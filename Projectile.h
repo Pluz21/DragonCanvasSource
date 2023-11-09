@@ -25,10 +25,16 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UWorld* myWorld;
 	UPROPERTY(VisibleAnywhere)
-	float myDelta;
+	float deltaSeconds;
 	
 	UPROPERTY(VisibleAnywhere)
 	float lifeSpan = 2;
+	UPROPERTY(VisibleAnywhere)
+	float moveSpeed = 2000;
+	UPROPERTY(VisibleAnywhere)
+	bool canMove = false;
+	UPROPERTY(VisibleAnywhere)
+	FVector forwardVector = FVector(0);
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,5 +43,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void GetInitialForwardVector();
+
+	void SelfMove(const FVector& _actorForwardVector);
+	void SetCanMove(bool _value);
+	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
 
 };

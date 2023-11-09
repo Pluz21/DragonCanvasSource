@@ -22,15 +22,35 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLifeSpan(lifeSpan);
-	ownerRef = GetOwner();
+
 }
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	ADragon* _dragonOwner = Cast<ADragon>(ownerRef);
-	moveCompo->Move();
+	deltaSeconds = GetWorld()->DeltaTimeSeconds;
+	//ADragon* _dragonOwner = Cast<ADragon>(ownerRef);
+	SelfMove(forwardVector);
+	//moveCompo->Move();
 
 }
+
+void AProjectile::SelfMove(const FVector& _actorForwardVector)
+{
+	if (canMove)
+	{
+
+	//FVector _actorForwardVector = GetOwner()->GetActorForwardVector();
+	FVector _direction = GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
+	SetActorLocation(_direction);
+	}
+}
+
+void AProjectile::SetCanMove(bool _value)
+{
+	canMove = _value;
+}
+
+
 

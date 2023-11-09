@@ -100,14 +100,16 @@ void ADragon::Action()
 void ADragon::FireBreath()
 {
 	spawnPointLocation = spawnPoint->GetComponentLocation();
-
+	FVector _fwdVector = GetActorForwardVector();
 	DebugText("Doing Action");
 	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation);
 	allProjectiles.Add(_spawnedProjectile);
 	float _size = allProjectiles.Num();
 	for (int i = 0; i < _size; i++)
 	{
-		_spawnedProjectile->SetOwner(this);
+		_spawnedProjectile->SetForwardVector(_fwdVector);
+		_spawnedProjectile->SetCanMove(true);
+		//_spawnedProjectile->SetOwner(this);
 
 	}
 }
