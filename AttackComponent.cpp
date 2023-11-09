@@ -2,6 +2,7 @@
 
 
 #include "AttackComponent.h"
+#include "Projectile.h"
 
 // Sets default values for this component's properties
 UAttackComponent::UAttackComponent()
@@ -18,6 +19,7 @@ UAttackComponent::UAttackComponent()
 void UAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	ownerRef = GetOwner();
 
 	// ...
 	
@@ -30,5 +32,15 @@ void UAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UAttackComponent::Attack()
+{
+}
+
+AProjectile* UAttackComponent::SpawnProjectile(const FVector& _spawnLocation)
+{
+	AProjectile* _spawned = GetWorld()->SpawnActor<AProjectile>(projectileRef,  _spawnLocation, FRotator::ZeroRotator);
+	return _spawned;
 }
 

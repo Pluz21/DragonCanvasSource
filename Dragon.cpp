@@ -3,6 +3,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
+#include "AttackComponent.h"
+#include "Projectile.h"
+
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -16,13 +19,21 @@ ADragon::ADragon()
 	spawnPoint = CreateDefaultSubobject<USceneComponent>("SpawnPoint");
 	springArm = CreateDefaultSubobject<USpringArmComponent>("Springarm");
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
-
+	attackCompo = CreateDefaultSubobject<UAttackComponent>("attackCompo");
+	
 	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
+	AddOwnedComponent(attackCompo);
 
 }
 
+// Called every frame
+void ADragon::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
 // Called when the game starts or when spawned
 void ADragon::BeginPlay()
 {
@@ -36,7 +47,6 @@ void ADragon::Init()
 {
 	currentAmmo = maxAmmo;
 	playerController = GetWorld()->GetFirstPlayerController();
-
 }
 
 void ADragon::InitInput()
@@ -83,11 +93,23 @@ void ADragon::RotatePitch(const FInputActionValue& _value)
 
 void ADragon::Action()
 {
+	FireBreath();
+
+}
+
+void ADragon::FireBreath()
+{
+	spawnPointLocation = spawnPoint->GetComponentLocation();
+
 	DebugText("Doing Action");
+	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation);
+	allProjectiles.Add(_spawnedProjectile);
+	float _size = allProjectiles.Num();
+	for (int i = 0; i < _size; i++)
+	{
+		_spawnedProjectile->SetOwner(this);
 
-
-	// attackCompo -> SpawnProjectile();
-
+	}
 }
 
 void ADragon::SetMaximumPitch()
@@ -101,12 +123,6 @@ void ADragon::DebugText(FString _string)
 {
 }
 
-// Called every frame
-void ADragon::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 // Called to bind functionality to input
 void ADragon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

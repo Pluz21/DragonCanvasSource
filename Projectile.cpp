@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Projectile.h"
+#include "Dragon.h"
 #include "MoveComponent.h"
 
 
@@ -20,13 +21,15 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetLifeSpan(lifeSpan);
+	ownerRef = GetOwner();
 }
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	ADragon* _dragonOwner = Cast<ADragon>(ownerRef);
 	moveCompo->Move();
 
 }

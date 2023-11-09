@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "AttackComponent.generated.h"
 
+class AProjectile;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DRAGONCANVAS_API UAttackComponent : public UActorComponent
@@ -15,6 +16,10 @@ class DRAGONCANVAS_API UAttackComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UAttackComponent();
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> projectileRef;
+	UPROPERTY()
+	TObjectPtr<AActor> ownerRef;
 
 protected:
 	// Called when the game starts
@@ -23,6 +28,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void Attack();
+	AProjectile* SpawnProjectile(const FVector& _spawnLocation);
 
 		
 };

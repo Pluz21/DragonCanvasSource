@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
-
 class UMoveComponent;
 UCLASS()
 class DRAGONCANVAS_API AProjectile : public AActor
@@ -20,11 +19,16 @@ public:
 	TObjectPtr<UStaticMeshComponent> meshCompo;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AActor> ownerRef;
 
 	UPROPERTY(VisibleAnywhere)
 	UWorld* myWorld;
 	UPROPERTY(VisibleAnywhere)
 	float myDelta;
+	
+	UPROPERTY(VisibleAnywhere)
+	float lifeSpan = 2;
 
 protected:
 	// Called when the game starts or when spawned

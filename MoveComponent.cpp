@@ -2,6 +2,8 @@
 
 
 #include "MoveComponent.h"
+#include "Dragon.h"
+#include "Projectile.h"
 
 // Sets default values for this component's properties
 UMoveComponent::UMoveComponent()
@@ -35,12 +37,16 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UMoveComponent::Move()
 {
-	FVector _actorForwardVector = ownerRef->GetActorForwardVector();
+	
+	FVector _actorForwardVector = GetOwner()->GetOwner()->GetActorForwardVector();
 	FVector _direction = GetOwner()->GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
 	ownerRef->SetActorLocation(_direction);
 }
 
 void UMoveComponent::Rotate()
 {
+	float _speed = rotateSpeed * deltaSeconds;
+	FRotator _newRotation = ownerRef->GetActorRotation() + FRotator(0, _speed, 0);
+	ownerRef->SetActorRotation(_newRotation);
 }
 

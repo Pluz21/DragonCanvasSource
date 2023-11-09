@@ -12,6 +12,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Dragon.generated.h"
 
+class AProjectile;
+class UAttackComponent;
 UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
 {
@@ -27,9 +29,14 @@ public:
 	TObjectPtr<UCameraComponent> camera;
 
 	UPROPERTY(EditAnywhere)
+	TArray<AProjectile*> allProjectiles;
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<USceneComponent> spawnPoint;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<APlayerController> playerController;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UAttackComponent> attackCompo;
 	// inputs
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> inputToMove;
@@ -62,7 +69,8 @@ public:
 	float maxAmmo = 10.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float currentAmmo;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector spawnPointLocation;
 	//camera
 	UPROPERTY(EditAnywhere)
 	float maxCameraPitch = 20;
@@ -81,11 +89,15 @@ protected:
 	void RotateYaw(const FInputActionValue& _value);
 	void RotatePitch(const FInputActionValue& _value);
 	void Action();
+	//Dragon actions
+	void FireBreath();
 	// camera
 	void SetMaximumPitch();
 
+	// attack compo needs
+	FVector  GetSpawnLocation() { return spawnPointLocation; }
+	
 	//Projectile
-	void SpawnProjectile();
 	float GetCurrentAmmo() { return currentAmmo; }
 
 	//Debug

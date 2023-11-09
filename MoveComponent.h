@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "MoveComponent.generated.h"
-
-
+class AProjectile;
+class ADragon;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DRAGONCANVAS_API UMoveComponent : public UActorComponent
 {
@@ -19,6 +19,8 @@ public:
 	float deltaSeconds;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AActor> ownerRef;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<ADragon> playeRef;
 
 	//Movement variables
 	UPROPERTY(EditAnywhere)
