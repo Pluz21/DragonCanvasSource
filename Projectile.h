@@ -30,7 +30,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	float lifeSpan = 2;
 	UPROPERTY(VisibleAnywhere)
-	float moveSpeed = 2000;
+	float moveSpeed;
 	UPROPERTY(VisibleAnywhere)
 	bool canMove = false;
 	UPROPERTY(VisibleAnywhere)
@@ -43,10 +43,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void GetInitialForwardVector();
 
 	void SelfMove(const FVector& _actorForwardVector);
 	void SetCanMove(bool _value);
 	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
-
+	UMoveComponent* GetMoveCompo() { return moveCompo; }
 };

@@ -19,7 +19,6 @@ UAttackComponent::UAttackComponent()
 void UAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	ownerRef = GetOwner();
 
 	// ...
 	

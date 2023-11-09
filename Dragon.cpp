@@ -4,6 +4,7 @@
 #include "EnhancedInputSubsystems.h"
 
 #include "AttackComponent.h"
+#include "MoveComponent.h"
 #include "Projectile.h"
 
 #include "Camera/CameraComponent.h"
@@ -109,7 +110,7 @@ void ADragon::FireBreath()
 	{
 		_spawnedProjectile->SetForwardVector(_fwdVector);
 		_spawnedProjectile->SetCanMove(true);
-		//_spawnedProjectile->SetOwner(this);
+		
 
 	}
 }

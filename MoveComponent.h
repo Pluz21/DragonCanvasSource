@@ -24,9 +24,9 @@ public:
 
 	//Movement variables
 	UPROPERTY(EditAnywhere)
-	float moveSpeed = 2000.f;
+	float moveSpeed = 100.f;
 	UPROPERTY(EditAnywhere)
-	float rotateSpeed = 200.f;
+	float rotateSpeed = 2000.f;
 
 
 protected:
@@ -38,5 +38,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void Move();
 	void Rotate();
+	float GetMoveSpeed() { return moveSpeed; }
 		
 };

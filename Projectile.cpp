@@ -22,6 +22,7 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLifeSpan(lifeSpan);
+	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
 
 }
 
@@ -30,8 +31,9 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
-	//ADragon* _dragonOwner = Cast<ADragon>(ownerRef);
 	SelfMove(forwardVector);
+	moveCompo->Rotate();
+	// or call 
 	//moveCompo->Move();
 
 }
@@ -41,7 +43,6 @@ void AProjectile::SelfMove(const FVector& _actorForwardVector)
 	if (canMove)
 	{
 
-	//FVector _actorForwardVector = GetOwner()->GetActorForwardVector();
 	FVector _direction = GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
 	SetActorLocation(_direction);
 	}

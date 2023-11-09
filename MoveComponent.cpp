@@ -38,13 +38,10 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 void UMoveComponent::Move()
 {
 	
-	FVector _actorForwardVector = GetOwner()->GetOwner()->GetActorForwardVector();
+	FVector _actorForwardVector = GetOwner()->GetActorForwardVector();
 	FVector _direction = GetOwner()->GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
 	ownerRef->SetActorLocation(_direction);
 	
-	/*FVector _actorForwardVector = GetOwner()->GetActorForwardVector();
-	FVector _direction = GetOwner()->GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
-	ownerRef->SetActorLocation(_direction);*/
 }
 
 void UMoveComponent::Rotate()
