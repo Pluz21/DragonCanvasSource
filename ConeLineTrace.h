@@ -7,13 +7,26 @@
 #include "ConeLineTrace.generated.h"
 
 UCLASS()
-class DRAGONCANVAS_API AConeLineTrace : public AActor
+class DRAGONCANVAS_API UConeLineTrace : public UActorComponent
 {
 	GENERATED_BODY()
 	
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AActor> ownerRef;
+	
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<ECollisionChannel> _coneTraceChannel;
+
+	UPROPERTY(EditAnywhere)
+	float distance = 100;
+	
+	UPROPERTY(EditAnywhere)
+	float coneTraceRadius = 300;
+
 public:	
 	// Sets default values for this actor's properties
-	AConeLineTrace();
+	UConeLineTrace();
 
 protected:
 	// Called when the game starts or when spawned
@@ -21,6 +34,7 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void ConeTrace();
 
 };

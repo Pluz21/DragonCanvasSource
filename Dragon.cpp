@@ -4,7 +4,9 @@
 #include "EnhancedInputSubsystems.h"
 
 #include "AttackComponent.h"
-#include "MoveComponent.h"
+//#include "MoveComponent.h"
+#include "ConeLineTrace.h"
+
 #include "Projectile.h"
 
 #include "Camera/CameraComponent.h"
@@ -21,11 +23,13 @@ ADragon::ADragon()
 	springArm = CreateDefaultSubobject<USpringArmComponent>("Springarm");
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	attackCompo = CreateDefaultSubobject<UAttackComponent>("attackCompo");
+	coneTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompo");
 	
 	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
 	AddOwnedComponent(attackCompo);
+	AddOwnedComponent(coneTraceCompo);
 
 }
 
@@ -95,6 +99,7 @@ void ADragon::RotatePitch(const FInputActionValue& _value)
 void ADragon::Action()
 {
 	FireBreath();
+	coneTraceCompo->ConeTrace();
 
 }
 

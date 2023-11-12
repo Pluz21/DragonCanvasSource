@@ -14,6 +14,7 @@
 
 class AProjectile;
 class UAttackComponent;
+class UConeLineTrace;
 UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
 {
@@ -27,6 +28,8 @@ public:
 	TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UConeLineTrace> coneTraceCompo;
 
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
