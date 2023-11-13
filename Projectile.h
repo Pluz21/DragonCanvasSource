@@ -13,9 +13,13 @@ UCLASS()
 class DRAGONCANVAS_API AProjectile : public AActor
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTargetReached);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileCreated);
+
 	UPROPERTY(EditAnywhere)
 	FTargetReached onTargetReached;
 
+	UPROPERTY(EditAnywhere)
+	FProjectileCreated onProjectileCreated;
 	GENERATED_BODY()
 	
 public:	
@@ -45,10 +49,15 @@ public:
 	bool canMove = false;
 	UPROPERTY(VisibleAnywhere)
 	FVector forwardVector = FVector(0);
-	UPROPERTY(VisibleAnywhere)
-	FVector endLocation = FVector(0);
+	UPROPERTY(EditAnywhere)
+	FVector targetLocation = FVector(0);
 	UPROPERTY(VisibleAnywhere)
 	FVector actorSpawnLocation = FVector(0);
+
+	UPROPERTY(EditAnywhere)
+	float distanceToSelfDestruct = 1000;
+	UPROPERTY(EditAnywhere)
+	float targetDistanceMultiplier = 100;
 
 protected:
 	// Called when the game starts or when spawned
@@ -61,6 +70,7 @@ public:
 	void SelfMove(const FVector& _actorForwardVector);
 	void SetCanMove(bool _value);
 	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
+	//void SetTargetLocation(const FVector& _targetLocation) { targetLocation = _targetLocation; }
 	UMoveComponent* GetMoveCompo() { return moveCompo; }
 
 	void CheckDistance();

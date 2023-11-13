@@ -80,6 +80,10 @@ public:
 	float currentAmmo;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector spawnPointLocation;
+
+	UPROPERTY(EditAnywhere)
+	FVector targetLocation; 
+	
 	//camera
 	UPROPERTY(EditAnywhere)
 	float maxCameraPitch = 20;

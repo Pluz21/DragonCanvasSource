@@ -101,8 +101,8 @@ void ADragon::RotatePitch(const FInputActionValue& _value)
 void ADragon::Action()
 {
 	coneTraceCompo->ConeTrace();
+	targetLocation = coneTraceCompo->GetLineTraceEnd();
 	onLineTraceCreated.Broadcast();
-	// FireBreath();
 
 }
 
@@ -123,7 +123,7 @@ void ADragon::FireBreath()
 	{
 		_spawnedProjectile->SetForwardVector(_fwdVector);
 		_spawnedProjectile->SetCanMove(true);
-		
+	
 
 	}
 }
