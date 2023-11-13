@@ -30,7 +30,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TObjectPtr<UConeLineTrace> coneLineTraceCompo;
 
 	UPROPERTY(EditAnywhere)
@@ -73,7 +73,8 @@ public:
 	//void SetTargetLocation(const FVector& _targetLocation) { targetLocation = _targetLocation; }
 	UMoveComponent* GetMoveCompo() { return moveCompo; }
 
-	void CheckDistance();
+	void CheckDistance(FVector& _targetLocation);
+	void CheckIfHit();
 	UFUNCTION() void SelfDestruct();
 
 

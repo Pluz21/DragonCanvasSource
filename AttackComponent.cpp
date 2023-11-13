@@ -37,9 +37,16 @@ void UAttackComponent::Attack()
 {
 }
 
-AProjectile* UAttackComponent::SpawnProjectile(const FVector& _spawnLocation)
+AProjectile* UAttackComponent::SpawnProjectile(const FVector& _spawnLocation,AActor* _owner)
 {
+	
 	AProjectile* _spawned = GetWorld()->SpawnActor<AProjectile>(projectileRef,  _spawnLocation, FRotator::ZeroRotator);
+	if (_spawned && _owner)
+	{
+		_spawned->SetOwner(_owner);
+		UE_LOG(LogTemp, Warning, TEXT("Spawned Projectile Owner: %s"), *_owner->GetName());
+
+	}
 	return _spawned;
 }
 

@@ -29,7 +29,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void Attack();
-	AProjectile* SpawnProjectile(const FVector& _spawnLocation);
+	AProjectile* SpawnProjectile(const FVector& _spawnLocation, AActor* _owner);
 
 		
 };

@@ -15,9 +15,9 @@ AProjectile::AProjectile()
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("mymesh");
 	meshCompo->SetupAttachment(RootComponent);
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
-	coneLineTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompo");
+	coneLineTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompohere");
 	AddOwnedComponent(moveCompo);
-	AddOwnedComponent(coneLineTraceCompo);
+	//AddOwnedComponent(coneLineTraceCompo);
 
 }
 
@@ -25,17 +25,28 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	SetOwner(GetOwner());
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
 	targetLocation = GetActorLocation() + (GetActorForwardVector() * targetDistanceMultiplier);
 	SetLifeSpan(lifeSpan);
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
 }
 
+void AProjectile::CheckIfHit()
+{
+	if (coneLineTraceCompo->GetCanSelfDestruct())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CanSelfDestruct!"));
+		onTargetReached.Broadcast();
+	}
+}
+
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	CheckDistance();
+	CheckDistance(targetLocation);
+	//CheckIfHit();
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
 	SelfMove(forwardVector);
 	moveCompo->Rotate();
@@ -66,11 +77,11 @@ void AProjectile::SelfDestruct()
 
 }
 
-void AProjectile::CheckDistance()
+void AProjectile::CheckDistance(FVector& _targetLocation)
 {
-	float _distanceToLineTraceEnd = FVector::Dist(GetActorLocation(), targetLocation);
-	UE_LOG(LogTemp, Warning, TEXT("targetLocation : %s"), *targetLocation.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("distance : %f"), _distanceToLineTraceEnd);
+	float _distanceToLineTraceEnd = FVector::Dist(GetActorLocation(), _targetLocation);
+	/*UE_LOG(LogTemp, Warning, TEXT("targetLocation : %s"), *targetLocation.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("distance : %f"), _distanceToLineTraceEnd);*/
 	if (distanceToSelfDestruct < _distanceToLineTraceEnd)
 		onTargetReached.Broadcast();
 }

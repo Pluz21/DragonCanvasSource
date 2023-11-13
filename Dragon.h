@@ -57,8 +57,8 @@ public:
 	TObjectPtr<UInputAction> inputToAction;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
-	/*UPROPERTY(EditAnywhere)
-	TSubclassOf<AProjectile> projectileToSpawn;*/
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> projectileToSpawn;
 
 	//input variables
 

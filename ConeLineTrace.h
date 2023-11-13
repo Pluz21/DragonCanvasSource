@@ -23,6 +23,9 @@ class DRAGONCANVAS_API UConeLineTrace : public UActorComponent
 	
 	UPROPERTY(EditAnywhere)
 	float coneTraceRadius = 300;
+
+	UPROPERTY(EditAnywhere)
+	bool canSelfDestruct = false;
 	
 	UPROPERTY(EditAnywhere)
 	FVector lineTraceEnd = FVector(0);
@@ -41,6 +44,7 @@ public:
 	void ConeTrace();
 
 	FVector GetLineTraceEnd() { return lineTraceEnd; }
+	bool GetCanSelfDestruct() { return canSelfDestruct; }
 	//void SetLineTraceEnd(FVector& _lineTraceEnd) {lineTraceEnd = _lineTraceEnd;}
 
 };

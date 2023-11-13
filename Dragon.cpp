@@ -116,13 +116,20 @@ void ADragon::FireBreath()
 		GEngine->AddOnScreenDebugMessage(1, 0.5, FColor::Black, TEXT("Empty subclass projectile"));
 		return;
 	}
-	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation);
+	//AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,this);
+	AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, spawnPointLocation, FRotator::ZeroRotator);
 	allProjectiles.Add(_spawnedProjectile);
 	float _size = allProjectiles.Num();
 	for (int i = 0; i < _size; i++)
 	{
+		if (_spawnedProjectile)
+		{
 		_spawnedProjectile->SetForwardVector(_fwdVector);
 		_spawnedProjectile->SetCanMove(true);
+		_spawnedProjectile->SetOwner(this);
+		UE_LOG(LogTemp, Warning, TEXT("Spawned Projectile Owner: %s"), *_spawnedProjectile->GetOwner()->GetName());
+
+		}
 	
 
 	}
