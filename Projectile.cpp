@@ -2,7 +2,9 @@
 
 #include "Projectile.h"
 #include "Dragon.h"
+
 #include "MoveComponent.h"
+#include "ConeLineTrace.h"
 
 
 // Sets default values
@@ -13,7 +15,9 @@ AProjectile::AProjectile()
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("mymesh");
 	meshCompo->SetupAttachment(RootComponent);
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
+	coneLineTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompo");
 	AddOwnedComponent(moveCompo);
+	AddOwnedComponent(coneLineTraceCompo);
 
 }
 
@@ -23,7 +27,7 @@ void AProjectile::BeginPlay()
 	Super::BeginPlay();
 	SetLifeSpan(lifeSpan);
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
-
+	FVector endLocation = coneLineTraceCompo->GetLineTraceEnd();
 }
 
 // Called every frame
@@ -51,6 +55,11 @@ void AProjectile::SelfMove(const FVector& _actorForwardVector)
 void AProjectile::SetCanMove(bool _value)
 {
 	canMove = _value;
+}
+
+void AProjectile::SelfDestruct()
+{
+	Destroy();
 }
 
 

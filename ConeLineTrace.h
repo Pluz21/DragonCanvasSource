@@ -23,6 +23,9 @@ class DRAGONCANVAS_API UConeLineTrace : public UActorComponent
 	
 	UPROPERTY(EditAnywhere)
 	float coneTraceRadius = 300;
+	
+	UPROPERTY(EditAnywhere)
+	FVector lineTraceEnd;
 
 public:	
 	// Sets default values for this actor's properties
@@ -36,5 +39,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void ConeTrace();
+
+	FVector GetLineTraceEnd() { return lineTraceEnd; }
 
 };

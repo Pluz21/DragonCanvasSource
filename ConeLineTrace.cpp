@@ -37,6 +37,7 @@ void UConeLineTrace::ConeTrace()
 	}
 	FVector _startLocation = ownerRef->GetActorLocation();
 	FVector _endLocation = ownerRef->GetActorLocation() + ownerRef->GetActorForwardVector() * distance;
+	lineTraceEnd = _endLocation;
 	FCollisionQueryParams _ignoreSelfParam;     
 	_ignoreSelfParam.AddIgnoredActor(ownerRef);
 

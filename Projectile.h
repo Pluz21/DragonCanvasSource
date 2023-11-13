@@ -6,7 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class UConeLineTrace;
 class UMoveComponent;
+
 UCLASS()
 class DRAGONCANVAS_API AProjectile : public AActor
 {
@@ -17,8 +19,12 @@ public:
 	AProjectile();
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UConeLineTrace> coneLineTraceCompo;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AActor> ownerRef;
 
@@ -48,4 +54,8 @@ public:
 	void SetCanMove(bool _value);
 	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
 	UMoveComponent* GetMoveCompo() { return moveCompo; }
+
+	void SelfDestruct();
+
+
 };
