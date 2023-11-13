@@ -12,6 +12,10 @@ class UMoveComponent;
 UCLASS()
 class DRAGONCANVAS_API AProjectile : public AActor
 {
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTargetReached);
+	UPROPERTY(EditAnywhere)
+	FTargetReached onTargetReached;
+
 	GENERATED_BODY()
 	
 public:	
@@ -41,6 +45,10 @@ public:
 	bool canMove = false;
 	UPROPERTY(VisibleAnywhere)
 	FVector forwardVector = FVector(0);
+	UPROPERTY(VisibleAnywhere)
+	FVector endLocation = FVector(0);
+	UPROPERTY(VisibleAnywhere)
+	FVector actorSpawnLocation = FVector(0);
 
 protected:
 	// Called when the game starts or when spawned
@@ -55,7 +63,8 @@ public:
 	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
 	UMoveComponent* GetMoveCompo() { return moveCompo; }
 
-	void SelfDestruct();
+	void CheckDistance();
+	UFUNCTION() void SelfDestruct();
 
 
 };

@@ -18,6 +18,9 @@ class UConeLineTrace;
 UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
 {
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLineTraceCreated);
+	UPROPERTY(EditAnywhere)
+	FLineTraceCreated onLineTraceCreated;
 	GENERATED_BODY()
 
 public:
@@ -96,7 +99,7 @@ protected:
 	void RotatePitch(const FInputActionValue& _value);
 	void Action();
 	//Dragon actions
-	void FireBreath();
+	UFUNCTION() void FireBreath();
 	// camera
 	void SetMaximumPitch();
 

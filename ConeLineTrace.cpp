@@ -36,8 +36,12 @@ void UConeLineTrace::ConeTrace()
 		UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
 	}
 	FVector _startLocation = ownerRef->GetActorLocation();
+	UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());
+
 	FVector _endLocation = ownerRef->GetActorLocation() + ownerRef->GetActorForwardVector() * distance;
+	UE_LOG(LogTemp, Error, TEXT("endlocation %s "),*_endLocation.ToString());
 	lineTraceEnd = _endLocation;
+	UE_LOG(LogTemp, Error, TEXT("linetraceend %s "),*lineTraceEnd.ToString());
 	FCollisionQueryParams _ignoreSelfParam;     
 	_ignoreSelfParam.AddIgnoredActor(ownerRef);
 

@@ -25,15 +25,18 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
+	actorSpawnLocation = GetActorLocation();
 	SetLifeSpan(lifeSpan);
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
-	FVector endLocation = coneLineTraceCompo->GetLineTraceEnd();
+	endLocation = coneLineTraceCompo->GetLineTraceEnd();
 }
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	CheckDistance();
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
 	SelfMove(forwardVector);
 	moveCompo->Rotate();
@@ -60,6 +63,17 @@ void AProjectile::SetCanMove(bool _value)
 void AProjectile::SelfDestruct()
 {
 	Destroy();
+}
+
+void AProjectile::CheckDistance()
+{
+	//FVector targetLocation = coneLineTraceCompo->GetLineTraceEnd();
+	float _distanceToLineTraceEnd = FVector::Dist(actorSpawnLocation, endLocation);
+	UE_LOG(LogTemp, Warning, TEXT("distanceToTarget : %f"), _distanceToLineTraceEnd);
+	UE_LOG(LogTemp, Warning, TEXT("actorspawnLocation : %f"), *actorSpawnLocation.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("endLocation : %f"), *endLocation.ToString());
+	if (_distanceToLineTraceEnd <= 100)
+		onTargetReached.Broadcast();
 }
 
 

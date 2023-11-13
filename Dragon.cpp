@@ -43,6 +43,7 @@ void ADragon::Tick(float DeltaTime)
 void ADragon::BeginPlay()
 {
 	Super::BeginPlay();
+	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
 	InitInput();
 	Init();
 	
@@ -99,8 +100,9 @@ void ADragon::RotatePitch(const FInputActionValue& _value)
 
 void ADragon::Action()
 {
-	FireBreath();
 	coneTraceCompo->ConeTrace();
+	onLineTraceCreated.Broadcast();
+	// FireBreath();
 
 }
 
