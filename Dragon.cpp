@@ -4,7 +4,7 @@
 #include "EnhancedInputSubsystems.h"
 
 #include "AttackComponent.h"
-//#include "MoveComponent.h"
+#include "MoveComponent.h"
 #include "ConeLineTrace.h"
 
 #include "Projectile.h"
@@ -50,6 +50,7 @@ void ADragon::BeginPlay()
 
 void ADragon::Init()
 {
+	world = GetWorld();
 	currentAmmo = maxAmmo;
 	playerController = GetWorld()->GetFirstPlayerController();
 }
@@ -108,6 +109,11 @@ void ADragon::FireBreath()
 	spawnPointLocation = spawnPoint->GetComponentLocation();
 	FVector _fwdVector = GetActorForwardVector();
 	DebugText("Doing Action");
+	if (!(attackCompo->projectileRef))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 0.5, FColor::Black, TEXT("Empty subclass projectile"));
+		return;
+	}
 	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation);
 	allProjectiles.Add(_spawnedProjectile);
 	float _size = allProjectiles.Num();

@@ -25,6 +25,9 @@ public:
 	ADragon();
 
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<UWorld> world;
+
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;

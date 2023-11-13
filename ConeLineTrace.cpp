@@ -35,16 +35,35 @@ void UConeLineTrace::ConeTrace()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
 	}
+	FVector _startLocation = ownerRef->GetActorLocation();
 	FVector _endLocation = ownerRef->GetActorLocation() + ownerRef->GetActorForwardVector() * distance;
-	TArray<FHitResult> _hits;
+	FCollisionQueryParams _ignoreSelfParam;     
+	_ignoreSelfParam.AddIgnoredActor(ownerRef);
+
+	TArray<FHitResult> _allHits;
 	FQuat _quat = FQuat(ownerRef->GetActorRotation());
 
-	GetWorld()->SweepMultiByChannel(_hits, ownerRef->GetActorLocation(),
-		_endLocation, _quat,
-		_coneTraceChannel, FCollisionShape::MakeSphere(coneTraceRadius));
+	bool _hit = GetWorld()->SweepMultiByChannel(_allHits, _startLocation,
+		_endLocation, _quat, 
+		_coneTraceChannel, FCollisionShape::MakeSphere(coneTraceRadius),
+		_ignoreSelfParam);
+	if (_hit)
+	{
+		for (int i = 0; i < _allHits.Num(); i++)
 
-	DrawDebugSphere(GetWorld(), ownerRef->GetActorLocation(),
-		coneTraceRadius, 12, FColor::Magenta, true, -1, 0, 3);
+		{
+			UE_LOG(LogTemp, Warning, TEXT("The FireBreath hit: %s"), *_allHits[i].GetActor()->GetName());
+
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Nothing hit by FireBreath")); 
+
+	}
+
+	DrawDebugSphere(GetWorld(), _endLocation,
+		coneTraceRadius + distance, 25, FColor::Orange, false, -1, 0, 3);
 }
 
 
