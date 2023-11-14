@@ -30,8 +30,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
-	UPROPERTY()
-	TObjectPtr<UConeLineTrace> coneLineTraceCompo;
+	//UPROPERTY()
+	//TObjectPtr<UConeLineTrace> coneLineTraceCompo;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AActor> ownerRef;
@@ -42,7 +42,7 @@ public:
 	float deltaSeconds;
 	
 	UPROPERTY(VisibleAnywhere)
-	float lifeSpan = 2;
+	float lifeSpan = 5;
 	UPROPERTY(VisibleAnywhere)
 	float moveSpeed;
 	UPROPERTY(VisibleAnywhere)

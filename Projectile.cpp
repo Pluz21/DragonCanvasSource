@@ -12,10 +12,12 @@ AProjectile::AProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	UE_LOG(LogTemp, Warning, TEXT("Projectile Constructor!"));
+
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("mymesh");
 	meshCompo->SetupAttachment(RootComponent);
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
-	coneLineTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompohere");
+	//coneLineTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompohere");
 	AddOwnedComponent(moveCompo);
 	//AddOwnedComponent(coneLineTraceCompo);
 
@@ -25,7 +27,7 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	SetOwner(GetOwner());
+	//SetOwner(GetOwner());
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
 	targetLocation = GetActorLocation() + (GetActorForwardVector() * targetDistanceMultiplier);
 	SetLifeSpan(lifeSpan);
@@ -34,18 +36,18 @@ void AProjectile::BeginPlay()
 
 void AProjectile::CheckIfHit()
 {
-	if (coneLineTraceCompo->GetCanSelfDestruct())
+	/*if (coneLineTraceCompo->GetCanSelfDestruct())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CanSelfDestruct!"));
 		onTargetReached.Broadcast();
-	}
+	}*/
 }
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	CheckDistance(targetLocation);
+	//CheckDistance(targetLocation);
 	//CheckIfHit();
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
 	SelfMove(forwardVector);
@@ -73,6 +75,7 @@ void AProjectile::SetCanMove(bool _value)
 void AProjectile::SelfDestruct()
 {
 	Destroy();
+	
 	UE_LOG(LogTemp, Warning, TEXT("DESTRUCTION"));
 
 }

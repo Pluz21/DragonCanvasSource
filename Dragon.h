@@ -88,7 +88,21 @@ public:
 	UPROPERTY(EditAnywhere)
 	float maxCameraPitch = 20;
 	
+	//Debug
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<ECollisionChannel> _coneTraceChannel;
 
+	UPROPERTY(EditAnywhere)
+	float distance = 100;
+
+	UPROPERTY(EditAnywhere)
+	float coneTraceRadius = 300;
+
+	UPROPERTY(EditAnywhere)
+	bool canSelfDestruct = false;
+
+	UPROPERTY(EditAnywhere)
+	FVector lineTraceEnd = FVector(0);
 
 
 protected:
@@ -104,6 +118,9 @@ protected:
 	void Action();
 	//Dragon actions
 	UFUNCTION() void FireBreath();
+
+	//Debug
+	void SphereTrace();
 	// camera
 	void SetMaximumPitch();
 
