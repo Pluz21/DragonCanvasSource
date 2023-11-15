@@ -11,7 +11,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Dragon.generated.h"
-
+class UConeLineTrace;
 class AProjectile;
 class UAttackComponent;
 class UConeLineTrace;
@@ -32,7 +32,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;
 	UPROPERTY(EditAnywhere)
+<<<<<<< Updated upstream
 	TObjectPtr<UConeLineTrace> coneTraceCompo;
+=======
+	TObjectPtr<UConeLineTrace> lineTraceCompo;
+>>>>>>> Stashed changes
 
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
@@ -70,6 +74,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float rotateInputValue;
 
+
 	// spawn variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (UIMin = "10", ClampMin = "10", UIMax = "100", ClampMax = "100"))
 	float maxAmmo = 10.f;
@@ -79,7 +84,13 @@ public:
 	FVector spawnPointLocation;
 	//camera
 	UPROPERTY(EditAnywhere)
+<<<<<<< Updated upstream
 	float maxCameraPitch = 20;
+=======
+	float minPitchRotation = -45;
+	UPROPERTY(EditAnywhere)
+	float maxPitchRotation = 15;
+>>>>>>> Stashed changes
 	
 
 

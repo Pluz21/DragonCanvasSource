@@ -22,6 +22,8 @@ class DRAGONCANVAS_API UConeLineTrace : public UActorComponent
 	float distance = 100;
 	
 	UPROPERTY(EditAnywhere)
+	float sphereTracedistance = 300;
+	UPROPERTY(EditAnywhere)
 	float coneTraceRadius = 300;
 
 public:	
