@@ -22,23 +22,14 @@ ADragon::ADragon()
 	spawnPoint = CreateDefaultSubobject<USceneComponent>("SpawnPoint");
 	springArm = CreateDefaultSubobject<USpringArmComponent>("Springarm");
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
-<<<<<<< Updated upstream
 	attackCompo = CreateDefaultSubobject<UAttackComponent>("attackCompo");
 	coneTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompo");
-=======
-	lineTraceCompo = CreateDefaultSubobject<UConeLineTrace>("lineTraceCompo");
->>>>>>> Stashed changes
 	
 	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
-<<<<<<< Updated upstream
 	AddOwnedComponent(attackCompo);
 	AddOwnedComponent(coneTraceCompo);
-=======
-	AddOwnedComponent(lineTraceCompo);
-	
->>>>>>> Stashed changes
 
 }
 
@@ -99,27 +90,10 @@ void ADragon::RotateYaw(const FInputActionValue& _value)
 
 void ADragon::RotatePitch(const FInputActionValue& _value)
 {
-<<<<<<< Updated upstream
 	float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _rotateValue = _value.Get<float>() * _delta * rotateSpeed;
 	rotateInputValue = _rotateValue;
 	AddControllerPitchInput(_rotateValue);
-=======
-	
-	
-	float _delta = GetWorld()->DeltaTimeSeconds;
-	const float _rotateValue = _value.Get<float>() * _delta * rotateSpeed;
-	rotateInputValue = _rotateValue;
-	if (springArm)
-	{
-		FRotator _springArmRotation = springArm->GetComponentRotation();
-		float _newPitch = FMath::Clamp(_springArmRotation.Pitch + _rotateValue, minPitchRotation, maxPitchRotation);
-
-		FRotator _newRotation = FRotator(_newPitch, _springArmRotation.Yaw, _springArmRotation.Roll);
-		springArm->SetWorldRotation(_newRotation);
-	}
-	//AddControllerPitchInput(-_rotateValue);
->>>>>>> Stashed changes
 	
 }
 
@@ -152,60 +126,6 @@ void ADragon::FireBreath()
 	}
 }
 
-<<<<<<< Updated upstream
-=======
-void ADragon::SphereTrace()
-{
-	lineTraceCompo->ConeTrace();
-	//if (!IsValid(GetOwner()))
-	//{
-	//	//UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
-	//	return;
-	//}
-	//FVector _startLocation = GetActorLocation();
-	//FRotator _ownerRotation = GetActorRotation();
-	//FVector _forwardVector = GetActorForwardVector();
-
-
-
-	////UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());
-
-	//FVector _endLocation = _startLocation + (_forwardVector * (sphereTracedistance + coneTraceRadius));
-	//targetLocation = _endLocation;
-	////UE_LOG(LogTemp, Error, TEXT("DRAGON ENDLOCATION %s "), *_endLocation.ToString());
-	//DrawDebugSphere(GetWorld(), _endLocation,
-	//	200, 25, FColor::Black, false, -1, 0, 3);
-	//FCollisionQueryParams _collisionParams;
-	//_collisionParams.AddIgnoredActor(this);
-	////_collisionParams.bTraceComplex;
-
-	//TArray<FHitResult> _allHits;
-	//FQuat _quat = FQuat(GetActorRotation());
-
-	//bool _hit = GetWorld()->SweepMultiByChannel(_allHits, _startLocation,
-	//	_endLocation, _quat,
-	//	_coneTraceChannel, FCollisionShape::MakeSphere(coneTraceRadius),
-	//	_collisionParams);
-	//if (_hit)
-	//{
-	//	for (int i = 0; i < _allHits.Num(); i++)
-
-	//	{
-	//		UE_LOG(LogTemp, Warning, TEXT("The FireBreath hit: %s"), *_allHits[i].GetActor()->GetName());
-	//	}
-	//}
-	//else
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Nothing hit by FireBreath"));
-
-
-	//}
-
-	//DrawDebugSphere(GetWorld(), _startLocation,
-	//	coneTraceRadius + sphereTracedistance, 25, FColor::Orange, false, -1, 0, 3);
-}
-
->>>>>>> Stashed changes
 void ADragon::SetMaximumPitch()
 {
 	
