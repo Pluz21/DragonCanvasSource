@@ -28,6 +28,8 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
+	_dragonRef->GetOnProjectileReachedTarget().AddDynamic(_dragonRef, &ADragon::StartLineTraceAction);
 	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
 	onTargetAcquired.AddDynamic(this, &AProjectile::SetCanCheckDistance);
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
@@ -55,6 +57,7 @@ void AProjectile::Tick(float DeltaTime)
 	SelfMove(forwardVector);
 	moveCompo->Rotate();
 	CheckTravelledDistance(maxDistance);
+	//SetCanActivateLineTraceEffect();
 	// or call 
 	//moveCompo->Move();
 
@@ -90,26 +93,32 @@ void AProjectile::SelfDestruct()
 
 }
 
-bool AProjectile::CheckTravelledDistance(const float& _maxDistance)
+void AProjectile::CheckTravelledDistance(const float& _maxDistance)
 {
 
 	FVector _currentLocation = GetActorLocation();
 	float travelledDistance = FVector::Dist(_currentLocation, actorSpawnLocation);
-	UE_LOG(LogTemp, Warning, TEXT("TRAVELLED %f CM"), travelledDistance);
+	//UE_LOG(LogTemp, Warning, TEXT("TRAVELLED %f CM"), travelledDistance);
 
 	if (travelledDistance > _maxDistance)
 	{
-		return true;
+		canActivateLineTraceEffect = true;
+		UE_LOG(LogTemp, Warning, TEXT("canActivateLineTraceEffect TRUE"));
+		ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
+		_dragonRef->GetOnProjectileReachedTarget().Broadcast();
+		
 	}
-	return false;
+	canActivateLineTraceEffect = false;
 }
 
 void AProjectile::SetCanActivateLineTraceEffect()
 {
-	if (CheckTravelledDistance(true))
+	/*if (CheckTravelledDistance(true))
 	{
+
 		canActivateLineTraceEffect = true;
-	}
+		UE_LOG(LogTemp, Warning, TEXT("CANACTIVATECALLED"));
+	}*/
 }
 
 void AProjectile::FindEndLocation()

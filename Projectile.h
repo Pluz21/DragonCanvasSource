@@ -100,7 +100,7 @@ public:
 	float GetLaunchTime() { return launchTime; }
 
 	UFUNCTION() void SetLaunchTime() {launchTime = GetWorld()->GetTimeSeconds();}
-	UFUNCTION() bool CheckTravelledDistance(const float& _maxDistance);
+	UFUNCTION() void CheckTravelledDistance(const float& _maxDistance);
 	UFUNCTION() void SetMaxDistance(const float& _maxDistance) { maxDistance = _maxDistance; }
 	UFUNCTION() void SetCanActivateLineTraceEffect();
 	UFUNCTION() void SetCanCheckDistance() { hasTarget = true; }

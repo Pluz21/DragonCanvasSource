@@ -17,11 +17,18 @@ UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLineTraceCreated);
+	//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FProjectileReachedTarget, UWorld*, world, FHitResult, result);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileReachedTarget);
+	
+
+
 	UPROPERTY(EditAnywhere)
 	FLineTraceCreated onLineTraceCreated;
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere)
+	FProjectileReachedTarget onProjectileTargetReached;
 	// Sets default values for this character's properties
 	ADragon();
 
@@ -34,11 +41,15 @@ public:
 	TObjectPtr<UCameraComponent> camera;
 
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<AProjectile> projectileRef;
+	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USceneComponent> spawnPoint;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<APlayerController> playerController;
+	UPROPERTY(EditAnywhere)
+	FHitResult hitResult;
 
 	
 	// inputs
@@ -143,8 +154,11 @@ public:
 	FVector GetProjectileTargetLocation() { return targetLocation; }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
-	void LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult);
+	UFUNCTION() void LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult);
+	UFUNCTION() void StartLineTraceAction();
 	
+	UFUNCTION()
+	FProjectileReachedTarget& GetOnProjectileReachedTarget() { return onProjectileTargetReached; }
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input

@@ -36,11 +36,13 @@ void ADragon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+	
 }
 // Called when the game starts or when spawned
 void ADragon::BeginPlay()
 {
 	Super::BeginPlay();
+	//onProjectileReachedTarget.AddDynamic(this, &ADragon::LineTraceDisplacement);
 	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
 	Init();
 	
@@ -146,23 +148,30 @@ void ADragon::FireBreath()
 	{
 		if (_spawnedProjectile)
 		{
-
+			projectileRef = _spawnedProjectile;
 			//float EstimatedTravelTime = 
 			//	DistanceTraveled / MoveSpeed;
 			//float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
 
 			//GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
-
+			// TODO call only one main function in projectile;
 			_spawnedProjectile->SetLaunchTime();
-			_spawnedProjectile->SetMaxDistance(sphereTracedistance);
-			_spawnedProjectile->CheckTravelledDistance(sphereTracedistance);
+			_spawnedProjectile->SetMaxDistance(sphereTracedistance-100);
 			_spawnedProjectile->SetTargetLocation(targetLocation);
 			_spawnedProjectile->SetForwardVector(_fwdVector);
 			_spawnedProjectile->SetCanMove(true);
 			_spawnedProjectile->SetOwner(this);
 			if (_spawnedProjectile->canActivateLineTraceEffect)
-				SphereTrace();
-		//UE_LOG(LogTemp, Warning, TEXT("Spawned Projectile Owner: %s"), *_spawnedProjectile->GetOwner()->GetName());
+			{
+				LineTraceDisplacement(world, hitResult);
+				UE_LOG(LogTemp, Warning, TEXT("CALLED LineTraceDisplacement"));
+
+			}
+			else 
+			{
+	
+				//UE_LOG(LogTemp, Warning, TEXT("FAILED CALL"));
+			}
 
 		}
 	
@@ -204,6 +213,7 @@ void ADragon::SphereTrace()
 		_hitResult, _location, _endLocation,
 		_coneTraceChannel, _collisionParams
 	);
+	hitResult = _hitResult;
 	if(_hit)
 	{
 		LineTraceDisplacement(world, _hitResult);
@@ -242,12 +252,21 @@ void ADragon::SphereTrace()
 
 void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult)
 {
+	//if (!_hitResult.GetActor() || !_hitResult.GetActor()->IsValidLowLevelFast())return;
+	if (!IsValid(_hitResult.GetActor()))return;
 	DrawDebugSphere(_world, _hitResult.Location, 20, 20, FColor::Cyan, false, -1, 0, 3);
 	UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
 	AActor* _hitActor = _hitResult.GetActor();
 	//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(-_hitActor->GetActorForwardVector() * 200);
 	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(GetActorForwardVector() * 20);
 	_hitResult.GetActor()->SetActorLocation(_displacedLocation);
+	//UE_LOG(LogTemp, Warning, TEXT("CALLED LINETRACEDISPLACEMENT"));
+
+}
+void ADragon::StartLineTraceAction()
+{
+	LineTraceDisplacement(world, hitResult);
+	UE_LOG(LogTemp, Warning, TEXT("DRAGON EVENT CALLED THROUGH  PROJECTILE"));
 
 }
 void ADragon::SetMaximumPitch()
