@@ -77,13 +77,17 @@ public:
 	FVector spawnPointLocation;
 
 	UPROPERTY(EditAnywhere)
+	float launchTime;
+	UPROPERTY(EditAnywhere)
+	FVector spawnedInitialLocation;
+	UPROPERTY(EditAnywhere)
 	FVector targetLocation; 
 	
 	//camera
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float minPitchRotation = -45;
+	float minPitchRotation = -65;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float maxPitchRotation = 20;
+	float maxPitchRotation = 40;
 	
 	
 	//Debug
@@ -139,6 +143,8 @@ public:
 	FVector GetProjectileTargetLocation() { return targetLocation; }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
+	void LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult);
+	
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input

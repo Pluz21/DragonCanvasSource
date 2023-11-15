@@ -31,6 +31,7 @@ void AProjectile::BeginPlay()
 	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
 	onTargetAcquired.AddDynamic(this, &AProjectile::SetCanCheckDistance);
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
+	actorSpawnLocation = GetActorLocation();
 	//SetLifeSpan(lifeSpan);
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
 
@@ -49,11 +50,11 @@ void AProjectile::CheckIfHit()
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	CheckDistance(targetLocation);
-	
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
+	CheckDistance(targetLocation);
 	SelfMove(forwardVector);
 	moveCompo->Rotate();
+	CheckTravelledDistance(maxDistance);
 	// or call 
 	//moveCompo->Move();
 
@@ -89,13 +90,35 @@ void AProjectile::SelfDestruct()
 
 }
 
+bool AProjectile::CheckTravelledDistance(const float& _maxDistance)
+{
+
+	FVector _currentLocation = GetActorLocation();
+	float travelledDistance = FVector::Dist(_currentLocation, actorSpawnLocation);
+	UE_LOG(LogTemp, Warning, TEXT("TRAVELLED %f CM"), travelledDistance);
+
+	if (travelledDistance > _maxDistance)
+	{
+		return true;
+	}
+	return false;
+}
+
+void AProjectile::SetCanActivateLineTraceEffect()
+{
+	if (CheckTravelledDistance(true))
+	{
+		canActivateLineTraceEffect = true;
+	}
+}
+
 void AProjectile::FindEndLocation()
 {
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	//targetLocation = _dragonRef->GetProjectileTargetLocation();
 	lineTraceDistance = _dragonRef->GetSphereTraceDistance();
 	minDistanceToSelfDestruct = _dragonRef->GetMinDistanceToSelfDestruct();
-	UE_LOG(LogTemp, Warning, TEXT("targetlocaiton is %s"), *targetLocation.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("targetlocaiton is %s"), *targetLocation.ToString());
 	onTargetAcquired.Broadcast();
 
 }

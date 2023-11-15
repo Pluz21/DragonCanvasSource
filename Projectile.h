@@ -61,7 +61,10 @@ public:
 	bool canMove = false;
 	UPROPERTY(VisibleAnywhere)
 	bool hasTarget = false;
-
+	UPROPERTY(VisibleAnywhere)
+	bool canActivateLineTraceEffect = false;
+	UPROPERTY(VisibleAnywhere)
+	float launchTime;
 	UPROPERTY(VisibleAnywhere)
 	FVector forwardVector = FVector(0);
 	UPROPERTY(EditAnywhere)
@@ -69,6 +72,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	FVector actorSpawnLocation = FVector(0);
 
+	UPROPERTY(EditAnywhere)
+	float maxDistance = 100000;
 	UPROPERTY(EditAnywhere)
 	float lineTraceDistance;
 	UPROPERTY(EditAnywhere)
@@ -91,9 +96,15 @@ public:
 	void SetTargetLocation(const FVector& _newTargetLocation) { targetLocation = _newTargetLocation; }
 	//void SetTargetLocation(const FVector& _targetLocation) { targetLocation = _targetLocation; }
 	UMoveComponent* GetMoveCompo() { return moveCompo; }
+	FVector GetInitialLocation() { return actorSpawnLocation; }
+	float GetLaunchTime() { return launchTime; }
 
-	UFUNCTION() void FindEndLocation();
+	UFUNCTION() void SetLaunchTime() {launchTime = GetWorld()->GetTimeSeconds();}
+	UFUNCTION() bool CheckTravelledDistance(const float& _maxDistance);
+	UFUNCTION() void SetMaxDistance(const float& _maxDistance) { maxDistance = _maxDistance; }
+	UFUNCTION() void SetCanActivateLineTraceEffect();
 	UFUNCTION() void SetCanCheckDistance() { hasTarget = true; }
+	UFUNCTION() void FindEndLocation();
 	UFUNCTION() void CheckDistance(FVector& _targetLocation);
 	
 	void CheckIfHit();

@@ -30,11 +30,12 @@ ADragon::ADragon()
 
 }
 
+
 // Called every frame
 void ADragon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 // Called when the game starts or when spawned
 void ADragon::BeginPlay()
@@ -123,7 +124,14 @@ void ADragon::FireBreath()
 {
 
 	spawnPointLocation = spawnPoint->GetComponentLocation();
-	FVector _fwdVector = GetActorForwardVector();
+	//FVector _fwdVector = GetActorForwardVector();
+	
+	FVector _location;
+	FRotator _rotation;
+	playerController->GetPlayerViewPoint(_location,_rotation);
+	FVector _fwdVector = _rotation.Vector();
+
+	FVector _forwardVector = _rotation.Vector();
 	DebugText("Doing Action");
 	if (!(projectileToSpawn))
 	{
@@ -138,10 +146,22 @@ void ADragon::FireBreath()
 	{
 		if (_spawnedProjectile)
 		{
-		_spawnedProjectile->SetTargetLocation(targetLocation);
-		_spawnedProjectile->SetForwardVector(_fwdVector);
-		_spawnedProjectile->SetCanMove(true);
-		_spawnedProjectile->SetOwner(this);
+
+			//float EstimatedTravelTime = 
+			//	DistanceTraveled / MoveSpeed;
+			//float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
+
+			//GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
+
+			_spawnedProjectile->SetLaunchTime();
+			_spawnedProjectile->SetMaxDistance(sphereTracedistance);
+			_spawnedProjectile->CheckTravelledDistance(sphereTracedistance);
+			_spawnedProjectile->SetTargetLocation(targetLocation);
+			_spawnedProjectile->SetForwardVector(_fwdVector);
+			_spawnedProjectile->SetCanMove(true);
+			_spawnedProjectile->SetOwner(this);
+			if (_spawnedProjectile->canActivateLineTraceEffect)
+				SphereTrace();
 		//UE_LOG(LogTemp, Warning, TEXT("Spawned Projectile Owner: %s"), *_spawnedProjectile->GetOwner()->GetName());
 
 		}
@@ -175,13 +195,29 @@ void ADragon::SphereTrace()
 	//UE_LOG(LogTemp, Error, TEXT("DRAGON ENDLOCATION %s "), *_endLocation.ToString());
 	DrawDebugSphere(GetWorld(), _endLocation,
 		200, 25, FColor::Black, false, -1, 0, 3);
-	FCollisionQueryParams _ignoreSelfParam;
-	_ignoreSelfParam.AddIgnoredActor(GetOwner());
-
+	FCollisionQueryParams _collisionParams;
+	_collisionParams.AddIgnoredActor(GetOwner());
 	TArray<FHitResult> _allHits;
 	FQuat _quat = FQuat(GetActorRotation());
+	FHitResult _hitResult;
+	bool _hit = GetWorld()->LineTraceSingleByChannel(
+		_hitResult, _location, _endLocation,
+		_coneTraceChannel, _collisionParams
+	);
+	if(_hit)
+	{
+		LineTraceDisplacement(world, _hitResult);
 
-	bool _hit = GetWorld()->SweepMultiByChannel(_allHits, _startLocation,
+		//DrawDebugSphere(world, _hitResult.Location, 20, 20, FColor::Cyan, false, -1, 0, 3);
+		//UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
+		//AActor* _hitActor = _hitResult.GetActor();
+		////FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(-_hitActor->GetActorForwardVector() * 200);
+		//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(GetActorForwardVector() * 20);
+		//_hitResult.GetActor()->SetActorLocation(_displacedLocation);
+	}
+
+
+	/*bool _hit = GetWorld()->SweepMultiByChannel(_allHits, _startLocation,
 		_endLocation, _quat,
 		_coneTraceChannel, FCollisionShape::MakeSphere(coneTraceRadius),
 		_ignoreSelfParam);
@@ -190,7 +226,7 @@ void ADragon::SphereTrace()
 		for (int i = 0; i < _allHits.Num(); i++)
 
 		{
-			UE_LOG(LogTemp, Warning, TEXT("The FireBreath hit: %s"), *_allHits[i].GetActor()->GetName());
+			UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_allHits[i].GetActor()->GetName());
 		}
 	}
 	else
@@ -201,9 +237,19 @@ void ADragon::SphereTrace()
 	}
 
 	DrawDebugSphere(GetWorld(), _startLocation,
-		coneTraceRadius + sphereTracedistance, 25, FColor::Orange, false, -1, 0, 3);
+		coneTraceRadius + sphereTracedistance, 25, FColor::Orange, false, -1, 0, 3);*/
 }
 
+void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult)
+{
+	DrawDebugSphere(_world, _hitResult.Location, 20, 20, FColor::Cyan, false, -1, 0, 3);
+	UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
+	AActor* _hitActor = _hitResult.GetActor();
+	//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(-_hitActor->GetActorForwardVector() * 200);
+	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(GetActorForwardVector() * 20);
+	_hitResult.GetActor()->SetActorLocation(_displacedLocation);
+
+}
 void ADragon::SetMaximumPitch()
 {
 	
