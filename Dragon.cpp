@@ -66,14 +66,7 @@ void ADragon::InitInput()
 
 void ADragon::InitCameraLimit()
 {
-	if (playerController)
-	{
-		if (playerController->PlayerCameraManager)
-		{
-			playerController->PlayerCameraManager->ViewPitchMin = minPitchRotation; // Use whatever values you want
-			playerController->PlayerCameraManager->ViewPitchMax = maxPitchRotation;
-		}
-	}
+	
 }
 
 void ADragon::Move(const FInputActionValue& _value)
@@ -104,12 +97,16 @@ void ADragon::RotatePitch(const FInputActionValue& _value)
 {
 	
 
-
 	float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _rotateValue = _value.Get<float>() * _delta * rotateSpeed;
 	rotateInputValue = _rotateValue;
-	playerController->PlayerCameraManager->AddActorLocalOffset(-_rotateValue);
-	AddControllerPitchInput(-_rotateValue);
+	FRotator _currentRotation = springArm->GetComponentRotation();
+	float _newPitch = FMath::Clamp(_currentRotation.Pitch + _rotateValue, minPitchRotation, maxPitchRotation);
+
+	// Set the new rotation for the SpringArm
+	FRotator _newArmRotation = FRotator(_newPitch, _currentRotation.Yaw, _currentRotation.Roll);
+	springArm->SetWorldRotation(_newArmRotation);
+	//AddControllerPitchInput(-_rotateValue);
 	
 }
 
