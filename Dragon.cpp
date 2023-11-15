@@ -158,10 +158,14 @@ void ADragon::SphereTrace()
 		//UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
 		return;
 	}
+	FVector _location;
+	FRotator _rotation;
+	playerController->GetPlayerViewPoint(_location,_rotation);
+
 	FVector _startLocation = GetActorLocation();
 	FRotator _ownerRotation = GetActorRotation();
-	FVector _forwardVector = GetActorForwardVector();
-
+	//FVector _forwardVector = GetActorForwardVector();
+	FVector _forwardVector = _rotation.Vector();
 
 
 	//UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());

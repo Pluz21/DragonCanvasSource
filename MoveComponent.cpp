@@ -37,13 +37,20 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
-void UMoveComponent::Move()
+void UMoveComponent::MoveAndFollow()
 {
 	
 	FVector _actorForwardVector = GetOwner()->GetActorForwardVector();
 	FVector _direction = GetOwner()->GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
 	ownerRef->SetActorLocation(_direction);
 	
+}
+
+void UMoveComponent::SelfMove(const FVector& _actorForwardVector)
+{
+	FVector Direction = GetOwner()->GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
+	GetOwner()->SetActorLocation(Direction);
+	//OnCanMove.Broadcast();
 }
 
 void UMoveComponent::Rotate()

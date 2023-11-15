@@ -63,11 +63,17 @@ void AProjectile::SelfMove(const FVector& _actorForwardVector)
 {
 	if (canMove)
 	{
+	moveCompo->SelfMove(forwardVector);
+	onCanMove.Broadcast();
+	}
+
+	/*if (canMove)
+	{
 
 	FVector _direction = GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
 	SetActorLocation(_direction);
 	onCanMove.Broadcast();
-	}
+	}*/
 }
 
 void AProjectile::SetCanMove(bool _value)
@@ -89,7 +95,7 @@ void AProjectile::FindEndLocation()
 	//targetLocation = _dragonRef->GetProjectileTargetLocation();
 	lineTraceDistance = _dragonRef->GetSphereTraceDistance();
 	minDistanceToSelfDestruct = _dragonRef->GetMinDistanceToSelfDestruct();
-	//UE_LOG(LogTemp, Warning, TEXT("targetlocaiton is %s"), *targetLocation.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("targetlocaiton is %s"), *targetLocation.ToString());
 	onTargetAcquired.Broadcast();
 
 }

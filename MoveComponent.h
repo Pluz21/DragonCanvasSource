@@ -36,7 +36,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void Move();
+	void MoveAndFollow();
+	void SelfMove(const FVector& _actorForwardVector);
 	void Rotate();
 	float GetMoveSpeed() { return moveSpeed; }
 		
