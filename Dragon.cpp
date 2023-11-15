@@ -3,9 +3,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
-#include "AttackComponent.h"
 #include "MoveComponent.h"
-#include "ConeLineTrace.h"
 
 #include "Projectile.h"
 
@@ -19,19 +17,16 @@ ADragon::ADragon()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	UE_LOG(LogTemp, Warning, TEXT("Dragon Constructor!"));
+	//UE_LOG(LogTemp, Warning, TEXT("Dragon Constructor!"));
 
 	spawnPoint = CreateDefaultSubobject<USceneComponent>("SpawnPoint");
 	springArm = CreateDefaultSubobject<USpringArmComponent>("Springarm");
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
-	attackCompo = CreateDefaultSubobject<UAttackComponent>("attackCompo");
-	coneTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompo");
 	
 	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
-	AddOwnedComponent(attackCompo);
-	AddOwnedComponent(coneTraceCompo);
+	
 
 }
 
@@ -46,6 +41,7 @@ void ADragon::BeginPlay()
 {
 	Super::BeginPlay();
 	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
+	
 	InitInput();
 	Init();
 	
@@ -56,6 +52,7 @@ void ADragon::Init()
 	world = GetWorld();
 	currentAmmo = maxAmmo;
 	playerController = GetWorld()->GetFirstPlayerController();
+	UpdateMinDistanceToSelfDestruct();
 }
 
 void ADragon::InitInput()
@@ -96,7 +93,7 @@ void ADragon::RotatePitch(const FInputActionValue& _value)
 	float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _rotateValue = _value.Get<float>() * _delta * rotateSpeed;
 	rotateInputValue = _rotateValue;
-	AddControllerPitchInput(_rotateValue);
+	AddControllerPitchInput(-_rotateValue);
 	
 }
 
@@ -115,7 +112,7 @@ void ADragon::FireBreath()
 	spawnPointLocation = spawnPoint->GetComponentLocation();
 	FVector _fwdVector = GetActorForwardVector();
 	DebugText("Doing Action");
-	if (!(attackCompo->projectileRef))
+	if (!(projectileToSpawn))
 	{
 		GEngine->AddOnScreenDebugMessage(1, 0.5, FColor::Black, TEXT("Empty subclass projectile"));
 		return;
@@ -128,10 +125,11 @@ void ADragon::FireBreath()
 	{
 		if (_spawnedProjectile)
 		{
+		_spawnedProjectile->SetTargetLocation(targetLocation);
 		_spawnedProjectile->SetForwardVector(_fwdVector);
 		_spawnedProjectile->SetCanMove(true);
 		_spawnedProjectile->SetOwner(this);
-		UE_LOG(LogTemp, Warning, TEXT("Spawned Projectile Owner: %s"), *_spawnedProjectile->GetOwner()->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("Spawned Projectile Owner: %s"), *_spawnedProjectile->GetOwner()->GetName());
 
 		}
 	
@@ -144,24 +142,22 @@ void ADragon::SphereTrace()
 
 	if (!IsValid(GetOwner()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
+		//UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
 		return;
 	}
 	FVector _startLocation = GetActorLocation();
 	FRotator _ownerRotation = GetActorRotation();
 	FVector _forwardVector = GetActorForwardVector();
 
-	UE_LOG(LogTemp, Warning, TEXT("Owner = %s"), GetOwner());
 
 
 	//UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());
 
-	FVector _endLocation = _startLocation + (_forwardVector * distance);
-	UE_LOG(LogTemp, Error, TEXT("endlocation %s "), *_endLocation.ToString());
+	FVector _endLocation = _startLocation + (_forwardVector * (sphereTracedistance + coneTraceRadius));
+	targetLocation = _endLocation;
+	//UE_LOG(LogTemp, Error, TEXT("DRAGON ENDLOCATION %s "), *_endLocation.ToString());
 	DrawDebugSphere(GetWorld(), _endLocation,
 		200, 25, FColor::Black, false, -1, 0, 3);
-	lineTraceEnd = _endLocation;
-	//UE_LOG(LogTemp, Error, TEXT("linetraceend %s "),*lineTraceEnd.ToString());
 	FCollisionQueryParams _ignoreSelfParam;
 	_ignoreSelfParam.AddIgnoredActor(GetOwner());
 
@@ -174,7 +170,6 @@ void ADragon::SphereTrace()
 		_ignoreSelfParam);
 	if (_hit)
 	{
-		canSelfDestruct = true;
 		for (int i = 0; i < _allHits.Num(); i++)
 
 		{
@@ -184,13 +179,12 @@ void ADragon::SphereTrace()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Nothing hit by FireBreath"));
-		canSelfDestruct = false;
 
 
 	}
 
 	DrawDebugSphere(GetWorld(), _startLocation,
-		coneTraceRadius + distance, 25, FColor::Orange, false, -1, 0, 3);
+		coneTraceRadius + sphereTracedistance, 25, FColor::Orange, false, -1, 0, 3);
 }
 
 void ADragon::SetMaximumPitch()
@@ -221,5 +215,10 @@ void ADragon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	_myInputCompo->BindAction(inputToAction, ETriggerEvent::Triggered, this, &ADragon::Action);
 
 
+}
+
+void ADragon::UpdateMinDistanceToSelfDestruct()
+{
+	minDistanceToSelfDestruct = coneTraceRadius / 2;
 }
 

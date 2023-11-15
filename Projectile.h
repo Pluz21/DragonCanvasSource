@@ -6,14 +6,21 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
-class UConeLineTrace;
+class ADragon;
 class UMoveComponent;
-
 UCLASS()
 class DRAGONCANVAS_API AProjectile : public AActor
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTargetReached);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTargetAcquired);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileCreated);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCanStartMoving);
+
+	UPROPERTY(EditAnywhere)
+	FCanStartMoving onCanMove;
+
+	UPROPERTY(EditAnywhere)
+	FTargetAcquired onTargetAcquired;
 
 	UPROPERTY(EditAnywhere)
 	FTargetReached onTargetReached;
@@ -35,6 +42,11 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AActor> ownerRef;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ADragon> dragonRef;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AActor> playerRef;
+
 
 	UPROPERTY(VisibleAnywhere)
 	UWorld* myWorld;
@@ -48,6 +60,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	bool canMove = false;
 	UPROPERTY(VisibleAnywhere)
+	bool hasTarget = false;
+
+	UPROPERTY(VisibleAnywhere)
 	FVector forwardVector = FVector(0);
 	UPROPERTY(EditAnywhere)
 	FVector targetLocation = FVector(0);
@@ -55,7 +70,10 @@ public:
 	FVector actorSpawnLocation = FVector(0);
 
 	UPROPERTY(EditAnywhere)
-	float distanceToSelfDestruct = 1000;
+	float lineTraceDistance;
+	UPROPERTY(EditAnywhere)
+	float minDistanceToSelfDestruct = 150; // equal to radius of our linetrace/2
+	
 	UPROPERTY(EditAnywhere)
 	float targetDistanceMultiplier = 100;
 
@@ -70,11 +88,16 @@ public:
 	void SelfMove(const FVector& _actorForwardVector);
 	void SetCanMove(bool _value);
 	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
+	void SetTargetLocation(const FVector& _newTargetLocation) { targetLocation = _newTargetLocation; }
 	//void SetTargetLocation(const FVector& _targetLocation) { targetLocation = _targetLocation; }
 	UMoveComponent* GetMoveCompo() { return moveCompo; }
 
-	void CheckDistance(FVector& _targetLocation);
+	UFUNCTION() void FindEndLocation();
+	UFUNCTION() void SetCanCheckDistance() { hasTarget = true; }
+	UFUNCTION() void CheckDistance(FVector& _targetLocation);
+	
 	void CheckIfHit();
+	
 	UFUNCTION() void SelfDestruct();
 
 

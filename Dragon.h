@@ -13,8 +13,6 @@
 #include "Dragon.generated.h"
 
 class AProjectile;
-class UAttackComponent;
-class UConeLineTrace;
 UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
 {
@@ -34,8 +32,6 @@ public:
 	TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UConeLineTrace> coneTraceCompo;
 
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
@@ -44,8 +40,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<APlayerController> playerController;
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UAttackComponent> attackCompo;
+	
 	// inputs
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> inputToMove;
@@ -93,16 +88,17 @@ public:
 	TEnumAsByte<ECollisionChannel> _coneTraceChannel;
 
 	UPROPERTY(EditAnywhere)
-	float distance = 100;
+	float sphereTracedistance = 3000;
 
 	UPROPERTY(EditAnywhere)
 	float coneTraceRadius = 300;
+	UPROPERTY(EditAnywhere)
+	float minDistanceToSelfDestruct;
 
 	UPROPERTY(EditAnywhere)
 	bool canSelfDestruct = false;
 
-	UPROPERTY(EditAnywhere)
-	FVector lineTraceEnd = FVector(0);
+	
 
 
 protected:
@@ -125,7 +121,6 @@ protected:
 	void SetMaximumPitch();
 
 	// attack compo needs
-	FVector  GetSpawnLocation() { return spawnPointLocation; }
 	
 	//Projectile
 	float GetCurrentAmmo() { return currentAmmo; }
@@ -135,9 +130,13 @@ protected:
 
 public:	
 	// Called every frame
+	FVector  GetSpawnLocation() { return spawnPointLocation; }
+	FVector GetProjectileTargetLocation() { return targetLocation; }
+	float GetSphereTraceDistance() { return sphereTracedistance; }
+	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	void UpdateMinDistanceToSelfDestruct();
 };
