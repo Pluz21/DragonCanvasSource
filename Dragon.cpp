@@ -41,8 +41,6 @@ void ADragon::BeginPlay()
 {
 	Super::BeginPlay();
 	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
-	
-	InitInput();
 	Init();
 	
 }
@@ -50,8 +48,10 @@ void ADragon::BeginPlay()
 void ADragon::Init()
 {
 	world = GetWorld();
-	currentAmmo = maxAmmo;
 	playerController = GetWorld()->GetFirstPlayerController();
+	InitInput();
+	InitCameraLimit();
+	currentAmmo = maxAmmo;
 	UpdateMinDistanceToSelfDestruct();
 }
 
@@ -62,6 +62,18 @@ void ADragon::InitInput()
 	UEnhancedInputLocalPlayerSubsystem* _inputSystem = _myPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	if (!_inputSystem)return;
 	_inputSystem->AddMappingContext(mappingContext, 0);
+}
+
+void ADragon::InitCameraLimit()
+{
+	if (playerController)
+	{
+		if (playerController->PlayerCameraManager)
+		{
+			playerController->PlayerCameraManager->ViewPitchMin = minPitchRotation; // Use whatever values you want
+			playerController->PlayerCameraManager->ViewPitchMax = maxPitchRotation;
+		}
+	}
 }
 
 void ADragon::Move(const FInputActionValue& _value)
@@ -90,9 +102,13 @@ void ADragon::RotateYaw(const FInputActionValue& _value)
 
 void ADragon::RotatePitch(const FInputActionValue& _value)
 {
+	
+
+
 	float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _rotateValue = _value.Get<float>() * _delta * rotateSpeed;
 	rotateInputValue = _rotateValue;
+	playerController->PlayerCameraManager->AddActorLocalOffset(-_rotateValue);
 	AddControllerPitchInput(-_rotateValue);
 	
 }

@@ -66,6 +66,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float rightInputValue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float minPitchRotation = -20;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float maxPitchRotation = 20;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float rotateInputValue;
 
 	// spawn variables
@@ -80,8 +84,7 @@ public:
 	FVector targetLocation; 
 	
 	//camera
-	UPROPERTY(EditAnywhere)
-	float maxCameraPitch = 20;
+	
 	
 	//Debug
 	UPROPERTY(EditAnywhere)
@@ -106,6 +109,8 @@ protected:
 	virtual void BeginPlay() override;
 	void Init();
 	void InitInput();
+
+	void InitCameraLimit();
 
 	//Inputs
 	void Move(const FInputActionValue& _value);
