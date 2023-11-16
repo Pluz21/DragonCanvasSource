@@ -172,6 +172,19 @@ void ADragon::FireBreath()
 	
 				//UE_LOG(LogTemp, Warning, TEXT("FAILED CALL"));
 			}
+			//TO DO 
+
+			//{
+			//	// Perform your line trace and set HitLocation and bLineTraceHit accordingly
+			//	// ...
+
+			//	// Calculate delay based on the estimated travel time
+			//	float EstimatedTravelTime = DistanceTraveled / MoveSpeed;
+			//	float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
+
+			//	// Start a timer to apply the effect after a delay
+			//	GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
+			//}
 
 		}
 	
@@ -189,7 +202,7 @@ void ADragon::SphereTrace()
 	}
 	FVector _location;
 	FRotator _rotation;
-	playerController->GetPlayerViewPoint(_location,_rotation);
+	playerController->GetPlayerViewPoint(_location, _rotation);
 
 	FVector _startLocation = GetActorLocation();
 	FRotator _ownerRotation = GetActorRotation();
@@ -214,40 +227,12 @@ void ADragon::SphereTrace()
 		_coneTraceChannel, _collisionParams
 	);
 	hitResult = _hitResult;
-	if(_hit)
+	if (_hit)
 	{
 		LineTraceDisplacement(world, _hitResult);
 
-		//DrawDebugSphere(world, _hitResult.Location, 20, 20, FColor::Cyan, false, -1, 0, 3);
-		//UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
-		//AActor* _hitActor = _hitResult.GetActor();
-		////FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(-_hitActor->GetActorForwardVector() * 200);
-		//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(GetActorForwardVector() * 20);
-		//_hitResult.GetActor()->SetActorLocation(_displacedLocation);
-	}
-
-
-	/*bool _hit = GetWorld()->SweepMultiByChannel(_allHits, _startLocation,
-		_endLocation, _quat,
-		_coneTraceChannel, FCollisionShape::MakeSphere(coneTraceRadius),
-		_ignoreSelfParam);
-	if (_hit)
-	{
-		for (int i = 0; i < _allHits.Num(); i++)
-
-		{
-			UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_allHits[i].GetActor()->GetName());
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Nothing hit by FireBreath"));
-
 
 	}
-
-	DrawDebugSphere(GetWorld(), _startLocation,
-		coneTraceRadius + sphereTracedistance, 25, FColor::Orange, false, -1, 0, 3);*/
 }
 
 void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult)
