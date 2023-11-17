@@ -204,10 +204,10 @@ void ADragon::SphereTrace()
 	FVector _location;
 	FRotator _rotation;
 	playerController->GetPlayerViewPoint(_location, _rotation);
-	DrawDebugSphere(GetWorld(), _location,
-		100, 25, FColor::Yellow, false, -1, 0, 3);
+	//DrawDebugSphere(GetWorld(), _location,
+		//100, 25, FColor::Yellow, true, -1, 0, 3);
 
-	FVector _startLocation = GetActorLocation();
+	FVector _startLocation = _location;
 	FRotator _ownerRotation = GetActorRotation();
 	//FVector _forwardVector = GetActorForwardVector();
 	FVector _forwardVector = _rotation.Vector();
