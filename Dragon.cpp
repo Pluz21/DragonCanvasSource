@@ -200,9 +200,12 @@ void ADragon::SphereTrace()
 		//UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
 		return;
 	}
+	// TO DO ADD CAMERA AS STARTLOCATION
 	FVector _location;
 	FRotator _rotation;
 	playerController->GetPlayerViewPoint(_location, _rotation);
+	DrawDebugSphere(GetWorld(), _location,
+		100, 25, FColor::Yellow, false, -1, 0, 3);
 
 	FVector _startLocation = GetActorLocation();
 	FRotator _ownerRotation = GetActorRotation();
@@ -213,6 +216,7 @@ void ADragon::SphereTrace()
 	//UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());
 
 	FVector _endLocation = _startLocation + (_forwardVector * (sphereTracedistance + coneTraceRadius));
+
 	targetLocation = _endLocation;
 	//UE_LOG(LogTemp, Error, TEXT("DRAGON ENDLOCATION %s "), *_endLocation.ToString());
 	DrawDebugSphere(GetWorld(), _endLocation,
