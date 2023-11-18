@@ -249,7 +249,13 @@ void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult
 	//working displacement
 	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(locationOnLineTraceSpawn * lineTraceEffectMultiplier);
 	_hitResult.GetActor()->SetActorLocation(_displacedLocation);
+	if (_hitActor->ActorHasTag("ExplodeOnProjectileHit"))
+	{
+		UE_LOG(LogTemp, Error, TEXT("BLOWING UP"), *_hitResult.GetActor()->GetName());
 
+		_hitActor->Destroy();
+
+	}
 }
 void ADragon::StartLineTraceAction()
 {
