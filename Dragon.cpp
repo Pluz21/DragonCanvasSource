@@ -202,9 +202,11 @@ void ADragon::SphereTrace()
 	FVector _location;
 	FRotator _rotation;
 	playerController->GetPlayerViewPoint(_location, _rotation);
+
 	//DrawDebugSphere(GetWorld(), _location,
 		//100, 25, FColor::Yellow, true, -1, 0, 3);
-	FVector _startLocation = _location;
+	//FVector _startLocation = _location;
+	FVector _startLocation = GetSpawnLocation();
 	FRotator _ownerRotation = GetActorRotation();
 	//FVector _forwardVector = GetActorForwardVector();
 	FVector _forwardVector = _rotation.Vector();
@@ -244,7 +246,6 @@ void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult
 	DrawDebugSphere(_world, _hitResult.Location, 10, 20, FColor::Cyan, true, -1, 0, 3);
 	UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
 	AActor* _hitActor = _hitResult.GetActor();
-	//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(-_hitActor->GetActorForwardVector() * 200);
 	//working displacement
 	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(locationOnLineTraceSpawn * lineTraceEffectMultiplier);
 	_hitResult.GetActor()->SetActorLocation(_displacedLocation);

@@ -100,6 +100,7 @@ void AProjectile::SetCanMove(bool _value)
 
 void AProjectile::SelfDestruct()
 {
+	CallLineTraceDisplacement();
 	projectileManager->RemoveItem(this);
 	Destroy();
 	UE_LOG(LogTemp, Warning, TEXT("DESTRUCTION"));
@@ -116,7 +117,7 @@ void AProjectile::CheckTravelledDistance(const float& _maxDistance)
 	if (travelledDistance > _maxDistance)    //Thats why it activates retro-actively
 	{
 		canActivateLineTraceEffect = true;
-		UE_LOG(LogTemp, Warning, TEXT("canActivateLineTraceEffect TRUE"));
+		//UE_LOG(LogTemp, Warning, TEXT("canActivateLineTraceEffect TRUE"));
 		ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 		_dragonRef->GetOnProjectileReachedTarget().Broadcast();
 		

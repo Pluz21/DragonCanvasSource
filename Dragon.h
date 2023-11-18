@@ -161,7 +161,7 @@ protected:
 public:	
 	UFUNCTION() void FireBreath();
 	// Called every frame
-	FVector  GetSpawnLocation() { return spawnPointLocation; }
+	FVector  GetSpawnLocation() { return spawnPoint->GetComponentLocation(); }
 	FVector GetProjectileTargetLocation() { return targetLocation; }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
