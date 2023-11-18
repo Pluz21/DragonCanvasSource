@@ -133,7 +133,6 @@ protected:
 	void RotatePitch(const FInputActionValue& _value);
 	void Action();
 	//Dragon actions
-	UFUNCTION() void FireBreath();
 
 	//Debug
 	void SphereTrace();
@@ -149,11 +148,14 @@ protected:
 	void DebugText(FString _string);
 
 public:	
+	UFUNCTION() void FireBreath();
 	// Called every frame
 	FVector  GetSpawnLocation() { return spawnPointLocation; }
 	FVector GetProjectileTargetLocation() { return targetLocation; }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
+	TArray<AProjectile*> GetAllProjectiles() { return allProjectiles; }
+	
 	UFUNCTION() void LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult);
 	UFUNCTION() void StartLineTraceAction();
 	

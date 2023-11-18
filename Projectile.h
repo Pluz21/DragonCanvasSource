@@ -109,7 +109,8 @@ public:
 	
 	void CheckIfHit();
 	
-	UFUNCTION() void SelfDestruct();
 
+
+	UFUNCTION() void SelfDestruct();
 
 };

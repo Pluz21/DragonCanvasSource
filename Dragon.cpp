@@ -141,6 +141,7 @@ void ADragon::FireBreath()
 		return;
 	}
 	//AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,this);
+	if (!projectileToSpawn)return;
 	AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, spawnPointLocation, FRotator::ZeroRotator);
 	allProjectiles.Add(_spawnedProjectile);
 	float _size = allProjectiles.Num();
@@ -200,13 +201,11 @@ void ADragon::SphereTrace()
 		//UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
 		return;
 	}
-	// TO DO ADD CAMERA AS STARTLOCATION
 	FVector _location;
 	FRotator _rotation;
 	playerController->GetPlayerViewPoint(_location, _rotation);
 	//DrawDebugSphere(GetWorld(), _location,
 		//100, 25, FColor::Yellow, true, -1, 0, 3);
-
 	FVector _startLocation = _location;
 	FRotator _ownerRotation = GetActorRotation();
 	//FVector _forwardVector = GetActorForwardVector();
@@ -216,6 +215,7 @@ void ADragon::SphereTrace()
 	//UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());
 
 	FVector _endLocation = _startLocation + (_forwardVector * (sphereTracedistance + coneTraceRadius));
+	DrawDebugLine(world, _startLocation, _endLocation, FColor::Blue, true, -1, 0, 3);
 
 	targetLocation = _endLocation;
 	//UE_LOG(LogTemp, Error, TEXT("DRAGON ENDLOCATION %s "), *_endLocation.ToString());
@@ -243,7 +243,7 @@ void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult
 {
 	//if (!_hitResult.GetActor() || !_hitResult.GetActor()->IsValidLowLevelFast())return;
 	if (!IsValid(_hitResult.GetActor()))return;
-	DrawDebugSphere(_world, _hitResult.Location, 20, 20, FColor::Cyan, false, -1, 0, 3);
+	DrawDebugSphere(_world, _hitResult.Location, 10, 20, FColor::Cyan, true, -1, 0, 3);
 	UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
 	AActor* _hitActor = _hitResult.GetActor();
 	//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(-_hitActor->GetActorForwardVector() * 200);

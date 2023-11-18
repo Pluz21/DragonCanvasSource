@@ -88,6 +88,18 @@ void AProjectile::SetCanMove(bool _value)
 void AProjectile::SelfDestruct()
 {
 	Destroy();
+	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
+	TArray<AProjectile*> _allProjectilesToRemove = _dragonRef->GetAllProjectiles();
+	float _size = _allProjectilesToRemove.Num();
+	if (_size > 0)
+	{
+		for (int i = 0; i < _size; i++)
+	{
+		_allProjectilesToRemove.RemoveAt(_allProjectilesToRemove.Num() - 1);
+		
+
+	}
+	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("DESTRUCTION"));
 
