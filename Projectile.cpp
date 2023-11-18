@@ -2,6 +2,10 @@
 
 #include "Projectile.h"
 #include "Dragon.h"
+
+#include "CustomGameMode.h"
+#include "ProjectileManager.h"
+
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -28,30 +32,20 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
-	_dragonRef->GetOnProjectileReachedTarget().AddDynamic(_dragonRef, &ADragon::StartLineTraceAction);
-	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
-	onTargetAcquired.AddDynamic(this, &AProjectile::SetCanCheckDistance);
+	onTargetReached.AddDynamic(this, &AProjectile::CallLineTraceDisplacement);
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
-	actorSpawnLocation = GetActorLocation();
-	//SetLifeSpan(lifeSpan);
-	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
+	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
 
+	Init();
 }
 
-void AProjectile::CheckIfHit()
-{
-	/*if (coneLineTraceCompo->GetCanSelfDestruct())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("CanSelfDestruct!"));
-		onTargetReached.Broadcast();
-	}*/
-}
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	UE_LOG(LogTemp, Error, TEXT("CanActivateLineTraceBool : %d"), canActivateLineTraceEffect);
+
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
 	CheckDistance(targetLocation);
 	SelfMove(forwardVector);
@@ -61,6 +55,29 @@ void AProjectile::Tick(float DeltaTime)
 	// or call 
 	//moveCompo->Move();
 
+}
+
+void AProjectile::Init()
+{
+	gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>();
+	if (!gameMode)return;
+	projectileManager = gameMode->GetProjectileManager();
+	if (projectileManager)return;
+	projectileManager->AddItem(this);
+
+	actorSpawnLocation = GetActorLocation();
+	//SetLifeSpan(lifeSpan);
+	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
+
+
+}
+void AProjectile::CheckIfHit()
+{
+	/*if (coneLineTraceCompo->GetCanSelfDestruct())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CanSelfDestruct!"));
+		onTargetReached.Broadcast();
+	}*/
 }
 
 void AProjectile::SelfMove(const FVector& _actorForwardVector)
@@ -87,20 +104,8 @@ void AProjectile::SetCanMove(bool _value)
 
 void AProjectile::SelfDestruct()
 {
+	projectileManager->RemoveItem(this);
 	Destroy();
-	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
-	TArray<AProjectile*> _allProjectilesToRemove = _dragonRef->GetAllProjectiles();
-	float _size = _allProjectilesToRemove.Num();
-	if (_size > 0)
-	{
-		for (int i = 0; i < _size; i++)
-	{
-		_allProjectilesToRemove.RemoveAt(_allProjectilesToRemove.Num() - 1);
-		
-
-	}
-	}
-	
 	UE_LOG(LogTemp, Warning, TEXT("DESTRUCTION"));
 
 }
@@ -110,9 +115,9 @@ void AProjectile::CheckTravelledDistance(const float& _maxDistance)
 
 	FVector _currentLocation = GetActorLocation();
 	float travelledDistance = FVector::Dist(_currentLocation, actorSpawnLocation);
-	//UE_LOG(LogTemp, Warning, TEXT("TRAVELLED %f CM"), travelledDistance);
+	//UE_LOG(LogTemp, Warning, TEXT("TRAVELLED %f "), travelledDistance);
 
-	if (travelledDistance > _maxDistance)
+	if (travelledDistance > _maxDistance)    //Thats why it activates retro-actively
 	{
 		canActivateLineTraceEffect = true;
 		UE_LOG(LogTemp, Warning, TEXT("canActivateLineTraceEffect TRUE"));
@@ -146,16 +151,27 @@ void AProjectile::FindEndLocation()
 
 void AProjectile::CheckDistance(FVector& _targetLocation)
 {
-	if (hasTarget) 
-	{
+	/*if (hasTarget) 
+	{*/
 
 	float _distanceToLineTraceEndLocation = FVector::Dist(GetActorLocation(), _targetLocation);
 	//UE_LOG(LogTemp, Warning, TEXT("targetLocation : %s"), *targetLocation.ToString());
 	//UE_LOG(LogTemp, Warning, TEXT("distance : %f"), _distanceToLineTraceEndLocation);
 	//UE_LOG(LogTemp, Error, TEXT("lineTraceDistance : %f"), lineTraceDistance);
 	if (_distanceToLineTraceEndLocation <= minDistanceToSelfDestruct)
+	{
 		onTargetReached.Broadcast(); // Calling destruct
 	}
+	//}
+}
+
+void AProjectile::CallLineTraceDisplacement()
+{	UE_LOG(LogTemp, Error, TEXT("LineTraceEventcalled"));
+
+	canActivateLineTraceEffect = true;
+
+	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
+	_dragonRef->StartLineTraceAction();
 }
 
 

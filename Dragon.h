@@ -12,6 +12,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Dragon.generated.h"
 
+class ACustomGameMode;
+class AProjectileManager;
 class AProjectile;
 UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
@@ -33,6 +35,11 @@ public:
 	ADragon();
 
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<ACustomGameMode> gameMode;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AProjectileManager> projectileManager;
+
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UWorld> world;
 
 	UPROPERTY(EditAnywhere)
@@ -40,8 +47,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<AProjectile> projectileRef;
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
 	UPROPERTY(EditAnywhere)

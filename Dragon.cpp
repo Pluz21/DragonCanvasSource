@@ -4,6 +4,8 @@
 #include "EnhancedInputSubsystems.h"
 
 #include "MoveComponent.h"
+#include "ProjectileManager.h"
+#include "CustomGameMode.h"
 
 #include "Projectile.h"
 
@@ -50,6 +52,11 @@ void ADragon::BeginPlay()
 
 void ADragon::Init()
 {
+	gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>(); // Grab game mode
+	if (!gameMode)return;
+	projectileManager = gameMode->GetProjectileManager();
+	if (!projectileManager)return;
+
 	world = GetWorld();
 	playerController = GetWorld()->GetFirstPlayerController();
 	InitInput();
@@ -65,6 +72,7 @@ void ADragon::InitInput()
 	UEnhancedInputLocalPlayerSubsystem* _inputSystem = _myPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	if (!_inputSystem)return;
 	_inputSystem->AddMappingContext(mappingContext, 0);
+	UE_LOG(LogTemp, Warning, TEXT("Init inputs"));
 }
 
 void ADragon::InitCameraLimit()
@@ -143,54 +151,44 @@ void ADragon::FireBreath()
 	//AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,this);
 	if (!projectileToSpawn)return;
 	AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, spawnPointLocation, FRotator::ZeroRotator);
-	allProjectiles.Add(_spawnedProjectile);
-	float _size = allProjectiles.Num();
+	if (!_spawnedProjectile)return;
+		projectileManager->AddItem(_spawnedProjectile);
+	float _size = projectileManager->GetAllProjectilesSize();
 	for (int i = 0; i < _size; i++)
 	{
-		if (_spawnedProjectile)
-		{
-			projectileRef = _spawnedProjectile;
-			//float EstimatedTravelTime = 
-			//	DistanceTraveled / MoveSpeed;
-			//float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
+		//float EstimatedTravelTime = 
+		//	DistanceTraveled / MoveSpeed;
+		//float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
 
-			//GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
-			// TODO call only one main function in projectile;
-			_spawnedProjectile->SetLaunchTime();
-			_spawnedProjectile->SetMaxDistance(sphereTracedistance-100);
-			_spawnedProjectile->SetTargetLocation(targetLocation);
-			_spawnedProjectile->SetForwardVector(_fwdVector);
-			_spawnedProjectile->SetCanMove(true);
-			_spawnedProjectile->SetOwner(this);
-			if (_spawnedProjectile->canActivateLineTraceEffect)
-			{
-				LineTraceDisplacement(world, hitResult);
-				UE_LOG(LogTemp, Warning, TEXT("CALLED LineTraceDisplacement"));
+		//GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
+		// TODO call only one main function in projectile;
+		_spawnedProjectile->SetLaunchTime();
+		_spawnedProjectile->SetMaxDistance(sphereTracedistance-100);
+		//UE_LOG(LogTemp, Warning, TEXT("MaxDistance : %f"), _spawnedProjectile->maxDistance);
 
-			}
-			else 
-			{
-	
-				//UE_LOG(LogTemp, Warning, TEXT("FAILED CALL"));
-			}
-			//TO DO 
+		_spawnedProjectile->SetTargetLocation(targetLocation);
+		_spawnedProjectile->SetForwardVector(_fwdVector);
+		_spawnedProjectile->SetCanMove(true);
+		_spawnedProjectile->SetOwner(this);
+		
+		//TO DO 
 
-			//{
-			//	// Perform your line trace and set HitLocation and bLineTraceHit accordingly
-			//	// ...
+		//{
+		//	// Perform your line trace and set HitLocation and bLineTraceHit accordingly
+		//	// ...
 
-			//	// Calculate delay based on the estimated travel time
-			//	float EstimatedTravelTime = DistanceTraveled / MoveSpeed;
-			//	float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
+		//	// Calculate delay based on the estimated travel time
+		//	float EstimatedTravelTime = DistanceTraveled / MoveSpeed;
+		//	float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
 
-			//	// Start a timer to apply the effect after a delay
-			//	GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
-			//}
-
-		}
-	
+		//	// Start a timer to apply the effect after a delay
+		//	GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
+		//}
 
 	}
+	
+
+	
 }
 
 void ADragon::SphereTrace()

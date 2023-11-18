@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class AProjectileManager;
+class ACustomGameMode;
 class ADragon;
 class UMoveComponent;
 UCLASS()
@@ -36,6 +38,11 @@ public:
 	TObjectPtr<UStaticMeshComponent> meshCompo;
 
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<ACustomGameMode> gameMode;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AProjectileManager> projectileManager;
+
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
 	//UPROPERTY()
 	//TObjectPtr<UConeLineTrace> coneLineTraceCompo;
@@ -59,8 +66,6 @@ public:
 	float moveSpeed;
 	UPROPERTY(VisibleAnywhere)
 	bool canMove = false;
-	UPROPERTY(VisibleAnywhere)
-	bool hasTarget = false;
 	UPROPERTY(VisibleAnywhere)
 	bool canActivateLineTraceEffect = false;
 	UPROPERTY(VisibleAnywhere)
@@ -90,6 +95,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void Init();
 	void SelfMove(const FVector& _actorForwardVector);
 	void SetCanMove(bool _value);
 	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
@@ -103,10 +109,10 @@ public:
 	UFUNCTION() void CheckTravelledDistance(const float& _maxDistance);
 	UFUNCTION() void SetMaxDistance(const float& _maxDistance) { maxDistance = _maxDistance; }
 	UFUNCTION() void SetCanActivateLineTraceEffect();
-	UFUNCTION() void SetCanCheckDistance() { hasTarget = true; }
 	UFUNCTION() void FindEndLocation();
 	UFUNCTION() void CheckDistance(FVector& _targetLocation);
-	
+	UFUNCTION() void CallLineTraceDisplacement();
+
 	void CheckIfHit();
 	
 
