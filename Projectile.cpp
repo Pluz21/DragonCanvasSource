@@ -49,7 +49,6 @@ void AProjectile::Tick(float DeltaTime)
 	CheckDistance(targetLocation);
 	SelfMove(forwardVector);
 	moveCompo->Rotate();
-	CheckTravelledDistance(maxDistance);
 	// or call 
 	//moveCompo->Move();
 
@@ -107,23 +106,7 @@ void AProjectile::SelfDestruct()
 
 }
 
-void AProjectile::CheckTravelledDistance(const float& _maxDistance)
-{
 
-	FVector _currentLocation = GetActorLocation();
-	float travelledDistance = FVector::Dist(_currentLocation, actorSpawnLocation);
-	//UE_LOG(LogTemp, Warning, TEXT("TRAVELLED %f "), travelledDistance);
-
-	if (travelledDistance > _maxDistance)    //Thats why it activates retro-actively
-	{
-		canActivateLineTraceEffect = true;
-		//UE_LOG(LogTemp, Warning, TEXT("canActivateLineTraceEffect TRUE"));
-		ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
-		_dragonRef->GetOnProjectileReachedTarget().Broadcast();
-		
-	}
-	//canActivateLineTraceEffect = false;
-}
 
 
 

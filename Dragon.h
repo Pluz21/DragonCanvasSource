@@ -123,6 +123,14 @@ public:
 	float minDistanceToSelfDestruct;
 	UPROPERTY(EditAnywhere)
 	bool canSelfDestruct = false;
+	
+	UPROPERTY(EditAnywhere)
+	float currentTime = 0;
+	UPROPERTY(EditAnywhere)
+	float maxTime = 2;
+	
+	UPROPERTY(EditAnywhere)
+	bool canStartAlphaCount = false;
 
 	//Actions
 	UPROPERTY(EditAnywhere, Category = "LineTrace")
@@ -177,4 +185,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void UpdateMinDistanceToSelfDestruct();
+
+	void SetStartAlphaCount();
+	float IncreaseTime(float _current, float _max);
+	FVector Lerperoo(const FVector& _start, const FVector& _end);
 };
