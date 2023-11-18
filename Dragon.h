@@ -110,17 +110,21 @@ public:
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<ECollisionChannel> _coneTraceChannel;
 
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY(EditAnywhere, Category = "LineTrace")
 	float sphereTracedistance = 3000;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "LineTrace")
 	float coneTraceRadius = 300;
+	
 	UPROPERTY(EditAnywhere)
 	float minDistanceToSelfDestruct;
-
 	UPROPERTY(EditAnywhere)
 	bool canSelfDestruct = false;
 
+	//Actions
+	UPROPERTY(EditAnywhere, Category = "LineTrace")
+	float lineTraceEffectMultiplier = 200;
 	
 
 

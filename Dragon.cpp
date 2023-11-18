@@ -245,7 +245,7 @@ void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult
 	UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
 	AActor* _hitActor = _hitResult.GetActor();
 	//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(-_hitActor->GetActorForwardVector() * 200);
-	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(GetActorForwardVector() * 20);
+	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(GetActorForwardVector() * lineTraceEffectMultiplier);
 	_hitResult.GetActor()->SetActorLocation(_displacedLocation);
 	//UE_LOG(LogTemp, Warning, TEXT("CALLED LINETRACEDISPLACEMENT"));
 

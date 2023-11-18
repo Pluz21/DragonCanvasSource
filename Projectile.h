@@ -79,6 +79,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float maxDistance = 100000;
+	
 	UPROPERTY(EditAnywhere)
 	float lineTraceDistance;
 	UPROPERTY(EditAnywhere)

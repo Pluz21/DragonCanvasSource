@@ -35,7 +35,6 @@ void AProjectile::BeginPlay()
 	onTargetReached.AddDynamic(this, &AProjectile::CallLineTraceDisplacement);
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
 	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
-
 	Init();
 }
 
@@ -44,7 +43,6 @@ void AProjectile::BeginPlay()
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UE_LOG(LogTemp, Error, TEXT("CanActivateLineTraceBool : %d"), canActivateLineTraceEffect);
 
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
 	CheckDistance(targetLocation);
@@ -142,7 +140,7 @@ void AProjectile::FindEndLocation()
 {
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	//targetLocation = _dragonRef->GetProjectileTargetLocation();
-	lineTraceDistance = _dragonRef->GetSphereTraceDistance();
+	//lineTraceDistance = _dragonRef->GetSphereTraceDistance();
 	minDistanceToSelfDestruct = _dragonRef->GetMinDistanceToSelfDestruct();
 	//UE_LOG(LogTemp, Warning, TEXT("targetlocaiton is %s"), *targetLocation.ToString());
 	onTargetAcquired.Broadcast();
