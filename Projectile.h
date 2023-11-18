@@ -97,6 +97,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void Init();
+	UFUNCTION()
+	void ManageOverlap(AActor* _overlapped, AActor* _overlap);
 	void SelfMove(const FVector& _actorForwardVector);
 	void SetCanMove(bool _value);
 	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
@@ -109,12 +111,10 @@ public:
 	UFUNCTION() void SetLaunchTime() {launchTime = GetWorld()->GetTimeSeconds();}
 	UFUNCTION() void CheckTravelledDistance(const float& _maxDistance);
 	UFUNCTION() void SetMaxDistance(const float& _maxDistance) { maxDistance = _maxDistance; }
-	UFUNCTION() void SetCanActivateLineTraceEffect();
 	UFUNCTION() void FindEndLocation();
 	UFUNCTION() void CheckDistance(FVector& _targetLocation);
 	UFUNCTION() void CallLineTraceDisplacement();
 
-	void CheckIfHit();
 	
 
 

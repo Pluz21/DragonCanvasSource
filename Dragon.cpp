@@ -140,8 +140,8 @@ void ADragon::FireBreath()
 	FRotator _rotation;
 	playerController->GetPlayerViewPoint(_location,_rotation);
 	FVector _fwdVector = _rotation.Vector();
+	locationOnLineTraceSpawn = _fwdVector;
 
-	FVector _forwardVector = _rotation.Vector();
 	DebugText("Doing Action");
 	if (!(projectileToSpawn))
 	{
@@ -229,12 +229,12 @@ void ADragon::SphereTrace()
 		_coneTraceChannel, _collisionParams
 	);
 	hitResult = _hitResult;
-	if (_hit)
+	/*if (_hit)
 	{
-		LineTraceDisplacement(world, _hitResult);
+		StartLineTraceAction();
 
 
-	}
+	}*/
 }
 
 void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult)
@@ -245,9 +245,9 @@ void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult
 	UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
 	AActor* _hitActor = _hitResult.GetActor();
 	//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(-_hitActor->GetActorForwardVector() * 200);
-	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(GetActorForwardVector() * lineTraceEffectMultiplier);
+	//working displacement
+	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(locationOnLineTraceSpawn * lineTraceEffectMultiplier);
 	_hitResult.GetActor()->SetActorLocation(_displacedLocation);
-	//UE_LOG(LogTemp, Warning, TEXT("CALLED LINETRACEDISPLACEMENT"));
 
 }
 void ADragon::StartLineTraceAction()

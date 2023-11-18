@@ -98,6 +98,8 @@ public:
 	FVector spawnedInitialLocation;
 	UPROPERTY(EditAnywhere)
 	FVector targetLocation; 
+	UPROPERTY(EditAnywhere)
+	FVector locationOnLineTraceSpawn; 
 	
 	//camera
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

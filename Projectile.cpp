@@ -32,6 +32,7 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	OnActorBeginOverlap.AddDynamic(this, &AProjectile::ManageOverlap);
 	onTargetReached.AddDynamic(this, &AProjectile::CallLineTraceDisplacement);
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
 	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
@@ -49,7 +50,6 @@ void AProjectile::Tick(float DeltaTime)
 	SelfMove(forwardVector);
 	moveCompo->Rotate();
 	CheckTravelledDistance(maxDistance);
-	//SetCanActivateLineTraceEffect();
 	// or call 
 	//moveCompo->Move();
 
@@ -67,16 +67,21 @@ void AProjectile::Init()
 	//SetLifeSpan(lifeSpan);
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
 
+}
+
+void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
+{
+	if (_overlap && (_overlap != this) && _overlap->ActorHasTag("ProjectileDestroyer"))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING"));
+		onTargetReached.Broadcast();
+	}
+	else 
+		UE_LOG(LogTemp, Warning, TEXT("FAILED OVERLAPCALL"));
 
 }
-void AProjectile::CheckIfHit()
-{
-	/*if (coneLineTraceCompo->GetCanSelfDestruct())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("CanSelfDestruct!"));
-		onTargetReached.Broadcast();
-	}*/
-}
+
+
 
 void AProjectile::SelfMove(const FVector& _actorForwardVector)
 {
@@ -86,13 +91,6 @@ void AProjectile::SelfMove(const FVector& _actorForwardVector)
 	onCanMove.Broadcast();
 	}
 
-	/*if (canMove)
-	{
-
-	FVector _direction = GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
-	SetActorLocation(_direction);
-	onCanMove.Broadcast();
-	}*/
 }
 
 void AProjectile::SetCanMove(bool _value)
@@ -123,18 +121,10 @@ void AProjectile::CheckTravelledDistance(const float& _maxDistance)
 		_dragonRef->GetOnProjectileReachedTarget().Broadcast();
 		
 	}
-	canActivateLineTraceEffect = false;
+	//canActivateLineTraceEffect = false;
 }
 
-void AProjectile::SetCanActivateLineTraceEffect()
-{
-	/*if (CheckTravelledDistance(true))
-	{
 
-		canActivateLineTraceEffect = true;
-		UE_LOG(LogTemp, Warning, TEXT("CANACTIVATECALLED"));
-	}*/
-}
 
 void AProjectile::FindEndLocation()
 {
@@ -153,10 +143,10 @@ void AProjectile::CheckDistance(FVector& _targetLocation)
 	{*/
 
 	float _distanceToLineTraceEndLocation = FVector::Dist(GetActorLocation(), _targetLocation);
+	
 	//UE_LOG(LogTemp, Warning, TEXT("targetLocation : %s"), *targetLocation.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("distance : %f"), _distanceToLineTraceEndLocation);
-	//UE_LOG(LogTemp, Error, TEXT("lineTraceDistance : %f"), lineTraceDistance);
-	if (_distanceToLineTraceEndLocation <= minDistanceToSelfDestruct)
+
+	if (_distanceToLineTraceEndLocation <= minDistanceToSelfDestruct)// || Overlapped )
 	{
 		onTargetReached.Broadcast(); // Calling destruct
 	}
@@ -164,9 +154,9 @@ void AProjectile::CheckDistance(FVector& _targetLocation)
 }
 
 void AProjectile::CallLineTraceDisplacement()
-{	UE_LOG(LogTemp, Error, TEXT("LineTraceEventcalled"));
+{	
 
-	canActivateLineTraceEffect = true;
+	//canActivateLineTraceEffect = true;
 
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	_dragonRef->StartLineTraceAction();
