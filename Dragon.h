@@ -155,9 +155,6 @@ protected:
 
 	//Debug
 	void SphereTrace();
-	// camera
-	void SetMaximumPitch();
-
 	// attack compo needs
 	
 	//Projectile

@@ -39,9 +39,7 @@ ADragon::ADragon()
 void ADragon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	/*LerpAlphaProgress();
-	UE_LOG(LogTemp, Warning, TEXT("%f"), lerpAlpha);*/
-	IncreaseTime(currentTime,maxTime);
+	
 
 
 	
@@ -168,6 +166,7 @@ void ADragon::FireBreath()
 		//float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
 
 		//GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
+		
 		// TODO call only one main function in projectile;
 		_spawnedProjectile->SetLaunchTime();
 		_spawnedProjectile->SetMaxDistance(sphereTracedistance-100);
@@ -238,19 +237,13 @@ void ADragon::SphereTrace()
 		_coneTraceChannel, _collisionParams
 	);
 	hitResult = _hitResult;
-	/*if (_hit)
-	{
-		StartLineTraceAction();
-
-
-	}*/
+	
 }
 
 void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult)
 {
 	//if (!_hitResult.GetActor() || !_hitResult.GetActor()->IsValidLowLevelFast())return;
-	SetStartAlphaCount();
-	if (!canStartAlphaCount)return;
+
 	if (!IsValid(_hitResult.GetActor()))return;
 	DrawDebugSphere(_world, _hitResult.Location, 10, 20, FColor::Cyan, true, -1, 0, 3);
 	UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
@@ -258,21 +251,15 @@ void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult
 	FVector _hitActorLocation = _hitActor->GetActorLocation();
 	//working displacement
 	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(locationOnLineTraceSpawn * lineTraceEffectMultiplier);
-	float _delta = GetWorld()->DeltaTimeSeconds;
-	float _speed = _delta * 50;
-	FVector _direction = (_displacedLocation - _hitActorLocation);
-	FVector _newLocation = _hitActorLocation + _direction * _speed;
-
-	
-	_hitResult.GetActor()->SetActorLocation(Lerperoo(_hitActorLocation, _displacedLocation));
+	_hitResult.GetActor()->SetActorLocation(_displacedLocation);
 
 	// Desutrction tag
 	if (_hitActor->ActorHasTag("ExplodeOnProjectileHit"))
 	{
 
-		UE_LOG(LogTemp, Error, TEXT("BLOWING UP"), *_hitResult.GetActor()->GetName())
+		UE_LOG(LogTemp, Warning, TEXT("BLOWING UP"), *_hitResult.GetActor()->GetName())
 		_hitActor->Destroy();
-		//
+		
 	}
 }
 void ADragon::StartLineTraceAction()
@@ -281,15 +268,14 @@ void ADragon::StartLineTraceAction()
 	UE_LOG(LogTemp, Warning, TEXT("DRAGON EVENT CALLED THROUGH  PROJECTILE"));
 
 }
-void ADragon::SetMaximumPitch()
-{
-	
-}
+
 
 
 
 void ADragon::DebugText(FString _string)
 {
+	UE_LOG(LogTemp, Warning, TEXT("%s"),*_string);
+
 }
 
 
@@ -316,30 +302,39 @@ void ADragon::UpdateMinDistanceToSelfDestruct()
 	minDistanceToSelfDestruct = coneTraceRadius / 2;
 }
 
-void ADragon::SetStartAlphaCount()
-{
-	canStartAlphaCount = true;
-}
-
-float ADragon::IncreaseTime(float _current, float _max)
-	{
-	if (!canStartAlphaCount)return _current;
-	_current += GetWorld()->DeltaTimeSeconds;
-		if (_current >= _max)
-		{
-			_current = 0;
-			return _current;
-		}
-		return _current;
-	}
 
 
-FVector ADragon::Lerperoo(const FVector& _start, const FVector& _end)
-{
-	FVector _lerpVector = UKismetMathLibrary::VLerp(_start, _end, currentTime / maxTime);
-	currentTime = IncreaseTime(currentTime, maxTime);
-	return _lerpVector;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//float ADragon::IncreaseTime(float _current, float _max)
+//	{
+//	//if (!canStartAlphaCount)return _current;
+//	_current += GetWorld()->DeltaTimeSeconds;
+//		if (_current >= _max)
+//		{
+//			_current = 0;
+//
+//			return _current;
+//		}
+//		return _current;
+//	}
+
+
 
 
 
