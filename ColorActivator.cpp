@@ -32,6 +32,9 @@ void AColorActivator::Tick(float DeltaTime)
 void AColorActivator::ManageOverlap(AActor* _overlap, AActor* _overlapped)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Overlapping"));
-
+	if (!_overlap || !_overlapped) return;
+	UStaticMeshComponent* _targetMesh = _overlap->GetComponentByClass<UStaticMeshComponent>();
+	
+	//_targetMesh->SetMaterial(matToApply);
 }
 
