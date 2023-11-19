@@ -14,6 +14,11 @@ class DRAGONCANVAS_API AColorActivator : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AColorActivator();
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> meshCompo;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialInstance> matToApply;
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,5 +27,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void ManageOverlap(AActor* _overlap, AActor* _overlapped);
 
 };
