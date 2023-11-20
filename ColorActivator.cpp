@@ -29,12 +29,21 @@ void AColorActivator::Tick(float DeltaTime)
 
 }
 
-void AColorActivator::ManageOverlap(AActor* _overlap, AActor* _overlapped)
+void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapping"));
+	UE_LOG(LogTemp, Warning, TEXT("Overlapping with "));
 	if (!_overlap || !_overlapped) return;
 	UStaticMeshComponent* _targetMesh = _overlap->GetComponentByClass<UStaticMeshComponent>();
+	UMaterialInterface* _targetMatInterface =  _targetMesh->GetMaterial(0);
+	UMaterial* _targetMat = _targetMatInterface->GetMaterial();
+	_targetMesh->SetMaterial(0,matToApply);
 	
-	//_targetMesh->SetMaterial(matToApply);
+	//_targetMat->SetMaterial(matToApply);
+}
+
+void AColorActivator::GiveColor()
+{
+
+
 }
 

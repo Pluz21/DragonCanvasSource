@@ -29,5 +29,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
 	void ManageOverlap(AActor* _overlap, AActor* _overlapped);
+	void GiveColor();
 
 };
