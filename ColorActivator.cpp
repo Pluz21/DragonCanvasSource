@@ -2,6 +2,10 @@
 
 
 #include "ColorActivator.h"
+#include "Dragon.h"
+#include "Kismet/GameplayStatics.h"
+#include "Projectile.h"
+
 
 // Sets default values
 AColorActivator::AColorActivator()
@@ -19,6 +23,7 @@ void AColorActivator::BeginPlay()
 {
 	Super::BeginPlay();
 	OnActorBeginOverlap.AddDynamic(this, &AColorActivator::ManageOverlap);
+	Init();
 	
 }
 
@@ -27,7 +32,15 @@ void AColorActivator::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
 }
+void AColorActivator::Init()
+{
+	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
+	TSubclassOf<AProjectile> _projectileRef = _dragonRef->GetProjectileToSpawn();
+	dragonProjectileRef = _projectileRef;
+}
+
 
 void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
@@ -37,13 +50,23 @@ void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	UMaterialInterface* _targetMatInterface =  _targetMesh->GetMaterial(0);
 	UMaterial* _targetMat = _targetMatInterface->GetMaterial();
 	_targetMesh->SetMaterial(0,matToApply);
+	GiveColor();
+
 	
 	//_targetMat->SetMaterial(matToApply);
 }
 
 void AColorActivator::GiveColor()
 {
+	if (!dragonProjectileRef)return;
+	AProjectile* _projectileRef = dragonProjectileRef.GetDefaultObject();
+	
+	 UStaticMeshComponent* _projectileMesh = _projectileRef->
+					GetComponentByClass<UStaticMeshComponent>();
 
+	 UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
+	 _projectileMesh->SetMaterial(0,matToApply);
 
 }
+
 

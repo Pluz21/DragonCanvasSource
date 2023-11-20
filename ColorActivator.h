@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ColorActivator.generated.h"
-
+class AProjectile;
+class ADragon;
 UCLASS()
 class DRAGONCANVAS_API AColorActivator : public AActor
 {
@@ -14,6 +15,8 @@ class DRAGONCANVAS_API AColorActivator : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AColorActivator();
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> dragonProjectileRef;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
 
@@ -31,4 +34,5 @@ public:
 	void ManageOverlap(AActor* _overlap, AActor* _overlapped);
 	void GiveColor();
 
+	void Init();
 };
