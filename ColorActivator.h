@@ -21,6 +21,10 @@ public:
 	TObjectPtr<UStaticMeshComponent> meshCompo;
 
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> projectileMeshRef;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterial> projectileMatRef;
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialInstance> matToApply;
 
 protected:
