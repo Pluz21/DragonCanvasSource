@@ -14,6 +14,8 @@
 
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
+
 
 
 // Sets default values
@@ -138,11 +140,9 @@ void ADragon::Action()
 void ADragon::FireBreath()
 {
 
-	spawnPointLocation = spawnPoint->GetComponentLocation();
-	//FVector _fwdVector = GetActorForwardVector();
-	
+	spawnPointLocation = spawnPoint->GetComponentLocation();	
 	FVector _location;
-	FRotator _rotation;
+	FRotator _rotation;					
 	playerController->GetPlayerViewPoint(_location,_rotation);
 	FVector _fwdVector = _rotation.Vector();
 	locationOnLineTraceSpawn = _fwdVector;
@@ -153,43 +153,21 @@ void ADragon::FireBreath()
 		GEngine->AddOnScreenDebugMessage(1, 0.5, FColor::Black, TEXT("Empty subclass projectile"));
 		return;
 	}
-	//AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,this);
 	if (!projectileToSpawn)return;
+
 	AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, spawnPointLocation, FRotator::ZeroRotator);
 	if (!_spawnedProjectile)return;
+	_spawnedProjectile->
 		projectileManager->AddItem(_spawnedProjectile);
 	float _size = projectileManager->GetAllProjectilesSize();
 	for (int i = 0; i < _size; i++)
 	{
-		//float EstimatedTravelTime = 
-		//	DistanceTraveled / MoveSpeed;
-		//float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
-
-		//GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
 		
-		// TODO call only one main function in projectile;
 		_spawnedProjectile->SetLaunchTime();
 		_spawnedProjectile->SetMaxDistance(sphereTracedistance-100);
-		//UE_LOG(LogTemp, Warning, TEXT("MaxDistance : %f"), _spawnedProjectile->maxDistance);
-
 		_spawnedProjectile->SetTargetLocation(targetLocation);
 		_spawnedProjectile->SetForwardVector(_fwdVector);
 		_spawnedProjectile->SetCanMove(true);
-		_spawnedProjectile->SetOwner(this);
-		
-		//TO DO 
-
-		//{
-		//	// Perform your line trace and set HitLocation and bLineTraceHit accordingly
-		//	// ...
-
-		//	// Calculate delay based on the estimated travel time
-		//	float EstimatedTravelTime = DistanceTraveled / MoveSpeed;
-		//	float DelayTime = FMath::Max(0.0f, EstimatedTravelTime - (GetWorld()->GetTimeSeconds() - LaunchTime));
-
-		//	// Start a timer to apply the effect after a delay
-		//	GetWorld()->GetTimerManager().SetTimer(EffectTimerHandle, this, &YourClass::ApplyEffect, DelayTime, false);
-		//}
 
 	}
 	
@@ -244,23 +222,23 @@ void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult
 {
 	//if (!_hitResult.GetActor() || !_hitResult.GetActor()->IsValidLowLevelFast())return;
 
-	if (!IsValid(_hitResult.GetActor()))return;
-	DrawDebugSphere(_world, _hitResult.Location, 10, 20, FColor::Cyan, true, -1, 0, 3);
-	UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
-	AActor* _hitActor = _hitResult.GetActor();
-	FVector _hitActorLocation = _hitActor->GetActorLocation();
-	//working displacement
-	FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(locationOnLineTraceSpawn * lineTraceEffectMultiplier);
-	_hitResult.GetActor()->SetActorLocation(_displacedLocation);
+	//if (!IsValid(_hitResult.GetActor()))return;
+	//DrawDebugSphere(_world, _hitResult.Location, 10, 20, FColor::Cyan, true, -1, 0, 3);
+	//UE_LOG(LogTemp, Error, TEXT("The FireBreath hit: %s"), *_hitResult.GetActor()->GetName());
+	//AActor* _hitActor = _hitResult.GetActor();
+	//FVector _hitActorLocation = _hitActor->GetActorLocation();
+	////working displacement
+	//FVector _displacedLocation = _hitActor->GetActorLocation() + FVector(locationOnLineTraceSpawn * lineTraceEffectMultiplier);
+	//_hitResult.GetActor()->SetActorLocation(_displacedLocation);
 
-	// Desutrction tag
-	if (_hitActor->ActorHasTag("ExplodeOnProjectileHit"))
-	{
+	//// Desutrction tag
+	//if (_hitActor->ActorHasTag("ExplodeOnProjectileHit"))
+	//{
 
-		UE_LOG(LogTemp, Warning, TEXT("BLOWING UP"), *_hitResult.GetActor()->GetName())
-		_hitActor->Destroy();
-		
-	}
+	//	UE_LOG(LogTemp, Warning, TEXT("BLOWING UP"), *_hitResult.GetActor()->GetName())
+	//	_hitActor->Destroy();
+	//	
+	//}
 }
 void ADragon::StartLineTraceAction()
 {

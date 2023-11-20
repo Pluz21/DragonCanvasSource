@@ -33,10 +33,10 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	OnActorBeginOverlap.AddDynamic(this, &AProjectile::ManageOverlap);
-	onTargetReached.AddDynamic(this, &AProjectile::CallLineTraceDisplacement);
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
 	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
 	Init();
+
 }
 
 
@@ -63,6 +63,7 @@ void AProjectile::Init()
 	projectileManager->AddItem(this);
 
 	actorSpawnLocation = GetActorLocation();
+	forwardVector = GetActorForwardVector();
 	//SetLifeSpan(lifeSpan);
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
 
@@ -70,13 +71,27 @@ void AProjectile::Init()
 
 void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
-	if (_overlap && (_overlap != this) && _overlap->ActorHasTag("ProjectileDestroyer"))
+	
+
+	if (_overlap && (_overlap != this)) 
 	{
+		FVector _overlapLocation = _overlap->GetActorLocation();
+		
+		FVector _displacedLocation = _overlapLocation + forwardVector * 200;
+		_overlap->SetActorLocation(_displacedLocation);
 		UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING"));
-		onTargetReached.Broadcast();
+		onTargetReached.Broadcast(); // Calls SelfDestruct
 	}
 	else 
 		UE_LOG(LogTemp, Warning, TEXT("FAILED OVERLAPCALL"));
+
+
+	if (_overlap->ActorHasTag("DestroyProjectileAndSelfDestruct"))
+	{
+		 _overlap->Destroy();
+		onTargetReached.Broadcast(); // Calls SelfDestruct
+	}
+	
 
 }
 
@@ -99,7 +114,7 @@ void AProjectile::SetCanMove(bool _value)
 
 void AProjectile::SelfDestruct()
 {
-	CallLineTraceDisplacement();
+	//CallLineTraceDisplacement();
 	projectileManager->RemoveItem(this);
 	Destroy();
 	UE_LOG(LogTemp, Warning, TEXT("DESTRUCTION"));
@@ -142,8 +157,8 @@ void AProjectile::CallLineTraceDisplacement()
 
 	//canActivateLineTraceEffect = true;
 
-	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
-	_dragonRef->StartLineTraceAction();
+	//ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
+	//_dragonRef->StartLineTraceAction();
 }
 
 
