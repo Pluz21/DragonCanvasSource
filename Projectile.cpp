@@ -73,12 +73,8 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
 	
 
-	if (_overlap && (_overlap != this)) 
+	if (_overlap && (_overlap != this))
 	{
-		FVector _overlapLocation = _overlap->GetActorLocation();
-		
-		FVector _displacedLocation = _overlapLocation + forwardVector * 200;
-		_overlap->SetActorLocation(_displacedLocation);
 		UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING"));
 		onTargetReached.Broadcast(); // Calls SelfDestruct
 	}
@@ -90,6 +86,12 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	{
 		 _overlap->Destroy();
 		onTargetReached.Broadcast(); // Calls SelfDestruct
+	}
+	if (_overlap->ActorHasTag("CanMove"))
+	{
+		FVector _overlapLocation = _overlap->GetActorLocation();
+		FVector _displacedLocation = _overlapLocation + forwardVector * 200;
+		_overlap->SetActorLocation(_displacedLocation);
 	}
 	
 

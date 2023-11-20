@@ -35,7 +35,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
-	void ManageOverlap(AActor* _overlap, AActor* _overlapped);
+	virtual void ManageOverlap(AActor* _overlap, AActor* _overlapped);
 	void GiveColor();
 
 	void Init();
