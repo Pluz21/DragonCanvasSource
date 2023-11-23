@@ -44,16 +44,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
-	//UPROPERTY()
-	//TObjectPtr<UConeLineTrace> coneLineTraceCompo;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<AActor> ownerRef;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ADragon> dragonRef;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<AActor> playerRef;
-
+	
+	
 
 	UPROPERTY(VisibleAnywhere)
 	UWorld* myWorld;
