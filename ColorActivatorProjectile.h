@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ColorActivator.h"
 #include "ColorActivatorProjectile.generated.h"
 
 UCLASS()
-class DRAGONCANVAS_API AColorActivatorProjectile : public AColorActivator
+class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> meshCompo;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -18,10 +19,12 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	virtual void BeginPlay();
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	virtual void ManageOverlap(AActor* _overlap, AActor* _overlapped) override;
+	virtual void Tick(float DeltaTime);
+	UFUNCTION()
+	void ManageOverlap(AActor* overlapped, AActor* _overlap);
+	void ReceiveColor(AActor* _projectile);
 };
