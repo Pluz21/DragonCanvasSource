@@ -21,7 +21,7 @@ void AColorActivatorProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	OnActorBeginOverlap.AddDynamic(this, &AColorActivatorProjectile::ManageOverlap);
-
+	initialMat = meshCompo->CreateDynamicMaterialInstance(0);
 	
 }
 
@@ -48,6 +48,19 @@ void AColorActivatorProjectile::ReceiveColor(AActor* _projectile)
 	UMaterialInterface* _projectileMat = _projectileMesh->GetMaterial(0);
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *_projectileMat->GetName());
 	meshCompo->SetMaterial(0, _projectileMat);
+
 }
+//}void AColorActivatorProjectile::ReceiveColor()
+//{
+//	/*UStaticMeshComponent* _projectileMesh = _projectile->GetComponentByClass < UStaticMeshComponent >();
+//	UMaterialInterface* _projectileMat = _projectileMesh->GetMaterial(0);
+//	UE_LOG(LogTemp, Warning, TEXT("%s"), *_projectileMat->GetName());
+//	meshCompo->SetMaterial(0, _projectileMat);*/
+//
+//
+//	//if (canReceiveColor)
+//	
+//
+//}
 
 

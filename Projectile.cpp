@@ -82,7 +82,7 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 		UE_LOG(LogTemp, Warning, TEXT("FAILED OVERLAPCALL"));
 
 
-	if (_overlap->ActorHasTag("DestroyProjectileAndSelfDestruct"))
+	if (_overlap->ActorHasTag("Destroy"))
 	{
 		 _overlap->Destroy();
 		onTargetReached.Broadcast(); // Calls SelfDestruct

@@ -12,7 +12,15 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
-	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialInstance> initialMat;
+
+	UPROPERTY(EditAnywhere)
+	float InterpolationSpeed = 0.5f;
+	UPROPERTY(EditAnywhere)
+	float TargetParameterValue = 1.0f;
+	UPROPERTY(EditAnywhere)
+	bool canReceiveColor = false;
 public:	
 	// Sets default values for this actor's properties
 	AColorActivatorProjectile();
