@@ -12,6 +12,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Grabber.h"
+
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -28,10 +31,14 @@ ADragon::ADragon()
 	spawnPoint = CreateDefaultSubobject<USceneComponent>("SpawnPoint");
 	springArm = CreateDefaultSubobject<USpringArmComponent>("Springarm");
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
+	grabber = CreateDefaultSubobject<UGrabber>("Grabber");
+	physicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>("PhysicsHandle");
 	
 	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
+	AddOwnedComponent(grabber);
+	AddOwnedComponent(physicsHandle);
 	
 
 }

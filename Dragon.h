@@ -8,10 +8,14 @@
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+
+
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Dragon.generated.h"
 
+class UGrabber;
 class ACustomGameMode;
 class AProjectileManager;
 class AProjectile;
@@ -55,6 +59,12 @@ public:
 	TObjectPtr<APlayerController> playerController;
 	UPROPERTY(EditAnywhere)
 	FHitResult hitResult;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UGrabber> grabber;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UPhysicsHandleComponent> physicsHandle;
+
 
 	
 	// inputs
