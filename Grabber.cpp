@@ -105,13 +105,18 @@ void UGrabber::Grab()
 
 void UGrabber::Hold()
 {
-	if (isGrabbing == true )
+	//if (isGrabbing == true )
+	if(physicsHandle && physicsHandle->GetGrabbedComponent())
 	{
 		AActor* _hitActor = hitResult.GetActor();
 		if (!_hitActor)return;
-		FVector _targetHitActorLocation = GetOwner()->GetActorLocation() +
-			GetOwner()->GetActorForwardVector() * holdDistance;
-		_hitActor->SetActorLocation(_targetHitActorLocation);
+		/*FVector _targetHitActorLocation = GetOwner()->GetActorLocation() +  // SELF  BOOSTING RETRO
+			GetOwner()->GetActorForwardVector();*/		
+			FVector _targetHitActorLocation = GetOwner()->GetActorLocation() +  // SELF  BOOSTING RETRO
+			GetOwner()->GetActorForwardVector() * maxGrabDistance;
+			physicsHandle->SetTargetLocationAndRotation(_targetHitActorLocation,
+				GetOwner()->GetActorRotation());
+		//_hitActor->SetActorLocation(_targetHitActorLocation);
 		UE_LOG(LogTemp, Warning, TEXT("Moving HitActor: %s to: %s"), *_hitActor->GetName(), *_targetHitActorLocation.ToString());
 		DrawDebugSphere(GetWorld(), _targetHitActorLocation, 50, 10, FColor::Emerald);
 	}

@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float maxGrabDistance = 600;
 	UPROPERTY(EditAnywhere)
-	float holdDistance = 200;
+	float holdDistance = 400;
 	UPROPERTY(EditAnywhere)
 	FVector targetLocation = FVector(0);
 	UPROPERTY(EditAnywhere)
