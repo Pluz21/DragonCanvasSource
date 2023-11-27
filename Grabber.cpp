@@ -84,43 +84,64 @@ void UGrabber::Grab()
 	
 	bool _hasHit = FindTargetInReach(_hitResult);
 	hitResult = _hitResult;
-	if (!_hasHit) return;
+	if (!_hasHit)
+	{
+		Release();
+
+		return;
+	}
 	UPrimitiveComponent* _hitComponent = _hitResult.GetComponent();
 	hitComponent = _hitComponent;
 	_hitComponent->WakeAllRigidBodies();
 	_hitComponent->SetSimulatePhysics(true);   // might need to be actor
 	if (!_hitResult.GetActor()->ActorHasTag("Grabbed"))
+	{
 	_hitResult.GetActor()->Tags.Add("Grabbed");
-
+	}
+	SetIsGrabbing();
 	_hitResult.GetActor()->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	physicsHandle->GrabComponentAtLocationWithRotation(
 		_hitComponent, NAME_None,		// might need to be actor
 		_hitResult.ImpactPoint,
 		_hitComponent->GetComponentRotation());
-	if(!isGrabbing)
-		isGrabbing = true;
-	Hold();
+	
+
+
 
 }
 
 void UGrabber::Hold()
 {
-	//if (isGrabbing == true )
+	if (!isGrabbing)return;
 	if(physicsHandle && physicsHandle->GetGrabbedComponent())
 	{
-		AActor* _hitActor = hitResult.GetActor();
-		if (!_hitActor)return;
-		/*FVector _targetHitActorLocation = GetOwner()->GetActorLocation() +  // SELF  BOOSTING RETRO
-			GetOwner()->GetActorForwardVector();*/		
-			FVector _targetHitActorLocation = GetOwner()->GetActorLocation() +  // SELF  BOOSTING RETRO
-			GetOwner()->GetActorForwardVector() * maxGrabDistance;
-			physicsHandle->SetTargetLocationAndRotation(_targetHitActorLocation,
+		
+			FVector _targetLocation = GetOwner()->GetActorLocation() +  // SELF  BOOSTING RETRO
+			GetOwner()->GetActorForwardVector() * holdDistance;
+			physicsHandle->SetTargetLocationAndRotation(_targetLocation,
 				GetOwner()->GetActorRotation());
-		//_hitActor->SetActorLocation(_targetHitActorLocation);
-		UE_LOG(LogTemp, Warning, TEXT("Moving HitActor: %s to: %s"), *_hitActor->GetName(), *_targetHitActorLocation.ToString());
-		DrawDebugSphere(GetWorld(), _targetHitActorLocation, 50, 10, FColor::Emerald);
+		DrawDebugSphere(GetWorld(), _targetLocation, 50, 10, FColor::Emerald);
 	}
 		
+}
+
+void UGrabber::Release()
+{
+
+	if (physicsHandle && physicsHandle->GetGrabbedComponent() && isGrabbing == true)
+	{
+		physicsHandle->GetGrabbedComponent()->WakeAllRigidBodies();
+		AActor* _heldActor = physicsHandle->GetGrabbedComponent()->GetOwner();
+		_heldActor->Tags.Remove("Grabbed");
+		physicsHandle->ReleaseComponent();
+		SetIsGrabbing();
+	}
+
+}
+
+void UGrabber::SetIsGrabbing()
+{
+	isGrabbing = !isGrabbing;
 }
 
 

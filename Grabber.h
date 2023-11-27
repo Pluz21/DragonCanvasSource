@@ -49,6 +49,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Grab();
 	void Hold();
+	void Release();
+	UFUNCTION(BlueprintCallable)
+	void SetIsGrabbing();
 
 	void test();
 		
