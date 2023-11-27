@@ -3,6 +3,7 @@
 
 #include "Grabber.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
+#include <DrawDebugHelpers.h>
 
 
 // Sets default values for this component's properties
@@ -30,7 +31,7 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+	Hold();
 }
 
 
@@ -39,18 +40,30 @@ bool UGrabber::FindTargetInReach(FHitResult& _outHitResult)   //maybe transform 
 {
 	FVector _ownerLocation = GetOwner()->GetActorLocation();
 	//DrawDebugSphere(GetWorld(), _ownerLocation, sphereRadius, 12, FColor::Blue);
-	FVector _targetLocation = _ownerLocation + GetOwner()->GetActorForwardVector() * maxGrabDistance;
+	FVector _cameraNormalDirection =  GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraRotation().Vector();
+	FVector _targetLocation = _ownerLocation + _cameraNormalDirection * maxGrabDistance;
 
 	//DrawDebugSphere(GetWorld(), _targetLocation,
-	//	sphereRadius, 12, FColor::Red, false, -1, 0, 3);	// ...
+	//	sphereRadius, 12, FColor::Red, true, -1, 0, 3);	// ...
 	FQuat _ownerQuat = GetOwner()->GetActorQuat();
 	FRotator _ownerRotation = GetOwner()->GetActorRotation();
-	FCollisionShape _sphere = FCollisionShape::MakeSphere(sphereRadius);
+	FCollisionShape _sphere = FCollisionShape::MakeSphere(20);
+	DrawDebugSphere(GetWorld(), _targetLocation,
+		_sphere.GetSphereRadius(), 12, FColor::Green, false, 1, 0, 3);
+
+
+	FCollisionQueryParams _customParams;
+	_customParams.AddIgnoredActor(GetOwner());
+	
 
 	bool _hit =  GetWorld()->SweepSingleByChannel(_outHitResult, _ownerLocation, // might need to change for more accurate grabbing linetrace
 		_targetLocation,
-		FQuat::Identity, ECC_EngineTraceChannel1,
-		_sphere);
+		FQuat::Identity, ECC_GameTraceChannel2,
+		_sphere, _customParams);
+	if (!_hit)return false;
+	DrawDebugPoint(GetWorld(), _outHitResult.ImpactPoint, 20, FColor::Cyan, false, 5, 0);
+	UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *_outHitResult.GetActor()->GetName());
+
 	targetLocation = _targetLocation;
 	return _hit;
 	
@@ -70,17 +83,41 @@ void UGrabber::Grab()
 	FHitResult _hitResult;
 	
 	bool _hasHit = FindTargetInReach(_hitResult);
+	hitResult = _hitResult;
 	if (!_hasHit) return;
 	UPrimitiveComponent* _hitComponent = _hitResult.GetComponent();
+	hitComponent = _hitComponent;
 	_hitComponent->WakeAllRigidBodies();
 	_hitComponent->SetSimulatePhysics(true);   // might need to be actor
+	if (!_hitResult.GetActor()->ActorHasTag("Grabbed"))
 	_hitResult.GetActor()->Tags.Add("Grabbed");
+
 	_hitResult.GetActor()->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	physicsHandle->GrabComponentAtLocationWithRotation(
 		_hitComponent, NAME_None,		// might need to be actor
 		_hitResult.ImpactPoint,
 		_hitComponent->GetComponentRotation());
+	if(!isGrabbing)
+		isGrabbing = true;
+	Hold();
+
 }
+
+void UGrabber::Hold()
+{
+	if (isGrabbing == true )
+	{
+		AActor* _hitActor = hitResult.GetActor();
+		if (!_hitActor)return;
+		FVector _targetHitActorLocation = GetOwner()->GetActorLocation() +
+			GetOwner()->GetActorForwardVector() * holdDistance;
+		_hitActor->SetActorLocation(_targetHitActorLocation);
+		UE_LOG(LogTemp, Warning, TEXT("Moving HitActor: %s to: %s"), *_hitActor->GetName(), *_targetHitActorLocation.ToString());
+		DrawDebugSphere(GetWorld(), _targetHitActorLocation, 50, 10, FColor::Emerald);
+	}
+		
+}
+
 
 void UGrabber::test()
 {

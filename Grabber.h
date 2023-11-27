@@ -20,12 +20,20 @@ public:
 	UPROPERTY(EditAnywhere)
 	float sphereRadius = 100;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	bool isGrabbing = false;
 	UPROPERTY(EditAnywhere)
 	float maxGrabDistance = 600;
+	UPROPERTY(EditAnywhere)
+	float holdDistance = 200;
 	UPROPERTY(EditAnywhere)
 	FVector targetLocation = FVector(0);
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UPhysicsHandleComponent> physicsHandle;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UPrimitiveComponent> hitComponent;
+	UPROPERTY(EditAnywhere)
+	FHitResult hitResult;
 
 protected:
 	// Called when the game starts
@@ -40,6 +48,7 @@ public:
 	UPhysicsHandleComponent* GetPhysicsHandleComponent();
 	UFUNCTION(BlueprintCallable)
 	void Grab();
+	void Hold();
 
 	void test();
 		
