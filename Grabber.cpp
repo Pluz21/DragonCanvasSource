@@ -116,11 +116,17 @@ void UGrabber::Hold()
 	if(physicsHandle && physicsHandle->GetGrabbedComponent())
 	{
 		
-			FVector _targetLocation = GetOwner()->GetActorLocation() +  // SELF  BOOSTING RETRO
-			GetOwner()->GetActorForwardVector() * holdDistance;
+		//FVector _targetLocation = GetOwner()->GetActorLocation() // SELF  BOOSTING RETRO
+		//	+ GetOwner()->GetActorForwardVector()  * holdDistance;
+			FVector _ownerLocation = GetOwner()->GetActorLocation();
+			//DrawDebugSphere(GetWorld(), _ownerLocation, sphereRadius, 12, FColor::Blue);
+			FVector _cameraNormalDirection = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraRotation().Vector();
+			FVector _targetLocation = _ownerLocation + _cameraNormalDirection * maxGrabDistance;
+		
 			physicsHandle->SetTargetLocationAndRotation(_targetLocation,
 				GetOwner()->GetActorRotation());
-		DrawDebugSphere(GetWorld(), _targetLocation, 50, 10, FColor::Emerald);
+			
+			DrawDebugSphere(GetWorld(), _targetLocation, 50, 10, FColor::Emerald);
 	}
 		
 }
