@@ -44,13 +44,14 @@ void AColorActivator::Init()
 
 void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapping with "));
+	UE_LOG(LogTemp, Warning, TEXT("Overlapping with %s"), *_overlap->GetName());
 	if (!_overlap || !_overlapped) return;
 	/*UStaticMeshComponent* _targetMesh = _overlap->GetComponentByClass<UStaticMeshComponent>();
 	UMaterialInterface* _targetMatInterface =  _targetMesh->GetMaterial(0);
 	UMaterial* _targetMat = _targetMatInterface->GetMaterial();
 	_targetMesh->SetMaterial(0,matToApply);*/
-	if (_overlap->IsA(ADragon::StaticClass()))
+	//if (_overlap->IsA(ADragon::StaticClass()))
+	if (_overlap->IsA(ACharacter::StaticClass()))
 	GiveColor();
 	
 	//_targetMat->SetMaterial(matToApply);
