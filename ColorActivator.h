@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ProjectileTriggerComponent.h"
 #include "ColorActivator.generated.h"
 class AProjectile;
 class ADragon;
+class APickUps;
 UCLASS()
 class DRAGONCANVAS_API AColorActivator : public AActor
 {
@@ -19,6 +21,8 @@ public:
 	TSubclassOf<AProjectile> dragonProjectileRef;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UProjectileTriggerComponent> triggerCompo;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> projectileMeshRef;
@@ -35,7 +39,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
-	void ManageOverlap(AActor* _overlapped, AActor* _overlap);
+	virtual void ManageOverlap(AActor* _overlapped, AActor* _overlap);
 	void GiveColor();
 
 	void Init();

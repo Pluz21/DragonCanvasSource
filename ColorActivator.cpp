@@ -3,6 +3,8 @@
 
 #include "ColorActivator.h"
 #include "Dragon.h"
+#include "PickUps.h"
+#include "ProjectileTriggerComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
 
@@ -13,9 +15,9 @@ AColorActivator::AColorActivator()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("meshCompo");
-
+	triggerCompo = CreateDefaultSubobject<UProjectileTriggerComponent>("trigger");
 	meshCompo->SetupAttachment(RootComponent);
-
+	AddOwnedComponent(triggerCompo);
 }
 
 // Called when the game starts or when spawned
@@ -39,20 +41,25 @@ void AColorActivator::Init()
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	TSubclassOf<AProjectile> _projectileRef = _dragonRef->GetProjectileToSpawn();
 	dragonProjectileRef = _projectileRef;
+	
 }
 
 
 void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapping with %s"), *_overlap->GetName());
 	if (!_overlap || !_overlapped) return;
 	/*UStaticMeshComponent* _targetMesh = _overlap->GetComponentByClass<UStaticMeshComponent>();
 	UMaterialInterface* _targetMatInterface =  _targetMesh->GetMaterial(0);
 	UMaterial* _targetMat = _targetMatInterface->GetMaterial();
 	_targetMesh->SetMaterial(0,matToApply);*/
 	//if (_overlap->IsA(ADragon::StaticClass()))
-	if (_overlap->IsA(ACharacter::StaticClass()))
+	if (_overlap->IsA(APickUps::StaticClass()) && _overlap->ActorHasTag("Grabbed"))
+	{
+	UE_LOG(LogTemp, Warning, TEXT("Overlapping with %s"), *_overlap->GetName());
 	GiveColor();
+	triggerCompo->SnapTarget(_overlap);
+	//ProjectileTriggerComponent->Activate 
+	}
 	
 	//_targetMat->SetMaterial(matToApply);
 }

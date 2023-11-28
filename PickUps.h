@@ -10,6 +10,8 @@ UCLASS()
 class DRAGONCANVAS_API APickUps : public AActor
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> meshCompo;
 	
 public:	
 	// Sets default values for this actor's properties

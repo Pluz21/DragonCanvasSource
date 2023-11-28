@@ -128,7 +128,7 @@ void UGrabber::Hold()
 			FVector _ownerLocation = GetOwner()->GetActorLocation();
 			//DrawDebugSphere(GetWorld(), _ownerLocation, sphereRadius, 12, FColor::Blue);
 			FVector _cameraNormalDirection = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraRotation().Vector();
-			FVector _targetLocation = _ownerLocation + _cameraNormalDirection * maxGrabDistance;
+			FVector _targetLocation = _ownerLocation + _cameraNormalDirection * holdDistance;
 		
 			physicsHandle->SetTargetLocationAndRotation(_targetLocation,
 				GetOwner()->GetActorRotation());
