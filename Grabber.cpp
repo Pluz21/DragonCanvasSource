@@ -80,6 +80,7 @@ UPhysicsHandleComponent* UGrabber::GetPhysicsHandleComponent()
 void UGrabber::Grab()
 {
 
+	
 	FHitResult _hitResult;
 	
 	bool _hasHit = FindTargetInReach(_hitResult);
@@ -90,6 +91,11 @@ void UGrabber::Grab()
 
 		return;
 	}
+	if (hitResult.GetActor()->ActorHasTag("Grabbed"))
+	{
+		SetIsGrabbing();
+		return;
+	}
 	UPrimitiveComponent* _hitComponent = _hitResult.GetComponent();
 	hitComponent = _hitComponent;
 	_hitComponent->WakeAllRigidBodies();
@@ -98,12 +104,13 @@ void UGrabber::Grab()
 	{
 	_hitResult.GetActor()->Tags.Add("Grabbed");
 	}
-	SetIsGrabbing();
 	_hitResult.GetActor()->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	physicsHandle->GrabComponentAtLocationWithRotation(
 		_hitComponent, NAME_None,		// might need to be actor
 		_hitResult.ImpactPoint,
 		_hitComponent->GetComponentRotation());
+	SetIsGrabbing();
+
 	
 
 
@@ -125,7 +132,6 @@ void UGrabber::Hold()
 		
 			physicsHandle->SetTargetLocationAndRotation(_targetLocation,
 				GetOwner()->GetActorRotation());
-			
 			DrawDebugSphere(GetWorld(), _targetLocation, 50, 10, FColor::Emerald);
 	}
 		
@@ -134,12 +140,14 @@ void UGrabber::Hold()
 void UGrabber::Release()
 {
 
-	if (physicsHandle && physicsHandle->GetGrabbedComponent() && isGrabbing == true)
+	if (physicsHandle->GetGrabbedComponent() && isGrabbing == true)
 	{
 		physicsHandle->GetGrabbedComponent()->WakeAllRigidBodies();
 		AActor* _heldActor = physicsHandle->GetGrabbedComponent()->GetOwner();
-		_heldActor->Tags.Remove("Grabbed");
+
 		physicsHandle->ReleaseComponent();
+		_heldActor->Tags.Remove("Grabbed");
+		UE_LOG(LogTemp, Warning, TEXT("Removing tag from %s"), *_heldActor->GetName()); 
 		SetIsGrabbing();
 	}
 
