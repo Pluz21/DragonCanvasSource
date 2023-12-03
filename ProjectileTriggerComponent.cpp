@@ -73,15 +73,14 @@ void UProjectileTriggerComponent::SnapTarget(AActor*& _targetActor) // Target Ac
 bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
 {
 
-	/*AActor* _owner = GetOwner(); 
+	AActor* _owner = GetOwner(); 
 
 	if (!_owner)return false; 
-	
 	UStaticMeshComponent* _ownerMesh =
 		_owner->GetComponentByClass<UStaticMeshComponent>();
 
 	UMaterial* _currentMaterial = _ownerMesh->GetMaterial(0)->GetMaterial();
-	mat = _currentMaterial;*/
+	mat = _currentMaterial;
 	return true;
 }
 

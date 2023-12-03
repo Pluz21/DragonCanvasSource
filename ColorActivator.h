@@ -12,6 +12,9 @@ class APickUps;
 UCLASS()
 class DRAGONCANVAS_API AColorActivator : public AActor
 {
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMaterialReceived, UMaterialInterface*, matReceived);
+	UPROPERTY()
+	FMaterialReceived onMaterialReceived;
 	GENERATED_BODY()
 	
 public:	
@@ -47,6 +50,7 @@ public:
 	UFUNCTION()
 	virtual void ManageOverlap(AActor* _overlapped, AActor* _overlap);
 	void GiveColor();
-
+	UFUNCTION()
+	void Test(UMaterialInterface* _mat);
 	void Init();
 };
