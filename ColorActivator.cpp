@@ -28,6 +28,7 @@ void AColorActivator::BeginPlay()
 {
 	Super::BeginPlay();
 	onMaterialReceived.AddDynamic(this, &AColorActivator::Test);
+	onMaterialReceived.AddDynamic(this, &AColorActivator::ApplyMatToApply);
 	OnActorBeginOverlap.AddDynamic(this, &AColorActivator::ManageOverlap);
 	Init();
 	
@@ -92,6 +93,12 @@ void AColorActivator::Test(UMaterialInterface* _mat)
 {
 
 	UE_LOG(LogTemp, Warning, TEXT("mat test is %s"), *_mat->GetName());
+}
+
+void AColorActivator::ApplyMatToApply(UMaterialInterface* _mat)
+{
+	if (!_mat)return;
+	matToApply = secondMesh->CreateDynamicMaterialInstance(0, _mat);
 }
 
 

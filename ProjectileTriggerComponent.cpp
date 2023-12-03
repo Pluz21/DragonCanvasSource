@@ -78,7 +78,6 @@ bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
 	if (!_owner)return false; 
 	UStaticMeshComponent* _ownerMesh =
 		_owner->GetComponentByClass<UStaticMeshComponent>();
-
 	UMaterial* _currentMaterial = _ownerMesh->GetMaterial(0)->GetMaterial();
 	mat = _currentMaterial;
 	return true;

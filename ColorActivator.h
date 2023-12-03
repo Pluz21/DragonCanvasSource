@@ -52,5 +52,7 @@ public:
 	void GiveColor();
 	UFUNCTION()
 	void Test(UMaterialInterface* _mat);
+	UFUNCTION()
+	void ApplyMatToApply(UMaterialInterface* _mat);
 	void Init();
 };
