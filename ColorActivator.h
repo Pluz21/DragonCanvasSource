@@ -19,10 +19,14 @@ public:
 	AColorActivator();
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> dragonProjectileRef;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USceneComponent> root;
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UStaticMeshComponent> meshCompo;
+	TObjectPtr<UStaticMeshComponent> baseMesh;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> secondMesh;
+	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UProjectileTriggerComponent> triggerCompo;
 

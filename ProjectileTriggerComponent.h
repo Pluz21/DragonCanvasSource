@@ -17,6 +17,9 @@ public:
 	UProjectileTriggerComponent();
 	UPROPERTY()
 	TObjectPtr<ADragon> dragonRef; 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterial> mat;
+
 
 protected:
 	// Called when the game starts
@@ -27,7 +30,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	UFUNCTION()
 	void SnapTarget(AActor*& _targetActor);
-
+	void Init();
 	
+	bool MaterialChecker(AActor*& _targetToCheck);
 		
 };

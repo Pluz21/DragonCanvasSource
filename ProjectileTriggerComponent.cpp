@@ -21,10 +21,18 @@ UProjectileTriggerComponent::UProjectileTriggerComponent()
 void UProjectileTriggerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	Init();
 	// ...
 	
 }
+
+void UProjectileTriggerComponent::Init()
+{
+	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
+	dragonRef = _dragonRef;
+}
+
+
 
 
 // Called every frame
@@ -37,34 +45,44 @@ void UProjectileTriggerComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 void UProjectileTriggerComponent::SnapTarget(AActor*& _targetActor) // Target Actor is Actor to Snap
 {
-	UE_LOG(LogTemp, Warning, TEXT("ENTERING SNATTARGET FUNCTION"), *_targetActor->GetName());
 	if (!_targetActor)return;
-	UE_LOG(LogTemp, Warning, TEXT("SECONDPHASE SNATTARGET FUNCTION"), *_targetActor->GetName());
 	UPrimitiveComponent* _primitiveCompo = _targetActor->
 		GetComponentByClass<UPrimitiveComponent>();
 	if (!_primitiveCompo)return;
 	FAttachmentTransformRules _worldTransform = FAttachmentTransformRules::KeepWorldTransform;
 	FAttachmentTransformRules _snap = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
-	UE_LOG(LogTemp, Warning, TEXT("THIRD SNATTARGET FUNCTION"), *_targetActor->GetName());
+
+	if (!MaterialChecker(_targetActor))return; // Check if the material is the same 
 	_primitiveCompo->SetSimulatePhysics(false);
-	/*_targetActor->AttachToComponent(GetOwner()->
-		GetRootComponent(), _worldTransform);
-	UE_LOG(LogTemp, Warning, TEXT("EXIT FUNCTION SNATTARGET FUNCTION"), *_targetActor->GetName());
-	*/
 	_targetActor->AttachToComponent(GetOwner()->
 		GetComponentByClass<UStaticMeshComponent>(), _snap);
-	// The grabber is on the player not on the actor to snap
 
-	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
-	if (!_dragonRef)return;
-	UGrabber* _grabberCompo = _dragonRef->GetComponentByClass<UGrabber>();
+	// The grabber is on the player not on the actor to snap
+	if (!dragonRef) 
+	{
+		ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
+		dragonRef = _dragonRef;
+	} // Adding this security if the dragonRef came to change during play. 
+	UGrabber* _grabberCompo = dragonRef->GetComponentByClass<UGrabber>();
 	if (!_grabberCompo)return;
 	_grabberCompo->Release();
-	/*_grabberCompo->SetIsGrabbing();
-	_grabberCompo->SetHitComponent();
-	_grabberCompo->SetHitResult();*/
-	//todo SetIsGrabbing = false _grabberCompo->
-	//Remove hold / Grab 
+
 
 }
+
+bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
+{
+
+	/*AActor* _owner = GetOwner(); 
+
+	if (!_owner)return false; 
+	
+	UStaticMeshComponent* _ownerMesh =
+		_owner->GetComponentByClass<UStaticMeshComponent>();
+
+	UMaterial* _currentMaterial = _ownerMesh->GetMaterial(0)->GetMaterial();
+	mat = _currentMaterial;*/
+	return true;
+}
+
 

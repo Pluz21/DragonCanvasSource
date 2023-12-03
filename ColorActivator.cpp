@@ -15,9 +15,11 @@ AColorActivator::AColorActivator()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	root = CreateDefaultSubobject<USceneComponent>("root");
-	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("meshCompo");
+	baseMesh = CreateDefaultSubobject<UStaticMeshComponent>("baseMesh");
+	secondMesh = CreateDefaultSubobject<UStaticMeshComponent>("secondMesh");
 	triggerCompo = CreateDefaultSubobject<UProjectileTriggerComponent>("trigger");
-	meshCompo->SetupAttachment(root);
+	baseMesh->SetupAttachment(root);
+	secondMesh->SetupAttachment(baseMesh);
 	AddOwnedComponent(triggerCompo);
 }
 
@@ -42,8 +44,13 @@ void AColorActivator::Init()
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	TSubclassOf<AProjectile> _projectileRef = _dragonRef->GetProjectileToSpawn();
 	dragonProjectileRef = _projectileRef;
-	
+	if (!secondMesh || !baseMesh)return;
+	UMaterialInterface* _secondMeshMat = secondMesh->GetMaterial(0);
+	if (!_secondMeshMat)return;
+	baseMesh->SetMaterial(0, _secondMeshMat);
 }
+
+
 
 
 void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
