@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "ProjectileTriggerComponent.generated.h"
 
-
+class ADragon;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DRAGONCANVAS_API UProjectileTriggerComponent : public UActorComponent
 {
@@ -15,6 +15,8 @@ class DRAGONCANVAS_API UProjectileTriggerComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UProjectileTriggerComponent();
+	UPROPERTY()
+	TObjectPtr<ADragon> dragonRef; 
 
 protected:
 	// Called when the game starts
@@ -23,6 +25,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION()
 	void SnapTarget(AActor*& _targetActor);
 
 	

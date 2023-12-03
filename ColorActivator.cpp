@@ -14,9 +14,10 @@ AColorActivator::AColorActivator()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	root = CreateDefaultSubobject<USceneComponent>("root");
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("meshCompo");
 	triggerCompo = CreateDefaultSubobject<UProjectileTriggerComponent>("trigger");
-	meshCompo->SetupAttachment(RootComponent);
+	meshCompo->SetupAttachment(root);
 	AddOwnedComponent(triggerCompo);
 }
 
@@ -57,6 +58,7 @@ void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	{
 	UE_LOG(LogTemp, Warning, TEXT("Overlapping with %s"), *_overlap->GetName());
 	GiveColor();
+	if (!triggerCompo)return; 
 	triggerCompo->SnapTarget(_overlap);
 	//ProjectileTriggerComponent->Activate 
 	}

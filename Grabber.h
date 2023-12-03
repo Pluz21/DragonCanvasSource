@@ -52,7 +52,5 @@ public:
 	void Release();
 	UFUNCTION(BlueprintCallable)
 	void SetIsGrabbing();
-
-	void test();
 		
 };

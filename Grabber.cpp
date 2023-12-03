@@ -122,6 +122,9 @@ void UGrabber::Hold()
 	if (!isGrabbing)return;
 	if(physicsHandle && physicsHandle->GetGrabbedComponent())
 	{
+		// hold is triggered even when object is not moving but
+		// if I correct the fact that the object can be taken out of snap
+		// it should fix it.
 		
 		//FVector _targetLocation = GetOwner()->GetActorLocation() // SELF  BOOSTING RETRO
 		//	+ GetOwner()->GetActorForwardVector()  * holdDistance;
@@ -159,11 +162,9 @@ void UGrabber::SetIsGrabbing()
 }
 
 
-void UGrabber::test()
-{
-	
-	/*if (FindTargetInReach(_hitResult))
-		UE_LOG(LogTemp, Warning, TEXT("Called test"));*/
-}
+
+
+
+
 
 

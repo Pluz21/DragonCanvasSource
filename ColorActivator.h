@@ -20,6 +20,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> dragonProjectileRef;
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<USceneComponent> root;
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UProjectileTriggerComponent> triggerCompo;
