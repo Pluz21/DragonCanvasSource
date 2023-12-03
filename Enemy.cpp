@@ -1,28 +1,31 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PickUps.h"
+#include "Enemy.h"
 
 // Sets default values
-APickUps::APickUps()
+AEnemy::AEnemy()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("meshCompo");
-	meshCompo->SetupAttachment(RootComponent);
+	root = CreateDefaultSubobject<USceneComponent>("root");
+	baseMesh = CreateDefaultSubobject<UStaticMeshComponent>("baseMesh");
+	secondMesh = CreateDefaultSubobject<UStaticMeshComponent>("secondMesh");
+	baseMesh->SetupAttachment(root);
+	secondMesh->SetupAttachment(baseMesh);
 }
 
 // Called when the game starts or when spawned
-void APickUps::BeginPlay()
+void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void APickUps::Tick(float DeltaTime)
+void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UPrimitiveComponent* _compo = GetComponentByClass<UPrimitiveComponent>();
+
 }
 

@@ -206,7 +206,7 @@ void ADragon::SphereTrace()
 	//UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());
 
 	FVector _endLocation = _startLocation + (_forwardVector * (sphereTracedistance + coneTraceRadius));
-	DrawDebugLine(world, _startLocation, _endLocation, FColor::Blue, true, -1, 0, 3);
+	//DrawDebugLine(world, _startLocation, _endLocation, FColor::Blue, true, -1, 0, 3);
 
 	targetLocation = _endLocation;
 	//UE_LOG(LogTemp, Error, TEXT("DRAGON ENDLOCATION %s "), *_endLocation.ToString());

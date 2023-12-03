@@ -18,7 +18,9 @@ public:
 	UPROPERTY()
 	TObjectPtr<ADragon> dragonRef; 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UMaterial> mat;
+	TObjectPtr<UMaterialInterface> mat;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialInterface> targetMat;
 
 
 protected:
@@ -33,5 +35,5 @@ public:
 	void Init();
 	
 	bool MaterialChecker(AActor*& _targetToCheck);
-		
+	UMaterialInterface* GetMatInterface() { return mat; }
 };
