@@ -11,6 +11,9 @@ UCLASS()
 class DRAGONCANVAS_API ASpawner : public AActor
 {
 	GENERATED_BODY()
+
+protected:
+
 	UPROPERTY(EditAnywhere, Category = "Spawner")
 	TSubclassOf<AActor> actorToSpawn;
 	UPROPERTY(VisibleAnywhere, Category = "Spawner")
@@ -32,7 +35,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(CallInEditor, Category = "Spawner")
-	void Spawn();
+	AActor* Spawn();
 	UFUNCTION(CallInEditor, Category = "Spawner")
 	void Remove();
 	UFUNCTION(CallInEditor, Category = "Spawner")

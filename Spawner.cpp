@@ -29,11 +29,15 @@ void ASpawner::Tick(float DeltaTime)
 
 }
 
-void ASpawner::Spawn()
+AActor* ASpawner::Spawn()
 {
 	AActor* _spawned = GetWorld()->SpawnActor<AActor>(actorToSpawn, 
 		GetActorLocation(), GetActorRotation());
+	UE_LOG(LogTemp, Error, TEXT("SPAWNED"));
 	allSpawned.Add(_spawned);
+	if (!_spawned)return nullptr;
+	return _spawned;
+
 
 }
 

@@ -29,6 +29,7 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Init()
 {
+	moveCompo->MoveAndFollow();
 }
 
 // Called every frame
@@ -36,6 +37,7 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	//moveCompo->MoveAndFollow(); replace with AI movement
+	moveCompo->MoveAndFollow();
 
 }
 

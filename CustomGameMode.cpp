@@ -3,14 +3,16 @@
 
 #include "CustomGameMode.h"
 #include "ProjectileManager.h"
+#include "SnapManager.h"
 
 void ACustomGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
-	InitManager();
+	InitProjectileManager();
+	InitSnapManager();
 }
 
-void ACustomGameMode::InitManager()
+void ACustomGameMode::InitProjectileManager()
 {
 	if (projectileManager)return; // SINGLETON 
 	projectileManager = GetWorld()->SpawnActor<AProjectileManager>(projectileManagerToSpawn);
@@ -18,4 +20,17 @@ void ACustomGameMode::InitManager()
 	{
 		UE_LOG(LogTemp, Warning, TEXT(" Failed to spawn CubeManager"));
 	}
+}
+
+void ACustomGameMode::InitSnapManager()
+{
+	if (snapManager)return;
+	snapManager = GetWorld()->
+		SpawnActor<ASnapManager>(snapManagerToSpawn);
+	if (!snapManager)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Failed to spawn SnapManager"));
+
+	}
+	
 }

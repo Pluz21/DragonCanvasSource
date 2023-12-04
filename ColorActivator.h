@@ -9,6 +9,7 @@
 class AProjectile;
 class ADragon;
 class APickUps;
+class AColorActivator;
 UCLASS()
 class DRAGONCANVAS_API AColorActivator : public AActor
 {
@@ -39,6 +40,9 @@ public:
 	TObjectPtr<UMaterial> projectileMatRef;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialInstance> matToApply;
+	
+	UPROPERTY(EditAnywhere)
+	bool isSpawner = false;
 
 protected:
 	// Called when the game starts or when spawned
@@ -55,4 +59,6 @@ public:
 	UFUNCTION()
 	void ApplyMatToApply(UMaterialInterface* _mat);
 	void Init();
+	void SetIsSpawner(bool _value) { isSpawner = _value; }
+	bool GetIsSpawner() { return isSpawner; }
 };
