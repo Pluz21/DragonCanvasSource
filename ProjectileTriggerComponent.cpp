@@ -28,8 +28,14 @@ void UProjectileTriggerComponent::BeginPlay()
 
 void UProjectileTriggerComponent::Init()
 {
+	onSnap.AddDynamic(this, &UProjectileTriggerComponent::Test);
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	dragonRef = _dragonRef;
+}
+
+void UProjectileTriggerComponent::Test(AActor* _snappedActor)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Snapped actor : %s"), *_snappedActor->GetName());
 }
 
 
@@ -56,6 +62,8 @@ void UProjectileTriggerComponent::SnapTarget(AActor*& _targetActor) // Target Ac
 	_primitiveCompo->SetSimulatePhysics(false);
 	_targetActor->AttachToComponent(GetOwner()->
 		GetComponentByClass<UStaticMeshComponent>(), _snap);
+
+	onSnap.Broadcast(_targetActor);
 
 	// The grabber is on the player not on the actor to snap
 	if (!dragonRef) 
