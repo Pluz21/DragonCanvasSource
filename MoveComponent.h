@@ -20,13 +20,16 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AActor> ownerRef;
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<ADragon> playeRef;
+	TObjectPtr<ADragon> playerRef;
+	
 
 	//Movement variables
 	UPROPERTY(EditAnywhere)
+	float chaseSpeed = 1.f;
+	UPROPERTY(EditAnywhere)
 	float moveSpeed = 100.f;
 	UPROPERTY(EditAnywhere)
-	float rotateSpeed = 2000.f;
+	float rotateSpeed = 2000.f;   //Projectile rotateSpeed
 
 
 protected:
@@ -36,9 +39,15 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	void Init();
+
 	void MoveAndFollow();
 	void SelfMove(const FVector& _actorForwardVector);
+	void ChasePlayer();
 	void Rotate();
+
 	float GetMoveSpeed() { return moveSpeed; }
+	ADragon* GetChaseTarget() { return playerRef; }
 		
 };

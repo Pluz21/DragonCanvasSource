@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Enemy.generated.h"
 class UMoveComponent;
+class ADragon;
 UCLASS()
 class DRAGONCANVAS_API AEnemy : public AActor
 {
@@ -22,6 +23,9 @@ public:
 	TObjectPtr<UStaticMeshComponent> secondMesh;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<ADragon> playerRef;
 
 protected:
 	// Called when the game starts or when spawned

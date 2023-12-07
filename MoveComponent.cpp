@@ -4,6 +4,8 @@
 #include "MoveComponent.h"
 #include "Dragon.h"
 #include "Projectile.h"
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values for this component's properties
 UMoveComponent::UMoveComponent()
@@ -22,12 +24,32 @@ UMoveComponent::UMoveComponent()
 void UMoveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	ownerRef = GetOwner();
+	Init();
 
 	// ...
 	
 }
 
+
+void UMoveComponent::Init()
+{
+	ownerRef = GetOwner();
+	if(!ownerRef)
+		UE_LOG(LogTemp, Warning, TEXT("No owner found"));
+
+	if (playerRef = Cast<ADragon>(GetWorld()->
+		GetFirstPlayerController()->GetCharacter()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cast succeeded to get player in movecomp"));
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cast failed to get player in movecomp"));
+
+	}
+
+}
 
 // Called every frame
 void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -42,15 +64,29 @@ void UMoveComponent::MoveAndFollow()
 	
 	FVector _actorForwardVector = GetOwner()->GetActorForwardVector();
 	FVector _direction = GetOwner()->GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
+	if (!ownerRef)return;
 	ownerRef->SetActorLocation(_direction);
 	
 }
 
 void UMoveComponent::SelfMove(const FVector& _actorForwardVector)
 {
-	FVector Direction = GetOwner()->GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
-	GetOwner()->SetActorLocation(Direction);
+	FVector _direction = GetOwner()->GetActorLocation() + _actorForwardVector * moveSpeed * deltaSeconds;
+	GetOwner()->SetActorLocation(_direction);
 	//OnCanMove.Broadcast();
+}
+
+void UMoveComponent::ChasePlayer()
+{
+	if (!playerRef || !ownerRef)
+	{
+		return;
+	}
+	FVector _direction = playerRef->GetActorLocation() - ownerRef->GetActorLocation();
+	UE_LOG(LogTemp, Warning, TEXT("Direction from Enemy is : %s"), *_direction.ToString());
+
+	FVector _targetLocation = ownerRef->GetActorLocation() + _direction * chaseSpeed * GetWorld()->DeltaTimeSeconds;
+	ownerRef->SetActorLocation(_targetLocation);
 }
 
 void UMoveComponent::Rotate()

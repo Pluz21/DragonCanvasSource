@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 #include "MoveComponent.h"
+#include "Dragon.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -29,15 +30,16 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Init()
 {
-	moveCompo->MoveAndFollow();
+	playerRef = moveCompo->GetChaseTarget();
+	//moveCompo->MoveAndFollow();
 }
 
 // Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//moveCompo->MoveAndFollow(); replace with AI movement
-	moveCompo->MoveAndFollow();
+	if (!moveCompo)return;
+	moveCompo->ChasePlayer();
 
 }
 
