@@ -31,16 +31,38 @@ void AEnemy::BeginPlay()
 void AEnemy::Init()
 {
 	playerRef = moveCompo->GetChaseTarget();
-	//moveCompo->MoveAndFollow();
 }
 
-// Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (!moveCompo)return;
 	moveCompo->ChasePlayer();
+	SelfDestroy();
 
 }
+
+bool AEnemy::CheckDistance()
+{
+	if (!playerRef)return false;
+	float _distance = FVector::Dist(playerRef->GetActorLocation(), GetActorLocation());
+	if(_distance < minDistanceAllowed)
+		return true;
+	return false;
+}
+
+void AEnemy::SelfDestroy()
+{
+	if (CheckDistance())
+	{
+		Destroy();
+		UE_LOG(LogTemp, Warning, TEXT("You got hit by a Flamito!"));
+
+	}
+	// TO DO 
+	// Add explosion effect
+	// Add health loss to player
+}
+
 
 

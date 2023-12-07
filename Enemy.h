@@ -26,7 +26,9 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ADragon> playerRef;
-
+	
+	UPROPERTY(EditAnywhere)
+	float minDistanceAllowed = 150.f; 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,4 +37,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void Init();
+
+	bool CheckDistance();
+
+	void SelfDestroy();
 };
