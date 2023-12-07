@@ -114,8 +114,10 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 		int _size = allSpawners.Num();
 		for (int i = 0; i < _size; i++)
 		{
-			AFireSpawner* _fireSpawnerRef = Cast<AFireSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(),
-				AFireSpawner::StaticClass()));
+
+			AFireSpawner* _fireSpawnerRef = Cast<AFireSpawner>(allSpawners[i]);
+				//UGameplayStatics::GetActorOfClass(GetWorld(),
+				//AFireSpawner::StaticClass()));
 
 		if (_fireSpawnerRef)
 		{
