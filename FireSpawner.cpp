@@ -15,6 +15,7 @@ AFireSpawner::AFireSpawner()
 void AFireSpawner::BeginPlay()
 {
 	Super::BeginPlay();
+	//Init();
 	
 }
 
@@ -22,6 +23,5 @@ void AFireSpawner::BeginPlay()
 void AFireSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

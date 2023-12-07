@@ -9,7 +9,7 @@
 class ADragon;
 class ASnapManager;
 class ACustomGameMode;
-class AFireSpawner;
+class ASpawner;
 class AEnemy;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 
@@ -38,10 +38,15 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> allSpawnedFromSnap;
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> allSpawners;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASpawner> spawnerToFind;
 	
 	
 	UPROPERTY(VisibleAnywhere)
 	bool hasSpawned = false;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -61,4 +66,5 @@ public:
 	//FSnapEvent& OnSnap() { return onSnap; }
 	UFUNCTION()
 	void HandleSnap(AActor* _actorToSnap);
+
 };

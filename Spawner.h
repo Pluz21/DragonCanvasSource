@@ -22,6 +22,11 @@ protected:
 	TObjectPtr<UBillboardComponent> billboardComponent;
 	UPROPERTY()
 	TObjectPtr<USceneComponent> root;
+
+	UPROPERTY(EditAnywhere)
+	FVector currentLocation = FVector(0);
+	UPROPERTY(EditAnywhere)
+	TArray<FVector> allSpawnLocations;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -35,10 +40,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(CallInEditor, Category = "Spawner")
+	void Init();
+	UFUNCTION(CallInEditor, Category = "Spawner")
 	AActor* Spawn();
 	UFUNCTION(CallInEditor, Category = "Spawner")
 	void Remove();
 	UFUNCTION(CallInEditor, Category = "Spawner")
 	void RemoveAll();
-
+	FVector GetCurrentLocation() { return  currentLocation; }
 };

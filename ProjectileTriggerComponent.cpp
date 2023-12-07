@@ -3,6 +3,7 @@
 
 #include "ProjectileTriggerComponent.h"
 #include "Grabber.h"
+#include "Spawner.h"
 #include "FireSpawner.h"
 #include "CustomGameMode.h"
 #include "SnapManager.h"
@@ -108,8 +109,13 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 	//_parent->SetIsSpawner();
 	if (_parent->GetIsSpawner() == false)return;
 	{
-		AFireSpawner* _fireSpawnerRef = Cast<AFireSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(),
-			AFireSpawner::StaticClass()));
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), spawnerToFind,
+			allSpawners);
+		int _size = allSpawners.Num();
+		for (int i = 0; i < _size; i++)
+		{
+			AFireSpawner* _fireSpawnerRef = Cast<AFireSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(),
+				AFireSpawner::StaticClass()));
 
 		if (_fireSpawnerRef)
 		{
@@ -118,11 +124,16 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 			//UE_LOG(LogTemp, Warning, TEXT("DEBUG FROM HANDLESNAP, SPAWNED ACTOR : %s"), *_spawnedEnemy->GetName());
 
 			// Set the flag to indicate that spawning has occurred
-			hasSpawned = true;
 		}
+		}
+		//For each spawner in allspawners ->Cast a new SpawnerChildRef
+
+			//hasSpawned = true;
 			_parent->SetIsSpawner(false);
 	}
 }
+
+
 
 
 bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)

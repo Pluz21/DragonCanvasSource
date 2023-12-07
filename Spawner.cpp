@@ -19,7 +19,7 @@ ASpawner::ASpawner()
 void ASpawner::BeginPlay()
 {
 	Super::BeginPlay();
-		
+	Init();
 }
 
 // Called every frame
@@ -27,6 +27,11 @@ void ASpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASpawner::Init()
+{
+	currentLocation = GetActorLocation();
 }
 
 AActor* ASpawner::Spawn()
