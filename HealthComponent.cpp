@@ -41,6 +41,9 @@ void UHealthComponent::AddHealth(int _value)
 	if (currentHealth <= 0)
 	{
 		SetIsDead(true);
+		
+
+		// To Do : Add Death Menu
 		return;
 	}
 	
