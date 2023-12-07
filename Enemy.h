@@ -29,6 +29,8 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	float minDistanceAllowed = 150.f; 
+	UPROPERTY(EditAnywhere)
+	int damageToApply = 1;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,5 +42,9 @@ public:
 
 	bool CheckDistance();
 
+	UFUNCTION(BlueprintCallable)
 	void SelfDestroy();
+
+	UFUNCTION(BlueprintCallable)
+	void ApplyDamage();
 };

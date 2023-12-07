@@ -18,7 +18,7 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	Init();
 	// ...
 	
 }
@@ -28,7 +28,35 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	// ...
+}
+
+void UHealthComponent::Init()
+{
+	currentHealth = maxHealth;
+}
+
+void UHealthComponent::AddHealth(int _value)
+{
+	if (currentHealth <= 0)
+	{
+		SetIsDead(true);
+		return;
+	}
+	
+	currentHealth += _value;
+	UE_LOG(LogTemp, Error, TEXT("Current Health = %i"), currentHealth);
+
+	
+}
+
+void UHealthComponent::SetIsDead(bool _value)
+{
+
+		isDead = _value;
+		
+		UE_LOG(LogTemp, Error, TEXT("You are dead"));
+
+
 }
 

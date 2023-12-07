@@ -14,6 +14,8 @@
 
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.h"
+#include "HealthComponent.h"
+
 
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -33,12 +35,14 @@ ADragon::ADragon()
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	grabber = CreateDefaultSubobject<UGrabber>("Grabber");
 	physicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>("PhysicsHandle");
-	
+	healthCompo = CreateDefaultSubobject<UHealthComponent>("healthCompo");
+
 	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
 	AddOwnedComponent(grabber);
 	AddOwnedComponent(physicsHandle);
+	AddOwnedComponent(healthCompo);
 	
 
 }
@@ -48,11 +52,7 @@ ADragon::ADragon()
 void ADragon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 
-
-	
-	
 }
 // Called when the game starts or when spawned
 void ADragon::BeginPlay()

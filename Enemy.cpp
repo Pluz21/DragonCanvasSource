@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "MoveComponent.h"
 #include "Dragon.h"
+#include "HealthComponent.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -56,13 +57,22 @@ void AEnemy::SelfDestroy()
 {
 	if (CheckDistance())
 	{
-		Destroy();
+		if (!playerRef)return;   // Enemy will join on top of you
+		Destroy(); // Play Animation
+		if (playerRef->healthCompo->isDead)return;
+		ApplyDamage();
+		
 		UE_LOG(LogTemp, Warning, TEXT("You got hit by a Flamito!"));
 
 	}
 	// TO DO 
 	// Add explosion effect
 	// Add health loss to player
+}
+
+void AEnemy::ApplyDamage()
+{
+	playerRef->healthCompo->AddHealth(-damageToApply);
 }
 
 

@@ -16,9 +16,11 @@
 #include "Dragon.generated.h"
 
 class UGrabber;
+class UHealthComponent;
 class ACustomGameMode;
 class AProjectileManager;
 class AProjectile;
+
 UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
 {
@@ -37,6 +39,8 @@ public:
 	FProjectileReachedTarget onProjectileTargetReached;
 	// Sets default values for this character's properties
 	ADragon();
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UWorld> world;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ACustomGameMode> gameMode;
@@ -44,29 +48,37 @@ public:
 	TObjectPtr<AProjectileManager> projectileManager;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UWorld> world;
+	TObjectPtr<USceneComponent> spawnPoint;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<APlayerController> playerController;
+
+#pragma region Components
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;
 
-	UPROPERTY(EditAnywhere)
-	TArray<AProjectile*> allProjectiles;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<USceneComponent> spawnPoint;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<APlayerController> playerController;
-	UPROPERTY(EditAnywhere)
-	FHitResult hitResult;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UGrabber> grabber;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UPhysicsHandleComponent> physicsHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UHealthComponent> healthCompo;
 
+#pragma endregion Components 
 
 	
+
+
+
+	UPROPERTY(EditAnywhere)
+	TArray<AProjectile*> allProjectiles;
+	UPROPERTY(EditAnywhere)
+	FHitResult hitResult;
+
+
+#pragma region Inputs
 	// inputs
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> inputToMove;
@@ -78,8 +90,6 @@ public:
 	TObjectPtr<UInputAction> inputToAction;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AProjectile> projectileToSpawn;
 
 	//input variables
 
@@ -94,18 +104,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float rotateInputValue;
 
+#pragma endregion Inputs
+
+#pragma region Spawn
 	// spawn variables
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (UIMin = "10", ClampMin = "10", UIMax = "100", ClampMax = "100"))
-	float maxAmmo = 10.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float currentAmmo;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> projectileToSpawn;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector spawnPointLocation;
 
 	UPROPERTY(EditAnywhere)
-	float launchTime;
-	UPROPERTY(EditAnywhere)
 	FVector spawnedInitialLocation;
+#pragma endregion Spawn
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (UIMin = "10", ClampMin = "10", UIMax = "100", ClampMax = "100"))
+	float maxAmmo = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float currentAmmo;
+
+	
 	UPROPERTY(EditAnywhere)
 	FVector targetLocation; 
 	UPROPERTY(EditAnywhere)
