@@ -11,6 +11,7 @@ class ASnapManager;
 class ACustomGameMode;
 class ASpawner;
 class AEnemy;
+class AColorActivator; 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 
 class DRAGONCANVAS_API UProjectileTriggerComponent : public UActorComponent
@@ -41,12 +42,16 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> allSpawners;
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASpawner> spawnerToFind;
-	
-	
-	UPROPERTY(VisibleAnywhere)
-	bool hasSpawned = false;
+	TArray<AActor*> allVessels;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASpawner> spawnerToFind;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AColorActivator> vesselToFind;
+	
+	UPROPERTY(EditAnywhere)
+	bool canSpawn = false;
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

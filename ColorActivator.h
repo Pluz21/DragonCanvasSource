@@ -61,4 +61,5 @@ public:
 	void Init();
 	void SetIsSpawner(bool _value) { isSpawner = _value; }
 	bool GetIsSpawner() { return isSpawner; }
+	UProjectileTriggerComponent* GetTriggerCompo() { return triggerCompo; }
 };

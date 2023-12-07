@@ -83,7 +83,7 @@ void UMoveComponent::ChasePlayer()
 		return;
 	}
 	FVector _direction = playerRef->GetActorLocation() - ownerRef->GetActorLocation();
-	UE_LOG(LogTemp, Warning, TEXT("Direction from Enemy is : %s"), *_direction.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Direction from Enemy is : %s"), *_direction.ToString());
 
 	FVector _targetLocation = ownerRef->GetActorLocation() + _direction * chaseSpeed * GetWorld()->DeltaTimeSeconds;
 	ownerRef->SetActorLocation(_targetLocation);

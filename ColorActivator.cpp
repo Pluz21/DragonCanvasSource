@@ -59,11 +59,7 @@ void AColorActivator::Init()
 void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
 	if (!_overlap || !_overlapped) return;
-	/*UStaticMeshComponent* _targetMesh = _overlap->GetComponentByClass<UStaticMeshComponent>();
-	UMaterialInterface* _targetMatInterface =  _targetMesh->GetMaterial(0);
-	UMaterial* _targetMat = _targetMatInterface->GetMaterial();
-	_targetMesh->SetMaterial(0,matToApply);*/
-	//if (_overlap->IsA(ADragon::StaticClass()))
+
 	if (_overlap->IsA(APickUps::StaticClass()) && _overlap->ActorHasTag("Grabbed"))
 	{
 	UE_LOG(LogTemp, Warning, TEXT("Overlapping with %s"), *_overlap->GetName());
@@ -73,7 +69,6 @@ void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	//ProjectileTriggerComponent->Activate 
 	}
 	
-	//_targetMat->SetMaterial(matToApply);
 }
 
 void AColorActivator::GiveColor()

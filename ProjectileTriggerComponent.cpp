@@ -2,6 +2,7 @@
 
 
 #include "ProjectileTriggerComponent.h"
+
 #include "Grabber.h"
 #include "Spawner.h"
 #include "FireSpawner.h"
@@ -99,41 +100,53 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 
 
 }
-
-
 void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 {
-	if (!snapManager || hasSpawned) return;
-	AActor* _owner = GetOwner();
-	AColorActivator* _parent = Cast<AColorActivator>(_owner);
-	//_parent->SetIsSpawner();
-	if (_parent->GetIsSpawner() == false)return;
+	if (!snapManager)return;
+
+	AColorActivator* _vessel = Cast<AColorActivator>(GetOwner()); //vessel with triggercompo
+	if (_vessel)
 	{
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), spawnerToFind,
-			allSpawners);
-		int _size = allSpawners.Num();
-		for (int i = 0; i < _size; i++)
-		{
+		UE_LOG(LogTemp, Warning, TEXT("Vessel Name: %s, IsSpawner: %d"), *_vessel->GetName(), _vessel->GetIsSpawner());
+		allVessels.Add(_vessel);
 
-			AFireSpawner* _fireSpawnerRef = Cast<AFireSpawner>(allSpawners[i]);
-				//UGameplayStatics::GetActorOfClass(GetWorld(),
-				//AFireSpawner::StaticClass()));
 
-		if (_fireSpawnerRef)
-		{
-			AActor* _spawnedEnemy = _fireSpawnerRef->Spawn();
-			allSpawnedFromSnap.Add(_spawnedEnemy);
-			//UE_LOG(LogTemp, Warning, TEXT("DEBUG FROM HANDLESNAP, SPAWNED ACTOR : %s"), *_spawnedEnemy->GetName());
-
-			// Set the flag to indicate that spawning has occurred
-		}
-		}
-		//For each spawner in allspawners ->Cast a new SpawnerChildRef
-
-			//hasSpawned = true;
-			_parent->SetIsSpawner(false);
 	}
+
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), vesselToFind, allVessels);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), spawnerToFind, allSpawners);
+
+	int _sizeAllVessels = allVessels.Num();
+	for (int i = 0; i < _sizeAllVessels; i++)
+	{
+
+		AColorActivator* _vesselRef = Cast<AColorActivator>(allVessels[i]);
+		//UE_LOG(LogTemp, Warning, TEXT("Vessel Name: %s, IsSpawner: %d"), *_vesselRef->GetName(), _vesselRef->GetIsSpawner());
+
+		{
+			int _sizeAllSpawners = allSpawners.Num();
+			for (int j = 0; j < _sizeAllSpawners; j++)
+			{
+				AFireSpawner* _fireSpawnerRef = Cast<AFireSpawner>(allSpawners[j]);
+
+				if (_fireSpawnerRef)
+				{
+					AActor* _spawnedEnemy = _fireSpawnerRef->Spawn();
+					allSpawnedFromSnap.Add(_spawnedEnemy);
+					UE_LOG(LogTemp, Error, TEXT("Final loop"));
+				}
+			}
+			// specific exit loop because we check vesselref = vessel.
+			//break;
+		}
+	}
+
 }
+
+	
+	
+
 
 
 

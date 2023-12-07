@@ -39,7 +39,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UFUNCTION(CallInEditor, Category = "Spawner")
+	UFUNCTION()
 	void Init();
 	UFUNCTION(CallInEditor, Category = "Spawner")
 	AActor* Spawn();
