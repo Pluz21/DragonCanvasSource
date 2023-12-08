@@ -15,6 +15,8 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.h"
 #include "HealthComponent.h"
+#include "ManaComponent.h"
+#include "AttackComponent.h"
 
 
 #include "Kismet/KismetSystemLibrary.h"
@@ -33,16 +35,21 @@ ADragon::ADragon()
 	spawnPoint = CreateDefaultSubobject<USceneComponent>("SpawnPoint");
 	springArm = CreateDefaultSubobject<USpringArmComponent>("Springarm");
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
+	attackCompo = CreateDefaultSubobject<UAttackComponent>("attackCompo");
 	grabber = CreateDefaultSubobject<UGrabber>("Grabber");
 	physicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>("PhysicsHandle");
 	healthCompo = CreateDefaultSubobject<UHealthComponent>("healthCompo");
+	manaCompo = CreateDefaultSubobject<UManaComponent>("manaCompo");
+
 
 	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
+
 	AddOwnedComponent(grabber);
 	AddOwnedComponent(physicsHandle);
 	AddOwnedComponent(healthCompo);
+	AddOwnedComponent(manaCompo);
 	
 
 }
@@ -162,7 +169,9 @@ void ADragon::FireBreath()
 	}
 	if (!projectileToSpawn)return;
 
-	AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, spawnPointLocation, FRotator::ZeroRotator);
+	//AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, spawnPointLocation, FRotator::ZeroRotator);
+	if (!attackCompo)return;
+	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,GetOwner());
 	if (!_spawnedProjectile)return;
 	_spawnedProjectile->
 		projectileManager->AddItem(_spawnedProjectile);

@@ -15,9 +15,12 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Dragon.generated.h"
 
+class ACustomGameMode;
 class UGrabber;
 class UHealthComponent;
-class ACustomGameMode;
+class UManaComponent;
+class UAttackComponent;
+
 class AProjectileManager;
 class AProjectile;
 
@@ -60,11 +63,15 @@ public:
 	TObjectPtr<UCameraComponent> camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UAttackComponent> attackCompo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UGrabber> grabber;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UPhysicsHandleComponent> physicsHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UHealthComponent> healthCompo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UManaComponent> manaCompo;
 
 #pragma endregion Components 
 
