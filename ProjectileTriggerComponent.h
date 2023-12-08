@@ -33,8 +33,6 @@ public:
 	TObjectPtr<UMaterialInterface> targetMat;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ACustomGameMode> gameMode;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<ASnapManager> snapManager;
 	
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> allSpawnedFromSnap;

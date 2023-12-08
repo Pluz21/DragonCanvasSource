@@ -6,7 +6,6 @@
 #include "Spawner.h"
 #include "FireSpawner.h"
 #include "CustomGameMode.h"
-//#include "SnapManager.h"
 #include "Enemy.h"
 #include "ColorActivator.h"
 #include "Dragon.h"
@@ -101,7 +100,6 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 }
 void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 {
-	//if (!snapManager)return;
 	UE_LOG(LogTemp, Warning, TEXT("HandleSnap Call"));
 
 	AColorActivator* _vessel = Cast<AColorActivator>(GetOwner()); //vessel with triggercompo
@@ -111,17 +109,13 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 		allVessels.Add(_vessel);
 
 	}
-	//UGameplayStatics::GetActorOfClass(GetWorld(), spawnerToFind);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), vesselToFind, allVessels);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), spawnerToFind, allSpawners);
 
-	/*int _sizeAllVessels = allVessels.Num();
-	for (int i = 0; i < _sizeAllVessels; i++)*/
-	//{
+
 			int _sizeAllSpawners = allSpawners.Num();
 			for (int j = 0; j < _sizeAllSpawners; j++)
 			{
-				//AFireSpawner* _spawnerRef = Cast<AFireSpawner>(allSpawners[j]);
 				ASpawner* _spawnerRef = Cast<ASpawner>(allSpawners[j]);
 				
 				if (_spawnerRef)
