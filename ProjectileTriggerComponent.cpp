@@ -13,23 +13,24 @@
 
 #include <Kismet/GameplayStatics.h>
 
-// Sets default values for this component's properties
 UProjectileTriggerComponent::UProjectileTriggerComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	
 }
 
 
-// Called when the game starts
+void UProjectileTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
 void UProjectileTriggerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Init();
-	// ...
+	
 	
 }
 
@@ -37,17 +38,17 @@ void UProjectileTriggerComponent::Init()
 {
 	gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>();
 	if (!gameMode)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Game mode not found."));
-		return;
-	}
+		{
+			UE_LOG(LogTemp, Error, TEXT("Game mode not found."));
+			return;
+		}
 
 	snapManager = gameMode->GetSnapManager();
 	if (!snapManager)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Snap manager not found."));
-		return;
-	}
+		{
+			UE_LOG(LogTemp, Error, TEXT("Snap manager not found."));
+			return;
+		}
 
 	snapManager->OnSnap().AddUniqueDynamic(this, &UProjectileTriggerComponent::HandleSnap);
 	
@@ -61,27 +62,21 @@ void UProjectileTriggerComponent::Test(AActor* _snappedActor)
 }
 
 
-
-
-// Called every frame
-void UProjectileTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
 void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Actor is Actor to Snap
 {
 	if (!_targetActor)return;
+
 	UPrimitiveComponent* _primitiveCompo = _targetActor->
 		GetComponentByClass<UPrimitiveComponent>();
+
 	if (!_primitiveCompo)return;
+
 	FAttachmentTransformRules _worldTransform = FAttachmentTransformRules::KeepWorldTransform;
 	FAttachmentTransformRules _snap = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
 
 	if (!MaterialChecker(_targetActor))return; // Check if the material is the same 
-	_primitiveCompo->SetSimulatePhysics(false);
+
+	_primitiveCompo->SetSimulatePhysics(false);				//Snap
 	_targetActor->AttachToComponent(GetOwner()->
 		GetComponentByClass<UStaticMeshComponent>(), _snap);
 
@@ -92,8 +87,11 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 		ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 		dragonRef = _dragonRef;
 	} // Adding this security if the dragonRef came to change during play. 
+
 	UGrabber* _grabberCompo = dragonRef->GetComponentByClass<UGrabber>();
+
 	if (!_grabberCompo)return;
+
 	_grabberCompo->Release();
 	
 
@@ -109,37 +107,29 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 		UE_LOG(LogTemp, Warning, TEXT("Vessel Name: %s, IsSpawner: %d"), *_vessel->GetName(), _vessel->GetIsSpawner());
 		allVessels.Add(_vessel);
 
-
 	}
-
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), vesselToFind, allVessels);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), spawnerToFind, allSpawners);
 
-	int _sizeAllVessels = allVessels.Num();
-	for (int i = 0; i < _sizeAllVessels; i++)
-	{
-
-		AColorActivator* _vesselRef = Cast<AColorActivator>(allVessels[i]);
-		//UE_LOG(LogTemp, Warning, TEXT("Vessel Name: %s, IsSpawner: %d"), *_vesselRef->GetName(), _vesselRef->GetIsSpawner());
-
-		{
+	/*int _sizeAllVessels = allVessels.Num();
+	for (int i = 0; i < _sizeAllVessels; i++)*/
+	//{
 			int _sizeAllSpawners = allSpawners.Num();
 			for (int j = 0; j < _sizeAllSpawners; j++)
 			{
-				AFireSpawner* _fireSpawnerRef = Cast<AFireSpawner>(allSpawners[j]);
-
-				if (_fireSpawnerRef)
+				//AFireSpawner* _spawnerRef = Cast<AFireSpawner>(allSpawners[j]);
+				ASpawner* _spawnerRef = Cast<ASpawner>(allSpawners[j]);
+				
+				if (_spawnerRef)
 				{
-					AActor* _spawnedEnemy = _fireSpawnerRef->Spawn();
+					AActor* _spawnedEnemy = _spawnerRef->Spawn();
 					allSpawnedFromSnap.Add(_spawnedEnemy);
-					UE_LOG(LogTemp, Error, TEXT("Final loop"));
 				}
 			}
 			// specific exit loop because we check vesselref = vessel.
 			//break;
-		}
-	}
+//	}
 
 }
 
