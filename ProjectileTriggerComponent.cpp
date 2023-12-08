@@ -6,7 +6,7 @@
 #include "Spawner.h"
 #include "FireSpawner.h"
 #include "CustomGameMode.h"
-#include "SnapManager.h"
+//#include "SnapManager.h"
 #include "Enemy.h"
 #include "ColorActivator.h"
 #include "Dragon.h"
@@ -42,15 +42,16 @@ void UProjectileTriggerComponent::Init()
 			UE_LOG(LogTemp, Error, TEXT("Game mode not found."));
 			return;
 		}
+	onSnap.AddDynamic(this, &UProjectileTriggerComponent::HandleSnap);
 
-	snapManager = gameMode->GetSnapManager();
+	/*snapManager = gameMode->GetSnapManager();
 	if (!snapManager)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Snap manager not found."));
 			return;
-		}
+		}*/
 
-	snapManager->OnSnap().AddUniqueDynamic(this, &UProjectileTriggerComponent::HandleSnap);
+	//snapManager->OnSnap().AddUniqueDynamic(this, &UProjectileTriggerComponent::HandleSnap);
 	
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	dragonRef = _dragonRef;
@@ -80,8 +81,9 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 	_targetActor->AttachToComponent(GetOwner()->
 		GetComponentByClass<UStaticMeshComponent>(), _snap);
 
-	snapManager->NotifySnap(_targetActor); // Broadcast through the manager
+	//snapManager->NotifySnap(_targetActor); // Broadcast through the manager
 	// The grabber is on the player not on the actor to snap
+	onSnap.Broadcast(_targetActor);
 	if (!dragonRef) 
 	{
 		ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
@@ -99,7 +101,8 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 }
 void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 {
-	if (!snapManager)return;
+	//if (!snapManager)return;
+	UE_LOG(LogTemp, Warning, TEXT("HandleSnap Call"));
 
 	AColorActivator* _vessel = Cast<AColorActivator>(GetOwner()); //vessel with triggercompo
 	if (_vessel)
@@ -108,7 +111,7 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 		allVessels.Add(_vessel);
 
 	}
-
+	//UGameplayStatics::GetActorOfClass(GetWorld(), spawnerToFind);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), vesselToFind, allVessels);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), spawnerToFind, allSpawners);
 

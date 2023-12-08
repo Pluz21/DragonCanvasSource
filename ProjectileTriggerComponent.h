@@ -16,9 +16,9 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DRAGONCANVAS_API UProjectileTriggerComponent : public UActorComponent
 {
 
-	/*DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSnapEvent, AActor*, actorSnapped);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSnapEvent, AActor*, actorSnapped);
 	UPROPERTY()
-	FSnapEvent onSnap;*/
+	FSnapEvent onSnap;
 
 	GENERATED_BODY()
 
@@ -66,8 +66,8 @@ public:
 	bool MaterialChecker(AActor*& _targetToCheck);
 	UMaterialInterface* GetMatInterface() { return mat; }
 
-	//UFUNCTION()
-	//FSnapEvent& OnSnap() { return onSnap; }
+	UFUNCTION()
+	FSnapEvent& OnSnap() { return onSnap; }
 	UFUNCTION()
 	void HandleSnap(AActor* _actorToSnap);
 
