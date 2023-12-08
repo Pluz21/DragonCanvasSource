@@ -153,7 +153,7 @@ void ADragon::Action()
 
 void ADragon::FireBreath()
 {
-
+	if (manaCompo->isOutOfMana || manaCompo->currentMana <= manaCompo->manaCost)return;
 	spawnPointLocation = spawnPoint->GetComponentLocation();	
 	FVector _location;
 	FRotator _rotation;					
@@ -169,10 +169,10 @@ void ADragon::FireBreath()
 	}
 	if (!projectileToSpawn)return;
 
-	//AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, spawnPointLocation, FRotator::ZeroRotator);
 	if (!attackCompo)return;
 	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,GetOwner());
 	if (!_spawnedProjectile)return;
+	manaCompo->AddMana(-manaCompo->manaCost);
 	_spawnedProjectile->
 		projectileManager->AddItem(_spawnedProjectile);
 	float _size = projectileManager->GetAllProjectilesSize();
@@ -287,6 +287,7 @@ void ADragon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	_myInputCompo->BindAction(inputToRotateYaw, ETriggerEvent::Triggered, this, &ADragon::RotateYaw);
 	_myInputCompo->BindAction(inputToPitch, ETriggerEvent::Triggered, this, &ADragon::RotatePitch);
 	_myInputCompo->BindAction(inputToAction, ETriggerEvent::Triggered, this, &ADragon::Action);
+	//_myInputCompo->BindAction(inputToGrab, ETriggerEvent::Triggered, grabber, &UGrabber::Grab);
 
 
 }
@@ -295,19 +296,6 @@ void ADragon::UpdateMinDistanceToSelfDestruct()
 {
 	minDistanceToSelfDestruct = coneTraceRadius / 2;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

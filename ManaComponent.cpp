@@ -33,6 +33,7 @@ void UManaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	IdleManaRegen();
+	SetOutOfMana();
 	// ...
 }
 
@@ -53,7 +54,11 @@ void UManaComponent::AddMana(float _value)
 void UManaComponent::SetOutOfMana()
 {
 	if (currentMana <= 1)
+	{
+		currentMana = currentMana;
 		isOutOfMana = true;
-	isOutOfMana = false;
+	}
+	else isOutOfMana = false;
+	//isOutOfMana = false;
 }
 

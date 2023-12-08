@@ -25,6 +25,9 @@ public:
 	float manaRegenRate = 5;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float manaCost = 15;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isOutOfMana = false;
 
 protected:

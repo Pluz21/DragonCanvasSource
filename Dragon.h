@@ -75,9 +75,6 @@ public:
 
 #pragma endregion Components 
 
-	
-
-
 
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
@@ -95,6 +92,8 @@ public:
 	TObjectPtr<UInputAction> inputToPitch;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> inputToAction;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UInputAction> inputToGrab;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
 

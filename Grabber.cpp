@@ -4,6 +4,7 @@
 #include "Grabber.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include <DrawDebugHelpers.h>
+#include <EnhancedInputSubsystems.h>
 
 
 // Sets default values for this component's properties
@@ -80,7 +81,6 @@ UPhysicsHandleComponent* UGrabber::GetPhysicsHandleComponent()
 void UGrabber::Grab()
 {
 
-	
 	FHitResult _hitResult;
 	
 	bool _hasHit = FindTargetInReach(_hitResult);
