@@ -1,4 +1,4 @@
-
+//Copyright © 2023 Pluz21(TVL).All rights reserved.
 #include "Dragon.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -172,7 +172,7 @@ void ADragon::FireBreath()
 	if (!attackCompo)return;
 	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,GetOwner());
 	if (!_spawnedProjectile)return;
-	manaCompo->AddMana(-manaCompo->manaCost);
+	manaCompo->AddMana(-manaCompo->manaCost);    
 	_spawnedProjectile->
 		projectileManager->AddItem(_spawnedProjectile);
 	float _size = projectileManager->GetAllProjectilesSize();

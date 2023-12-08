@@ -1,10 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//Copyright © 2023 Pluz21(TVL).All rights reserved.
 
 #include "MoveComponent.h"
 #include "Dragon.h"
 #include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values for this component's properties
@@ -84,9 +84,14 @@ void UMoveComponent::ChasePlayer()
 	}
 	FVector _direction = playerRef->GetActorLocation() - ownerRef->GetActorLocation();
 	//UE_LOG(LogTemp, Warning, TEXT("Direction from Enemy is : %s"), *_direction.ToString());
-
+	FVector _normalizedDirection = _direction.GetSafeNormal();
+	FRotator _newRotate = _normalizedDirection.Rotation();
 	FVector _targetLocation = ownerRef->GetActorLocation() + _direction * chaseSpeed * GetWorld()->DeltaTimeSeconds;
+	ownerRef->SetActorRotation(_newRotate);
 	ownerRef->SetActorLocation(_targetLocation);
+
+		// UKismetMathLibrary::MakeRotFromXZ(_direction, FVector::UpVector);
+	
 }
 
 void UMoveComponent::Rotate()
