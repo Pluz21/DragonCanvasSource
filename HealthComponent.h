@@ -23,6 +23,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isDead = false;
 
+	// Colors
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor currentColor = FLinearColor(0,0,0);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor highHealthColor = FLinearColor(0,0,0);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor midHealthColor = FLinearColor(0,0,0);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor lowHealthColor = FLinearColor(0,0,0);
+
+	
 
 protected:
 	// Called when the game starts
@@ -42,4 +53,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetIsDead(bool _value);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetHealthColor();
 };

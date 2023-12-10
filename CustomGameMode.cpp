@@ -15,7 +15,7 @@ void ACustomGameMode::InitProjectileManager()
 	projectileManager = GetWorld()->SpawnActor<AProjectileManager>(projectileManagerToSpawn);
 	if (!projectileManager)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" Failed to spawn CubeManager"));
+		UE_LOG(LogTemp, Warning, TEXT(" Failed to spawn ProjectileManager"));
 	}
 }
 

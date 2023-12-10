@@ -98,6 +98,7 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 
 
 }
+
 void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 {
 	UE_LOG(LogTemp, Warning, TEXT("HandleSnap Call"));
@@ -113,29 +114,21 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), spawnerToFind, allSpawners);
 
 
-			int _sizeAllSpawners = allSpawners.Num();
-			for (int j = 0; j < _sizeAllSpawners; j++)
-			{
-				ASpawner* _spawnerRef = Cast<ASpawner>(allSpawners[j]);
-				
-				if (_spawnerRef)
-				{
-					AActor* _spawnedEnemy = _spawnerRef->Spawn();
-					allSpawnedFromSnap.Add(_spawnedEnemy);
-				}
-			}
-			// specific exit loop because we check vesselref = vessel.
-			//break;
-//	}
+	int _sizeAllSpawners = allSpawners.Num();
+	for (int i = 0; i < _sizeAllSpawners; i++)
+	{
+		ASpawner* _spawnerRef = Cast<ASpawner>(allSpawners[i]);
+
+		if (_spawnerRef)
+		{
+			AActor* _spawnedEnemy = _spawnerRef->Spawn();
+			allSpawnedFromSnap.Add(_spawnedEnemy);
+		}
+
+
+	}
 
 }
-
-	
-	
-
-
-
-
 
 bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
 {

@@ -1,4 +1,4 @@
-//Copyright © 2023 Pluz21(TVL).All rights reserved.
+//Copyright ï¿½ 2023 Pluz21(TVL).All rights reserved.
 #include "Dragon.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"

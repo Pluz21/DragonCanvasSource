@@ -27,26 +27,29 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 	// ...
 }
 
 void UHealthComponent::Init()
 {
 	currentHealth = maxHealth;
+	SetHealthColor();
 }
 
 void UHealthComponent::AddHealth(int _value)
 {
 	if (currentHealth <= 0)
 	{
+		SetHealthColor();   // has to be called in other places too.
 		SetIsDead(true);
 		
 
 		// To Do : Add Death Menu
 		return;
 	}
-	
 	currentHealth += _value;
+	SetHealthColor();
 	UE_LOG(LogTemp, Error, TEXT("Current Health = %i"), currentHealth);
 
 	
@@ -61,4 +64,36 @@ void UHealthComponent::SetIsDead(bool _value)
 
 
 }
+
+void UHealthComponent::SetHealthColor()
+{
+
+	if (currentHealth == maxHealth)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Called HealthColor INIT"));
+
+		currentColor = highHealthColor;
+	}
+	float maxHealthFraction = 1.2f;
+	float midHealthFraction = 1.9f;
+	float lowHealthFraction = 3.5f;
+
+	float maxHealthThreshHold = maxHealth / maxHealthFraction;
+	float midHealthThreshHold = maxHealth / midHealthFraction;
+	float lowHealthThreshHold = maxHealth / lowHealthFraction;
+	UE_LOG(LogTemp, Error, TEXT("MaxHealththreshold = %f"), maxHealthThreshHold);
+	UE_LOG(LogTemp, Error, TEXT("MidHealththreshold = %f"), midHealthThreshHold);
+	UE_LOG(LogTemp, Error, TEXT("LowHealththreshold = %f"), lowHealthThreshHold);
+
+	if (currentHealth > maxHealthThreshHold)
+		currentColor = highHealthColor;
+
+	if (currentHealth > midHealthThreshHold && currentHealth < maxHealthThreshHold)
+		currentColor = midHealthColor;
+	
+	if (currentHealth > lowHealthThreshHold && currentHealth < midHealthThreshHold)
+		currentColor = lowHealthColor;
+}
+
+
 
