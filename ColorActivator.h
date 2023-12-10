@@ -62,4 +62,6 @@ public:
 	void SetIsSpawner(bool _value) { isSpawner = _value; }
 	bool GetIsSpawner() { return isSpawner; }
 	UProjectileTriggerComponent* GetTriggerCompo() { return triggerCompo; }
+
+	void SetMatToApply(UMaterialInstance* _mat) { matToApply = _mat; }
 };

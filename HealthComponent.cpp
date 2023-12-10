@@ -76,24 +76,27 @@ void UHealthComponent::SetHealthColor()
 	}
 	float maxHealthFraction = 1.2f;
 	float midHealthFraction = 1.9f;
-	float lowHealthFraction = 3.5f;
+	float lowHealthFraction = 3.3f;
+	float criticalHealthFraction = 4.2f;
 
 	float maxHealthThreshHold = maxHealth / maxHealthFraction;
 	float midHealthThreshHold = maxHealth / midHealthFraction;
 	float lowHealthThreshHold = maxHealth / lowHealthFraction;
+	float criticalHealthThreshHold = maxHealth / criticalHealthFraction;
 	UE_LOG(LogTemp, Error, TEXT("MaxHealththreshold = %f"), maxHealthThreshHold);
 	UE_LOG(LogTemp, Error, TEXT("MidHealththreshold = %f"), midHealthThreshHold);
 	UE_LOG(LogTemp, Error, TEXT("LowHealththreshold = %f"), lowHealthThreshHold);
+	UE_LOG(LogTemp, Error, TEXT("CriticalHealththreshold = %f"), criticalHealthFraction);
 
-	if (currentHealth > maxHealthThreshHold)
+	if (currentHealth >= maxHealthThreshHold)
 		currentColor = highHealthColor;
 
-	if (currentHealth > midHealthThreshHold && currentHealth < maxHealthThreshHold)
+	if (currentHealth >= midHealthThreshHold && currentHealth <= maxHealthThreshHold)
 		currentColor = midHealthColor;
 	
-	if (currentHealth > lowHealthThreshHold && currentHealth < midHealthThreshHold)
+	if (currentHealth >= lowHealthThreshHold && currentHealth <= midHealthThreshHold)
 		currentColor = lowHealthColor;
+	
+	if (currentHealth >= criticalHealthFraction && currentHealth <= lowHealthThreshHold)
+		currentColor = criticalHealthColor;  
 }
-
-
-

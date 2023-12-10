@@ -4,10 +4,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
 
-// Sets default values
+// THIS CLASS IS THE ONE THAT ALLOWS ACTORS TO CHANGE TO THE COLOR OF THE PROJECTILE
 AColorActivatorProjectile::AColorActivatorProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("meshCompo");
 

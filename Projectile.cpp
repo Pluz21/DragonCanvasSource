@@ -59,8 +59,8 @@ void AProjectile::Init()
 	if (!gameMode)return;
 	projectileManager = gameMode->GetProjectileManager();
 	if (projectileManager)return;
-	projectileManager->AddItem(this);
-
+	projectileManager->AddItem(this); // Not necessary. Safety extra call but already called on spawn from Dragon
+	
 	actorSpawnLocation = GetActorLocation();
 	forwardVector = GetActorForwardVector();
 	//SetLifeSpan(lifeSpan);

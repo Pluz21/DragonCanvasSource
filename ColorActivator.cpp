@@ -7,8 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
 
+// THIS CLASS CHANGES THE MATERIAL OF THE PROJECTILE ON OVERLAP WITH A PICK-UP class
 
-// Sets default values
 AColorActivator::AColorActivator()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -70,7 +70,7 @@ void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	
 }
 
-void AColorActivator::GiveColor()
+void AColorActivator::GiveColor() // Function to be re-used for the projectile selection
 {
 	if (!dragonProjectileRef)return;
 	AProjectile* _projectileRef = dragonProjectileRef.GetDefaultObject();
@@ -79,7 +79,7 @@ void AColorActivator::GiveColor()
 					GetComponentByClass<UStaticMeshComponent>();
 
 	 UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
-	 _projectileMesh->SetMaterial(0,matToApply);
+	 _projectileMesh->SetMaterial(0,matToApply); 
 
 }
 

@@ -46,6 +46,7 @@ AProjectile* UAttackComponent::SpawnProjectile(const FVector& _spawnLocation,AAc
 		UE_LOG(LogTemp, Warning, TEXT("Spawned Projectile Owner: %s"), *_owner->GetName());
 
 	}
+
 	return _spawned;
 }
 

@@ -32,6 +32,8 @@ public:
 	FLinearColor midHealthColor = FLinearColor(0,0,0);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor lowHealthColor = FLinearColor(0,0,0);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor criticalHealthColor = FLinearColor(0,0,0);
 
 	
 
@@ -50,6 +52,8 @@ public:
 		
 	UFUNCTION(BlueprintCallable)
 	int GetCurrentHealth() { return currentHealth; }
+	UFUNCTION(BlueprintCallable)
+	void SetMaxHealth(int _value) { maxHealth = _value; }
 
 	UFUNCTION(BlueprintCallable)
 	void SetIsDead(bool _value);

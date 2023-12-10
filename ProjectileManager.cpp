@@ -25,6 +25,8 @@ void AProjectileManager::Tick(float DeltaTime)
 
 }
 
+// PROJECTILES
+
 void AProjectileManager::AddItem(TObjectPtr<AProjectile> _item)
 {
 	if (!_item || Exists(_item))return; // check if item is !valid and if he has already been added to array
@@ -65,8 +67,60 @@ bool AProjectileManager::Exists(const int& _index)
 {
 	int _size = allProjectiles.Num();
 	if (_index < 0 || _index >= _size)return false; // check out of the bounds of array
-	AProjectile* _chaser = allProjectiles[_index];
-	if (!_chaser)return false;
+	AProjectile* _projectile = allProjectiles[_index];
+	if (!_projectile)return false;
 	return true;
 }
+
+// MATS 
+
+void AProjectileManager::AddMaterial(TObjectPtr<UMaterialInstance> _mat)
+{
+	//exists check
+	allCollectedMats.Add(_mat);
+}
+
+void AProjectileManager::RemoveMaterial(TObjectPtr<UMaterialInstance> _mat)
+{
+	//exists check
+	allCollectedMats.Remove(_mat);
+
+
+}
+
+bool AProjectileManager::MatExists(TObjectPtr<UMaterialInstance> _mat)
+{
+	int _size = allCollectedMats.Num();
+	for (int i = 0; i < _size; i++)
+	{
+		UMaterialInstance* _matInstance = allCollectedMats[i];
+		if (!_matInstance)continue;
+		if (_matInstance == _mat)
+			return true;
+	}
+	return false;
+}
+
+bool AProjectileManager::MatExists(const int& _index)
+{
+	int _size = allCollectedMats.Num();
+	if (_index < 0 || _index >= _size)return false; // check out of the bounds of array
+	UMaterialInstance* _matInstance = allCollectedMats[_index];
+	if (!_matInstance)return false;
+	return true;
+}
+
+TObjectPtr<UMaterialInstance> AProjectileManager::GetMaterialInstance(const int& _index)
+{
+	int _size = allCollectedMats.Num();
+	if (_size >= 0 && _index >= 0 && _index < _size) 
+		return allCollectedMats[_index];					
+	return nullptr;
+}
+
+
+
+
+
+
 

@@ -13,6 +13,9 @@ class DRAGONCANVAS_API AProjectileManager : public AActor
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
 	
+	UPROPERTY(EditAnywhere)
+	TArray<UMaterialInstance*> allCollectedMats;
+	
 public:	
 	// Sets default values for this actor's properties
 	AProjectileManager();
@@ -26,10 +29,17 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 	void AddItem(TObjectPtr<AProjectile> _item);
 	void RemoveItem(TObjectPtr<AProjectile> _item);
-	TObjectPtr<AProjectile> GetItem(const int& _index); //we need the index. 
 	bool Exists(TObjectPtr<AProjectile> _item);
 	bool Exists(const int& _index);
+	TObjectPtr<AProjectile> GetItem(const int& _index); //we need the index. 
+
+	void AddMaterial(TObjectPtr<UMaterialInstance> _mat);
+	void RemoveMaterial(TObjectPtr<UMaterialInstance> _mat);
+	bool MatExists(TObjectPtr <UMaterialInstance> _mat);
+	bool MatExists(const int& _index);
+	TObjectPtr<UMaterialInstance> GetMaterialInstance(const int& _index);
 
 };
