@@ -76,13 +76,13 @@ bool AProjectileManager::Exists(const int& _index)
 
 void AProjectileManager::AddMaterial(TObjectPtr<UMaterialInstance> _mat)
 {
-	//exists check
+	if (!_mat || MatExists(_mat))return; 
 	allCollectedMats.Add(_mat);
 }
 
 void AProjectileManager::RemoveMaterial(TObjectPtr<UMaterialInstance> _mat)
 {
-	//exists check
+	if (!MatExists(_mat))return;
 	allCollectedMats.Remove(_mat);
 
 

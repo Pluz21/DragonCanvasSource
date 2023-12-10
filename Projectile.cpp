@@ -60,7 +60,12 @@ void AProjectile::Init()
 	projectileManager = gameMode->GetProjectileManager();
 	if (projectileManager)return;
 	projectileManager->AddItem(this); // Not necessary. Safety extra call but already called on spawn from Dragon
-	
+	// // TODO 
+		//projectileManager->AddMaterial()
+		//Call GetMat on spawn ? 
+		//Better to call it on the color activator. 
+		// That way we can swap color even without shooting
+
 	actorSpawnLocation = GetActorLocation();
 	forwardVector = GetActorForwardVector();
 	//SetLifeSpan(lifeSpan);
@@ -121,9 +126,6 @@ void AProjectile::SelfDestruct()
 	UE_LOG(LogTemp, Warning, TEXT("DESTRUCTION"));
 
 }
-
-
-
 
 
 void AProjectile::FindEndLocation()

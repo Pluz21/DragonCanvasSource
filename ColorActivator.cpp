@@ -3,6 +3,10 @@
 #include "ColorActivator.h"
 #include "Dragon.h"
 #include "PickUps.h"
+
+#include "ProjectileManager.h"
+#include "CustomGameMode.h"
+
 #include "ProjectileTriggerComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
@@ -42,6 +46,8 @@ void AColorActivator::Tick(float DeltaTime)
 }
 void AColorActivator::Init()
 {
+	//Might need to call managers as in Dragon class 
+	InitGameMode();
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	TSubclassOf<AProjectile> _projectileRef = _dragonRef->GetProjectileToSpawn();
 	dragonProjectileRef = _projectileRef;
@@ -50,6 +56,14 @@ void AColorActivator::Init()
 	if (!_secondMeshMat)return;
 	baseMesh->SetMaterial(0, _secondMeshMat);
 	onMaterialReceived.Broadcast(_secondMeshMat);
+}
+
+void AColorActivator::InitGameMode()
+{
+	gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>(); // Grab game mode
+	if (!gameMode)return;
+	projectileManager = gameMode->GetProjectileManager();
+	if (!projectileManager)return;
 }
 
 
@@ -77,9 +91,10 @@ void AColorActivator::GiveColor() // Function to be re-used for the projectile s
 	
 	 UStaticMeshComponent* _projectileMesh = _projectileRef->
 					GetComponentByClass<UStaticMeshComponent>();
-
 	 UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
 	 _projectileMesh->SetMaterial(0,matToApply); 
+	
+	 projectileManager->AddMaterial(matToApply);
 
 }
 
@@ -93,6 +108,7 @@ void AColorActivator::ApplyMatToApply(UMaterialInterface* _mat)
 {
 	if (!_mat)return;
 	matToApply = secondMesh->CreateDynamicMaterialInstance(0, _mat);
+//	projectileManager->AddMaterial(matToApply);
 }
 
 
