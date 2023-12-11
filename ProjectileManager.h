@@ -19,8 +19,7 @@ class DRAGONCANVAS_API AProjectileManager : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProjectileManager();
-	TArray<AProjectile*> GetAllProjectiles() { return allProjectiles; }
-	int GetAllProjectilesSize() { return GetAllProjectiles().Num(); }
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,11 +34,15 @@ public:
 	bool Exists(TObjectPtr<AProjectile> _item);
 	bool Exists(const int& _index);
 	TObjectPtr<AProjectile> GetItem(const int& _index); //we need the index. 
+	TArray<AProjectile*> GetAllProjectiles() { return allProjectiles; }
+	int GetAllProjectilesSize() { return GetAllProjectiles().Num(); }
 
 	void AddMaterial(TObjectPtr<UMaterialInstance> _mat);
 	void RemoveMaterial(TObjectPtr<UMaterialInstance> _mat);
 	bool MatExists(TObjectPtr <UMaterialInstance> _mat);
 	bool MatExists(const int& _index);
 	TObjectPtr<UMaterialInstance> GetMaterialInstance(const int& _index);
+	TArray<UMaterialInstance*> GetAllCollectedMaterialInstances() { return allCollectedMats; }
+	int GetAllCollectedMaterialInstancesSize() { return allCollectedMats.Num(); }
 
 };
