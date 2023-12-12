@@ -48,7 +48,13 @@ void UManaComponent::IdleManaRegen()
 
 void UManaComponent::AddMana(float _value)
 {
+	if (currentMana >= maxMana)return;
 	currentMana += _value;
+}
+
+void UManaComponent::RemoveMana(float _value)
+{
+	currentMana -= _value;
 }
 
 void UManaComponent::SetOutOfMana()
@@ -61,4 +67,6 @@ void UManaComponent::SetOutOfMana()
 	else isOutOfMana = false;
 	//isOutOfMana = false;
 }
+
+
 

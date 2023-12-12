@@ -71,7 +71,7 @@ void AEnemy::SelfDestroy()
 
 void AEnemy::ApplyDamage()
 {
-	playerRef->healthCompo->AddHealth(-damageToApply);
+	playerRef->healthCompo->RemoveHealth(damageToApply);
 }
 
 

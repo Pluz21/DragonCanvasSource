@@ -37,22 +37,34 @@ void UHealthComponent::Init()
 	SetHealthColor();
 }
 
-void UHealthComponent::AddHealth(int _value)
+void UHealthComponent::CheckDeathState()
 {
 	if (currentHealth <= 0)
 	{
-		SetHealthColor();   // has to be called in other places too.
+		SetHealthColor();   
 		SetIsDead(true);
-		
 
-		// To Do : Add Death Menu
+
 		return;
 	}
+}
+
+void UHealthComponent::AddHealth(int _value)
+{
+
+	CheckDeathState();
+	if (currentHealth >= maxHealth)return;
 	currentHealth += _value;
 	SetHealthColor();
 	UE_LOG(LogTemp, Error, TEXT("Current Health = %i"), currentHealth);
 
 	
+}
+
+void UHealthComponent::RemoveHealth(int _value)
+{
+	CheckDeathState();
+	currentHealth -= _value;
 }
 
 void UHealthComponent::SetIsDead(bool _value)

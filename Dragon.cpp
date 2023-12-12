@@ -153,7 +153,7 @@ void ADragon::Action()
 
 void ADragon::FireBreath()
 {
-	if (manaCompo->isOutOfMana || manaCompo->currentMana <= manaCompo->manaCost)return;
+	if (manaCompo->isOutOfMana || manaCompo->currentMana <= manaCompo->projectileManaCost)return;
 	spawnPointLocation = spawnPoint->GetComponentLocation();	
 	FVector _location;
 	FRotator _rotation;					
@@ -172,7 +172,7 @@ void ADragon::FireBreath()
 	if (!attackCompo)return;
 	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,GetOwner());
 	if (!_spawnedProjectile)return;
-	manaCompo->AddMana(-manaCompo->manaCost);    
+	manaCompo->RemoveMana(manaCompo->projectileManaCost);    
 	_spawnedProjectile->
 		projectileManager->AddItem(_spawnedProjectile);
 	float _size = projectileManager->GetAllProjectilesSize();

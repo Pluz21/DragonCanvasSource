@@ -48,8 +48,11 @@ public:
 	void Init();
 
 	UFUNCTION(BlueprintCallable)
+	void CheckDeathState();
+	UFUNCTION(BlueprintCallable)
 	void AddHealth(int _value);
-		
+	UFUNCTION(BlueprintCallable)
+	void RemoveHealth(int _value);
 	UFUNCTION(BlueprintCallable)
 	int GetCurrentHealth() { return currentHealth; }
 	UFUNCTION(BlueprintCallable)

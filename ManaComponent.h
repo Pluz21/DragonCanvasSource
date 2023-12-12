@@ -15,7 +15,7 @@ public:
 	// Sets default values for this component's properties
 	UManaComponent();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0", ClampMax = "100"))
 	float maxMana = 100;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float currentMana = 0;
@@ -24,10 +24,12 @@ public:
 	float manaRegenRate = 5;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float manaCost = 15;
+	float projectileManaCost = 15;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isOutOfMana = false;
+
+
 
 protected:
 	// Called when the game starts
@@ -43,6 +45,8 @@ public:
 	void IdleManaRegen();
 	UFUNCTION(BlueprintCallable)
 	void AddMana(float _value);
+	UFUNCTION(BlueprintCallable)
+	void RemoveMana(float _value);
 	
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentMana() { return currentMana; }
@@ -53,4 +57,5 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetOutOfMana();
+
 };
