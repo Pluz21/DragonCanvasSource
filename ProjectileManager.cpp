@@ -15,6 +15,7 @@ AProjectileManager::AProjectileManager()
 void AProjectileManager::BeginPlay()
 {
 	Super::BeginPlay();
+	//onMatAcquired.AddDynamic(this, &AProjectileManager::)
 	
 }
 
@@ -78,6 +79,10 @@ void AProjectileManager::AddMaterial(TObjectPtr<UMaterialInstance> _mat)
 {
 	if (!_mat || MatExists(_mat))return; 
 	allCollectedMats.Add(_mat);
+	// ADD EVENT
+	onMatAcquired.Broadcast(_mat);
+	UE_LOG(LogTemp, Warning, TEXT("Broadcast onMatAcquired"));
+
 }
 
 void AProjectileManager::RemoveMaterial(TObjectPtr<UMaterialInstance> _mat)

@@ -259,7 +259,7 @@ void ADragon::LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult
 void ADragon::StartLineTraceAction()
 {
 	LineTraceDisplacement(world, hitResult);
-	UE_LOG(LogTemp, Warning, TEXT("DRAGON EVENT CALLED THROUGH  PROJECTILE"));
+	//UE_LOG(LogTemp, Warning, TEXT("DRAGON EVENT CALLED THROUGH  PROJECTILE"));
 
 }
 

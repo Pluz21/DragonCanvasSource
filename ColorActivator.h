@@ -72,7 +72,9 @@ public:
 	void SetIsSpawner(bool _value) { isSpawner = _value; }
 	bool GetIsSpawner() { return isSpawner; }
 	UProjectileTriggerComponent* GetTriggerCompo() { return triggerCompo; }
-
+	UFUNCTION(BlueprintCallable,BlueprintPure)
+	UMaterialInterface* GetMatToApply() { return matToApply; }
+	UFUNCTION(BlueprintCallable)
 	void SetMatToApply(UMaterialInstance* _mat) { matToApply = _mat; }
 	
 };

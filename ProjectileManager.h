@@ -9,6 +9,11 @@ class AProjectile;
 UCLASS()
 class DRAGONCANVAS_API AProjectileManager : public AActor
 {
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMaterialAcquired, UMaterialInterface*, mat);
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FMaterialAcquired onMatAcquired;
+
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
@@ -45,4 +50,6 @@ public:
 	TArray<UMaterialInstance*> GetAllCollectedMaterialInstances() { return allCollectedMats; }
 	int GetAllCollectedMaterialInstancesSize() { return allCollectedMats.Num(); }
 
+	UFUNCTION()
+	FMaterialAcquired& OnMatAcquired() { return onMatAcquired; }
 };
