@@ -77,4 +77,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetMatToApply(UMaterialInstance* _mat) { matToApply = _mat; }
 	
+
+
+
 };
