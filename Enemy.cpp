@@ -4,6 +4,11 @@
 #include "MoveComponent.h"
 #include "Dragon.h"
 #include "HealthComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "UObject/ConstructorHelpers.h"
+
+
+
 
 // Sets default values
 AEnemy::AEnemy()
@@ -14,6 +19,7 @@ AEnemy::AEnemy()
 	baseMesh = CreateDefaultSubobject<UStaticMeshComponent>("baseMesh");
 	secondMesh = CreateDefaultSubobject<UStaticMeshComponent>("secondMesh");
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
+	soundToPlay = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Enemy_Hit_sound.Enemy_Hit_sound")).Object;
 	baseMesh->SetupAttachment(root);
 	secondMesh->SetupAttachment(baseMesh);
 	AddOwnedComponent(moveCompo);
@@ -60,7 +66,7 @@ void AEnemy::SelfDestroy()
 		Destroy(); // Play Animation
 		if (playerRef->healthCompo->isDead)return;
 		ApplyDamage();
-		
+		PlaySound(soundToPlay);
 		UE_LOG(LogTemp, Warning, TEXT("You got hit by a Flamito!"));
 
 	}
@@ -72,6 +78,13 @@ void AEnemy::SelfDestroy()
 void AEnemy::ApplyDamage()
 {
 	playerRef->healthCompo->RemoveHealth(damageToApply);
+}
+
+void AEnemy::PlaySound(USoundBase* _audioToPlay)
+{
+	if (!_audioToPlay)return;
+	UGameplayStatics::PlaySound2D(GetWorld(), _audioToPlay);
+
 }
 
 

@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Enemy.generated.h"
+
 class UMoveComponent;
 class ADragon;
 UCLASS()
@@ -23,6 +24,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
 	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> soundToPlay;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ADragon> playerRef;
 	
@@ -46,4 +50,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamage();
+	UFUNCTION(BlueprintCallable)
+	void PlaySound(USoundBase* _audioToPlay);
 };
