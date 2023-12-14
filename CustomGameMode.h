@@ -16,14 +16,14 @@ class DRAGONCANVAS_API ACustomGameMode : public AGameModeBase
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectileManager> projectileManagerToSpawn;
-
-	UPROPERTY(EditAnywhere)
+public :
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<AProjectileManager> projectileManager = nullptr;
 
 	
 public :
-
-	TObjectPtr<AProjectileManager> GetProjectileManager() { return projectileManager; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	AProjectileManager* GetProjectileManager() { return projectileManager; }
 
 protected:
 

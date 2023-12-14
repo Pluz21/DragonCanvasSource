@@ -16,6 +16,7 @@ void ACustomGameMode::InitProjectileManager()
 	if (!projectileManager)
 	{
 		UE_LOG(LogTemp, Warning, TEXT(" Failed to spawn ProjectileManager"));
+
 	}
 }
 
