@@ -9,6 +9,11 @@
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DRAGONCANVAS_API UHealthComponent : public UActorComponent
 {
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathEvent);
+
+	UPROPERTY(EditAnywhere, BlueprintAssignable)
+	FDeathEvent onDeath;
+	
 	GENERATED_BODY()
 
 public:	
@@ -63,4 +68,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetHealthColor();
+	UFUNCTION()
+	void TestDeath();
 };

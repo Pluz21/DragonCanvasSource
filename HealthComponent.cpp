@@ -34,6 +34,7 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UHealthComponent::Init()
 {
 	currentHealth = maxHealth;
+	onDeath.AddDynamic(this, &UHealthComponent::TestDeath);
 	SetHealthColor();
 }
 
@@ -52,26 +53,26 @@ void UHealthComponent::CheckDeathState()
 void UHealthComponent::AddHealth(int _value)
 {
 
-	CheckDeathState();
 	if (currentHealth >= maxHealth)return;
 	currentHealth += _value;
 	SetHealthColor();
 	UE_LOG(LogTemp, Error, TEXT("Current Health = %i"), currentHealth);
+	CheckDeathState();
 
 	
 }
 
 void UHealthComponent::RemoveHealth(int _value)
 {
-	CheckDeathState();
 	currentHealth -= _value;
+	CheckDeathState();
 }
 
 void UHealthComponent::SetIsDead(bool _value)
 {
 
 		isDead = _value;
-		
+		onDeath.Broadcast();
 		UE_LOG(LogTemp, Error, TEXT("You are dead"));
 
 
@@ -111,4 +112,10 @@ void UHealthComponent::SetHealthColor()
 	
 	if (currentHealth >= criticalHealthFraction && currentHealth <= lowHealthThreshHold)
 		currentColor = criticalHealthColor;  
+}
+
+void UHealthComponent::TestDeath()
+{
+	UE_LOG(LogTemp, Error, TEXT("Triggered Death Event : %d"), onDeath.IsBound());
+
 }
