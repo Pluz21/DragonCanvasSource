@@ -204,6 +204,7 @@ public:
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
 	TArray<AProjectile*> GetAllProjectiles() { return allProjectiles; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TSubclassOf<AProjectile>GetProjectileToSpawn() { return projectileToSpawn; }
 
 	UFUNCTION() void LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult);
