@@ -3,9 +3,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
-#include "MoveComponent.h"
+#include "DragonCanvas/Components/MoveComponent.h"
 #include "ProjectileManager.h"
-#include "CustomGameMode.h"
+#include "DragonCanvas/World/CustomGameMode.h"
 
 #include "Projectile.h"
 
@@ -13,10 +13,10 @@
 #include "GameFramework/SpringArmComponent.h"
 
 #include "PhysicsEngine/PhysicsHandleComponent.h"
-#include "Grabber.h"
-#include "HealthComponent.h"
-#include "ManaComponent.h"
-#include "AttackComponent.h"
+#include "DragonCanvas/Components/Grabber.h"
+#include "DragonCanvas/Components/HealthComponent.h"
+#include "DragonCanvas/Components/ManaComponent.h"
+#include "DragonCanvas/Components/AttackComponent.h"
 
 
 #include "Kismet/KismetSystemLibrary.h"

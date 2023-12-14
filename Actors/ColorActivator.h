@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ProjectileTriggerComponent.h"
+#include "DragonCanvas/Components/ProjectileTriggerComponent.h"
 #include "ColorActivator.generated.h"
 class AProjectile;
 class ADragon;

@@ -2,13 +2,13 @@
 #include "Projectile.h"
 #include "Dragon.h"
 
-#include "CustomGameMode.h"
+#include "DragonCanvas/World/CustomGameMode.h"
 #include "ProjectileManager.h"
 
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "MoveComponent.h"
+#include "DragonCanvas/Components/MoveComponent.h"
 
 
 // Sets default values

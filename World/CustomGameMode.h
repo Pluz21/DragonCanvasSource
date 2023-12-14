@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "DragonCanvas/Actors/ProjectileManager.h"
 #include "CustomGameMode.generated.h"
 
 /**

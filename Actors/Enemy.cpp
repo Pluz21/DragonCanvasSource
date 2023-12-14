@@ -1,9 +1,9 @@
 //Copyright © 2023 Pluz21(TVL).All rights reserved.
 
 #include "Enemy.h"
-#include "MoveComponent.h"
-#include "Dragon.h"
-#include "HealthComponent.h"
+#include "DragonCanvas/Components/MoveComponent.h"
+#include "DragonCanvas/Actors/Dragon.h"
+#include "DragonCanvas/Components/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 

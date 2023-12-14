@@ -1,8 +1,8 @@
 //Copyright © 2023 Pluz21(TVL).All rights reserved.
 
 #include "MoveComponent.h"
-#include "Dragon.h"
-#include "Projectile.h"
+#include "DragonCanvas/Actors/Dragon.h"
+#include "DragonCanvas/Actors/Projectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 

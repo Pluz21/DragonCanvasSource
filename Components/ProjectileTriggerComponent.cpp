@@ -3,12 +3,11 @@
 #include "ProjectileTriggerComponent.h"
 
 #include "Grabber.h"
-#include "Spawner.h"
-#include "FireSpawner.h"
-#include "CustomGameMode.h"
-#include "Enemy.h"
-#include "ColorActivator.h"
-#include "Dragon.h"
+#include "DragonCanvas/Actors/Spawner.h"
+#include "DragonCanvas/World/CustomGameMode.h"
+#include "DragonCanvas/Actors/Enemy.h"
+#include "DragonCanvas/Actors/ColorActivator.h"
+#include "DragonCanvas/Actors/Dragon.h"
 
 #include <Kismet/GameplayStatics.h>
 

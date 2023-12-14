@@ -1,7 +1,7 @@
 //Copyright © 2023 Pluz21(TVL).All rights reserved.
 
 #include "AttackComponent.h"
-#include "Projectile.h"
+#include "DragonCanvas/Actors/Projectile.h"
 
 // Sets default values for this component's properties
 UAttackComponent::UAttackComponent()

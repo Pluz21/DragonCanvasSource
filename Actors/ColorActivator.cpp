@@ -5,9 +5,9 @@
 #include "PickUps.h"
 
 #include "ProjectileManager.h"
-#include "CustomGameMode.h"
+#include "DragonCanvas/World/CustomGameMode.h"
 
-#include "ProjectileTriggerComponent.h"
+#include "DragonCanvas/Components/ProjectileTriggerComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
 
