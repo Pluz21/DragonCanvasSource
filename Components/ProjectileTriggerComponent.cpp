@@ -8,6 +8,8 @@
 #include "DragonCanvas/Actors/Enemy.h"
 #include "DragonCanvas/Actors/ColorActivator.h"
 #include "DragonCanvas/Actors/Dragon.h"
+#include "DragonCanvas/Actors/ProjectileManager.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 #include <Kismet/GameplayStatics.h>
 
@@ -15,7 +17,6 @@ UProjectileTriggerComponent::UProjectileTriggerComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
-	
 }
 
 
@@ -28,37 +29,29 @@ void UProjectileTriggerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Init();
+	InitGameMode();
 	
 	
 }
 
 void UProjectileTriggerComponent::Init()
 {
-	gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>();
-	if (!gameMode)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Game mode not found."));
-			return;
-		}
+	
 	onSnap.AddDynamic(this, &UProjectileTriggerComponent::HandleSnap);
-
-	/*snapManager = gameMode->GetSnapManager();
-	if (!snapManager)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Snap manager not found."));
-			return;
-		}*/
-
-	//snapManager->OnSnap().AddUniqueDynamic(this, &UProjectileTriggerComponent::HandleSnap);
 	
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	dragonRef = _dragonRef;
 }
 
-void UProjectileTriggerComponent::Test(AActor* _snappedActor)
+
+void UProjectileTriggerComponent::InitGameMode()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Snapped actor : %s"), *_snappedActor->GetName());
+		gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>(); // Grab game mode
+		if (!gameMode)return;
+		projectileManager = gameMode->GetProjectileManager();
+		if (!projectileManager)return;
 }
+
 
 
 void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Actor is Actor to Snap
@@ -74,14 +67,13 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 	FAttachmentTransformRules _snap = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
 
 	if (!MaterialChecker(_targetActor))return; // Check if the material is the same 
+	// Add To Manager mat
 
 	_primitiveCompo->SetSimulatePhysics(false);				//Snap
 	_targetActor->AttachToComponent(GetOwner()->
 		GetComponentByClass<UStaticMeshComponent>(), _snap);
 
-	//snapManager->NotifySnap(_targetActor); // Broadcast through the manager
 	// The grabber is on the player not on the actor to snap
-	onSnap.Broadcast(_targetActor);
 	if (!dragonRef) 
 	{
 		ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
@@ -93,7 +85,8 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 	if (!_grabberCompo)return;
 
 	_grabberCompo->Release();
-	
+
+	onSnap.Broadcast(_targetActor);
 
 
 }
@@ -123,8 +116,6 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 			AActor* _spawnedEnemy = _spawnerRef->Spawn();
 			allSpawnedFromSnap.Add(_spawnedEnemy);
 		}
-
-
 	}
 
 }
@@ -137,17 +128,24 @@ bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
 	if (!_owner)return false; 
 	UStaticMeshComponent* _ownerMesh =
 		_owner->GetComponentByClass<UStaticMeshComponent>();
-	if(UMaterialInterface* _currentMaterial = _ownerMesh->GetMaterial(0))
-	mat = _currentMaterial;
+	//if(UMaterialInterface* _currentMaterial = _ownerMesh->GetMaterial(0))
+	//mat = _currentMaterial;
 	UMaterialInterface* _currentMaterial = _ownerMesh->GetMaterial(0);
-	// not sure
 	UStaticMeshComponent* _targetMesh = _targetToCheck->
 		GetComponentByClass<UStaticMeshComponent>();
 	UMaterialInterface* _targetMaterial = _targetMesh->GetMaterial(0);
-	targetMat = _targetMaterial;
+	//targetMat = _targetMaterial;
 	if (_targetMaterial != _currentMaterial)
 	{
+		
 		return false;
 	}
-	return true;
+	else
+	{
+
+		mat = _currentMaterial;
+		targetMat = _targetMaterial;
+		projectileManager->AddMaterial(UMaterialInstanceDynamic::Create(_currentMaterial, _ownerMesh));
+		return true;
+	}
 }

@@ -11,6 +11,8 @@ class ACustomGameMode;
 class ASpawner;
 class AEnemy;
 class AColorActivator; 
+class AProjectileManager;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 
 class DRAGONCANVAS_API UProjectileTriggerComponent : public UActorComponent
@@ -27,12 +29,14 @@ public:
 	UProjectileTriggerComponent();
 	UPROPERTY()
 	TObjectPtr<ADragon> dragonRef; 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UMaterialInterface> mat;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialInterface> targetMat;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ACustomGameMode> gameMode;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AProjectileManager> projectileManager;
 	
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> allSpawnedFromSnap;
@@ -59,9 +63,10 @@ public:
 	UFUNCTION()
 	void SnapTarget(AActor* _targetActor);
 	void Init();
-	UFUNCTION()
-	void Test(AActor* _snappedActor);
+	void InitGameMode();
+	UFUNCTION(BlueprintCallable)
 	bool MaterialChecker(AActor*& _targetToCheck);
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	UMaterialInterface* GetMatInterface() { return mat; }
 
 	UFUNCTION()
