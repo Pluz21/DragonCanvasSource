@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "ColorActivatorProjectile.generated.h"
 
+class UMaterialCheckerComponent; 
 UCLASS()
 class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 {
@@ -12,14 +13,19 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UMaterialInstance> initialMat;
+	TObjectPtr<UMaterialInterface> matToCheck;
+	
 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialCheckerComponent> materialChecker;
 	UPROPERTY(EditAnywhere)
 	float InterpolationSpeed = 0.5f;
 	UPROPERTY(EditAnywhere)
 	float TargetParameterValue = 1.0f;
 	UPROPERTY(EditAnywhere)
 	bool canReceiveColor = false;
+
+
 public:	
 	// Sets default values for this actor's properties
 	AColorActivatorProjectile();

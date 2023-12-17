@@ -45,6 +45,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialInstance> matToApply; // This is the one to add to the projectile manager
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialInterface> matInterfaceToApply; // This is the one to add to the projectile manager
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<ACustomGameMode> gameMode;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AProjectileManager> projectileManager;

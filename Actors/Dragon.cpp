@@ -165,7 +165,7 @@ void ADragon::FireBreath()
 	FVector _fwdVector = _rotation.Vector();
 	locationOnLineTraceSpawn = _fwdVector;
 
-	DebugText("Doing Action");
+	//DebugText("Doing Action");
 	if (!(projectileToSpawn))
 	{
 		GEngine->AddOnScreenDebugMessage(1, 0.5, FColor::Black, TEXT("Empty subclass projectile"));

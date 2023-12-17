@@ -11,6 +11,7 @@
 #include "DragonCanvas/Actors/ProjectileManager.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "DragonCanvas/Actors/PickUps.h"
+#include "DragonCanvas/MaterialCheckerComponent.h"
 
 #include <Kismet/GameplayStatics.h>
 
@@ -69,6 +70,8 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 	FAttachmentTransformRules _snap = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
 
 	if (!MaterialChecker(_targetActor))return; // Check if the material is the same 
+	// add safety
+	//if(GetOwner()->FindComponentByClass<UMaterialCheckerComponent>()->MaterialChecker(_targetActor))
 	// Add To Manager mat
 
 	_primitiveCompo->SetSimulatePhysics(false);				//Snap
@@ -131,7 +134,9 @@ void UProjectileTriggerComponent::PlaySound()
 
 bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
 {
-
+	
+	//UMaterialCheckerComponent _checker;
+	//_checker.MaterialChecker(_targetToCheck);
 	AActor* _owner = GetOwner(); 
 
 	if (!_owner)return false; 

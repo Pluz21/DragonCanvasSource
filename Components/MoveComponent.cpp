@@ -40,7 +40,6 @@ void UMoveComponent::Init()
 	if (playerRef = Cast<ADragon>(GetWorld()->
 		GetFirstPlayerController()->GetCharacter()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Cast succeeded to get player in movecomp"));
 
 	}
 	else

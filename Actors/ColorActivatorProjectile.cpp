@@ -2,6 +2,7 @@
 
 #include "ColorActivatorProjectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "DragonCanvas/MaterialCheckerComponent.h"
 #include "Projectile.h"
 
 // THIS CLASS IS THE ONE THAT ALLOWS ACTORS TO CHANGE TO THE COLOR OF THE PROJECTILE
@@ -9,8 +10,9 @@ AColorActivatorProjectile::AColorActivatorProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("meshCompo");
-
+	materialChecker = CreateDefaultSubobject<UMaterialCheckerComponent>("materiaChecker");
 	meshCompo->SetupAttachment(RootComponent);
+	AddOwnedComponent(materialChecker);
 
 }
 
@@ -19,8 +21,7 @@ void AColorActivatorProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	OnActorBeginOverlap.AddDynamic(this, &AColorActivatorProjectile::ManageOverlap);
-	initialMat = meshCompo->CreateDynamicMaterialInstance(0);
-	
+	//initialMat = meshCompo->CreateDynamicMaterialInstance(0);
 }
 
 // Called every frame
@@ -33,18 +34,32 @@ void AColorActivatorProjectile::Tick(float DeltaTime)
 void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
 	//Super::ManageOverlap(_overlapped, _overlap);
+
 	if (!_overlap || !_overlapped) return;
-	if(_overlap->IsA(AProjectile::StaticClass()))
-	ReceiveColor(_overlap);
-	UE_LOG(LogTemp, Warning, TEXT("Overlap"));
+	if (!_overlap->IsA(AProjectile::StaticClass()))return;
+	{    UStaticMeshComponent* _projectileMeshComponent = _overlap->
+		FindComponentByClass<UStaticMeshComponent>();
+		if (_projectileMeshComponent->GetMaterial(0) == matToCheck)
+		{
+		ReceiveColor(_overlap);
+		UE_LOG(LogTemp, Warning, TEXT("matToCheck is true : mattocheck = %s"), *matToCheck.GetName());
+		}
+		else
+		{
+		UE_LOG(LogTemp, Warning, TEXT("matToCheck is false : mattocheck = %s"), *matToCheck.GetName());
+		}
+	}
+	
+	
+
 
 }
 
-void AColorActivatorProjectile::ReceiveColor(AActor* _projectile)
+void AColorActivatorProjectile::ReceiveColor(AActor* _targetToGetColorFrom)
 {
-	UStaticMeshComponent* _projectileMesh = _projectile->GetComponentByClass < UStaticMeshComponent >();
+	UStaticMeshComponent* _projectileMesh = _targetToGetColorFrom->GetComponentByClass < UStaticMeshComponent >();
 	UMaterialInterface* _projectileMat = _projectileMesh->GetMaterial(0);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *_projectileMat->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *_projectileMat->GetName());
 	meshCompo->SetMaterial(0, _projectileMat);
 
 }

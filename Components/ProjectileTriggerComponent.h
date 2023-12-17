@@ -13,6 +13,7 @@ class AEnemy;
 class AColorActivator; 
 class AProjectileManager;
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 
 class DRAGONCANVAS_API UProjectileTriggerComponent : public UActorComponent

@@ -56,6 +56,7 @@ void AColorActivator::Init()
 	if (!_secondMeshMat)return;
 	baseMesh->SetMaterial(0, _secondMeshMat);
 	onMaterialReceived.Broadcast(_secondMeshMat);
+	matInterfaceToApply = secondMesh->GetMaterial(0);
 }
 
 void AColorActivator::InitGameMode()
@@ -92,7 +93,8 @@ void AColorActivator::GiveColor() // Function to be re-used for the projectile s
 	 UStaticMeshComponent* _projectileMesh = _projectileRef->
 					GetComponentByClass<UStaticMeshComponent>();
 	 UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
-	 _projectileMesh->SetMaterial(0,matToApply); 
+	 _projectileMesh->SetMaterial(0, matInterfaceToApply);
+	 //_projectileMesh->SetMaterial(0,matToApply); 
 	
 	// projectileManager->AddMaterial(matToApply);
 
@@ -107,7 +109,8 @@ void AColorActivator::Test(UMaterialInterface* _mat)
 void AColorActivator::ApplyMatToApply(UMaterialInterface* _mat)
 {
 	if (!_mat)return;
-	matToApply = secondMesh->CreateDynamicMaterialInstance(0, _mat);
+	//matToApply = secondMesh->CreateDynamicMaterialInstance(0, _mat);
+	//matInterfaceToApply = secondMesh->CreateDynamicMaterialInstance(0, _mat);
 //	projectileManager->AddMaterial(matToApply);
 }
 
