@@ -11,6 +11,7 @@
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DRAGONCANVAS_API UGrabber : public UActorComponent
 {
+
 	GENERATED_BODY()
 
 public:	

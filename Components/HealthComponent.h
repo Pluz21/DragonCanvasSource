@@ -40,6 +40,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor criticalHealthColor = FLinearColor(0,0,0);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "1", ClampMax = "1.5"))
+	float maxHealthFraction = 1.2f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "1.6", ClampMax = "2.5"))
+	float midHealthFraction = 1.9f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "2.5", ClampMax = "3.5"))
+	float lowHealthFraction = 3.3f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "3.6", ClampMax = "4.5"))
+	float criticalHealthFraction = 4.2f;
+
 	
 
 protected:

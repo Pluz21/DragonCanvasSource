@@ -71,6 +71,7 @@ void AEnemy::SelfDestroy()
 
 	}
 	// TO DO 
+	// EnemyManager->RemoveEnemy(this);
 	// Add explosion effect
 	// Add health loss to player
 }

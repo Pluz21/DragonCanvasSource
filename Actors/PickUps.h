@@ -15,6 +15,8 @@ class DRAGONCANVAS_API APickUps : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APickUps();
+	UPROPERTY(EditAnywhere)
+	bool isSnapped = false;
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,4 +26,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SetIsSnapped() { isSnapped = true; }
 };

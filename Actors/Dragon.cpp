@@ -80,10 +80,12 @@ void ADragon::Init()
 
 	world = GetWorld();
 	playerController = GetWorld()->GetFirstPlayerController();
+	if (!playerController)return;
 	InitInput();
 	InitCameraLimit();
 	currentAmmo = maxAmmo;
 	UpdateMinDistanceToSelfDestruct();
+
 }
 
 void ADragon::InitInput()
@@ -94,6 +96,8 @@ void ADragon::InitInput()
 	if (!_inputSystem)return;
 	_inputSystem->AddMappingContext(mappingContext, 0);
 	UE_LOG(LogTemp, Warning, TEXT("Init inputs"));
+	//playerController->bShowMouseCursor = true;
+
 }
 
 void ADragon::InitCameraLimit()

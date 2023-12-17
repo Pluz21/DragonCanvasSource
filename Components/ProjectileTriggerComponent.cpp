@@ -10,6 +10,7 @@
 #include "DragonCanvas/Actors/Dragon.h"
 #include "DragonCanvas/Actors/ProjectileManager.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "DragonCanvas/Actors/PickUps.h"
 
 #include <Kismet/GameplayStatics.h>
 
@@ -38,6 +39,7 @@ void UProjectileTriggerComponent::Init()
 {
 	
 	onSnap.AddDynamic(this, &UProjectileTriggerComponent::HandleSnap);
+	onSnap.AddDynamic(this, &UProjectileTriggerComponent::PlaySound);
 	
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	dragonRef = _dragonRef;
@@ -73,6 +75,7 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 	_targetActor->AttachToComponent(GetOwner()->
 		GetComponentByClass<UStaticMeshComponent>(), _snap);
 
+	//_targetPickUp->SetIsSnapped();  // Make target not snappable more
 	// The grabber is on the player not on the actor to snap
 	if (!dragonRef) 
 	{
@@ -86,12 +89,12 @@ void UProjectileTriggerComponent::SnapTarget(AActor* _targetActor) // Target Act
 
 	_grabberCompo->Release();
 
-	onSnap.Broadcast(_targetActor);
+	onSnap.Broadcast();
 
 
 }
 
-void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
+void UProjectileTriggerComponent::HandleSnap()
 {
 	UE_LOG(LogTemp, Warning, TEXT("HandleSnap Call"));
 
@@ -115,9 +118,15 @@ void UProjectileTriggerComponent::HandleSnap(AActor* _actorToSnap)
 		{
 			AActor* _spawnedEnemy = _spawnerRef->Spawn();
 			allSpawnedFromSnap.Add(_spawnedEnemy);
+			//TODO : EnemyManager->AddEnemy(_spawnedEnemy);
 		}
 	}
 
+}
+
+void UProjectileTriggerComponent::PlaySound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(),snapSound);
 }
 
 bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)

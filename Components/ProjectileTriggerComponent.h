@@ -18,7 +18,7 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DRAGONCANVAS_API UProjectileTriggerComponent : public UActorComponent
 {
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSnapEvent, AActor*, actorSnapped);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSnapEvent);
 	UPROPERTY()
 	FSnapEvent onSnap;
 
@@ -51,6 +51,9 @@ public:
 	TSubclassOf<AColorActivator> vesselToFind;
 	
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> snapSound;;
+
+	UPROPERTY(EditAnywhere)
 	bool canSpawn = false;
 	
 protected:
@@ -72,6 +75,8 @@ public:
 	UFUNCTION()
 	FSnapEvent& OnSnap() { return onSnap; }
 	UFUNCTION()
-	void HandleSnap(AActor* _actorToSnap);
+	void HandleSnap();
+	UFUNCTION()
+	void PlaySound();
 
 };

@@ -65,7 +65,9 @@ void UHealthComponent::AddHealth(int _value)
 void UHealthComponent::RemoveHealth(int _value)
 {
 	currentHealth -= _value;
+	SetHealthColor();
 	CheckDeathState();
+
 }
 
 void UHealthComponent::SetIsDead(bool _value)
@@ -87,10 +89,6 @@ void UHealthComponent::SetHealthColor()
 
 		currentColor = highHealthColor;
 	}
-	float maxHealthFraction = 1.2f;
-	float midHealthFraction = 1.9f;
-	float lowHealthFraction = 3.3f;
-	float criticalHealthFraction = 4.2f;
 
 	float maxHealthThreshHold = maxHealth / maxHealthFraction;
 	float midHealthThreshHold = maxHealth / midHealthFraction;

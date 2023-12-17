@@ -121,14 +121,8 @@ void UGrabber::Hold()
 	if (!isGrabbing)return;
 	if(physicsHandle && physicsHandle->GetGrabbedComponent())
 	{
-		// hold is triggered even when object is not moving but
-		// if I correct the fact that the object can be taken out of snap
-		// it should fix it.
-		
-		//FVector _targetLocation = GetOwner()->GetActorLocation() // SELF  BOOSTING RETRO
-		//	+ GetOwner()->GetActorForwardVector()  * holdDistance;
+
 			FVector _ownerLocation = GetOwner()->GetActorLocation();
-			//DrawDebugSphere(GetWorld(), _ownerLocation, sphereRadius, 12, FColor::Blue);
 			FVector _cameraNormalDirection = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraRotation().Vector();
 			FVector _targetLocation = _ownerLocation + _cameraNormalDirection * holdDistance;
 		
