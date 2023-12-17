@@ -14,7 +14,8 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	TObjectPtr<UStaticMeshComponent> meshCompo;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialInterface> matToCheck;
-	
+	UPROPERTY(EditAnywhere)
+	TArray<UMaterialInterface*> allMatsToCheck;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialCheckerComponent> materialChecker;
@@ -22,8 +23,9 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	float InterpolationSpeed = 0.5f;
 	UPROPERTY(EditAnywhere)
 	float TargetParameterValue = 1.0f;
+	
 	UPROPERTY(EditAnywhere)
-	bool canReceiveColor = false;
+	bool canCheckMat = false;
 
 
 public:	

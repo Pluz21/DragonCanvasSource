@@ -31,9 +31,7 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	OnActorBeginOverlap.AddDynamic(this, &AProjectile::ManageOverlap);
-	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
-	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
+
 	Init();
 
 }
@@ -60,17 +58,20 @@ void AProjectile::Init()
 	projectileManager = gameMode->GetProjectileManager();
 	if (projectileManager)return;
 	projectileManager->AddItem(this); // Not necessary. Safety extra call but already called on spawn from Dragon
-	// // TODO 
-		//projectileManager->AddMaterial()
-		//Call GetMat on spawn ? 
-		//Better to call it on the color activator. 
-		// That way we can swap color even without shooting
-
+	EventsInit();
+	onProjectileCreated.Broadcast();
 	actorSpawnLocation = GetActorLocation();
 	forwardVector = GetActorForwardVector();
 	//SetLifeSpan(lifeSpan);
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
 
+}
+
+void AProjectile::EventsInit()
+{
+	OnActorBeginOverlap.AddDynamic(this, &AProjectile::ManageOverlap);
+	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
+	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
 }
 
 void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)

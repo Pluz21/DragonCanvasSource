@@ -44,7 +44,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
 	
-	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialInterface> initialMat;
 
 	UPROPERTY(VisibleAnywhere)
 	UWorld* myWorld;
@@ -88,6 +89,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void Init();
+	void EventsInit();
 	UFUNCTION()
 	void ManageOverlap(AActor* _overlapped, AActor* _overlap);
 	void SelfMove(const FVector& _actorForwardVector);
