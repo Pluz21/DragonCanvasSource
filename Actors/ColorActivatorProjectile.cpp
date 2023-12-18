@@ -56,7 +56,7 @@ void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _over
 			{
 			ReceiveColor(_overlap);
 			onMaterialReceived.Broadcast();
-			UE_LOG(LogTemp, Warning, TEXT("matToCheck is true : mattocheck = %s"), *matToCheck.GetName());
+			UE_LOG(LogTemp, Warning, TEXT("matToCheck is true : mattocheck = %s"), *allMatsToCheck[i]->GetName());
 
 			}
 			

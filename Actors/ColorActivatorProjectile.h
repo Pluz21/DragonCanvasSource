@@ -19,13 +19,12 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UMaterialInterface> matToCheck;
+	/*UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialInterface> matToCheck;*/
 	UPROPERTY(EditAnywhere)
 	TArray<UMaterialInterface*> allMatsToCheck;
 	
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AHiddenActors> hiddenActorToFind;
+	
 	UPROPERTY(EditAnywhere)
 	TArray<AHiddenActors*> allHiddenActors;
 
