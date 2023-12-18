@@ -159,7 +159,7 @@ bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
 
 		mat = _currentMaterial;
 		targetMat = _targetMaterial;
-		projectileManager->AddMaterial(UMaterialInstanceDynamic::Create(_currentMaterial, _ownerMesh));
+		//projectileManager->AddMaterial(UMaterialInstanceDynamic::Create(_currentMaterial, _ownerMesh));
 		return true;
 	}
 }

@@ -66,23 +66,29 @@ void ADragon::BeginPlay()
 {
 	Super::BeginPlay();
 	//onProjectileReachedTarget.AddDynamic(this, &ADragon::LineTraceDisplacement);
-	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
 	Init();
 	
 }
 
 void ADragon::Init()
 {
+
 	gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>(); // Grab game mode
 	if (!gameMode)return;
 	projectileManager = gameMode->GetProjectileManager();
 	if (!projectileManager)return;
+	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
 
+	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
+	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
+	//onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::ScrollUpSelectProjectile);
+	//onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::ScrollDownSelectProjectile);
+	
 	world = GetWorld();
 	playerController = GetWorld()->GetFirstPlayerController();
 	if (!playerController)return;
 	InitInput();
-	InitCameraLimit();
+	//InitProjectiles();
 	currentAmmo = maxAmmo;
 	UpdateMinDistanceToSelfDestruct();
 
@@ -95,14 +101,21 @@ void ADragon::InitInput()
 	UEnhancedInputLocalPlayerSubsystem* _inputSystem = _myPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	if (!_inputSystem)return;
 	_inputSystem->AddMappingContext(mappingContext, 0);
-	UE_LOG(LogTemp, Warning, TEXT("Init inputs"));
+	//UE_LOG(LogTemp, Warning, TEXT("Init inputs"));
 	//playerController->bShowMouseCursor = true;
 
 }
 
-void ADragon::InitCameraLimit()
+void ADragon::UpdateCurrentProjectileMat(UMaterialInterface* _mat)
 {
-	
+
+
+	//allProjectileMats.Add(_mat);
+	if (projectileManager->MatExists(_mat, allProjectileMats))return;
+	allProjectileMats.EmplaceAt(0, _mat);
+	currentProjectileMat = allProjectileMats[currentProjectileIndex];
+
+	//onCurrentProjectileMatReceived.Broadcast(_mat);
 }
 
 void ADragon::Move(const FInputActionValue& _value)
@@ -153,6 +166,35 @@ void ADragon::Action()
 	SphereTrace();
 	onLineTraceCreated.Broadcast();
 
+}
+
+void ADragon::ScrollUpSelectProjectile()
+{
+	float _minRange = allProjectileMats.Num() - 1 ;
+	currentProjectileIndex = FMath::Clamp(currentProjectileIndex + 1, 0, _minRange);
+	UpdateProjectileMaterial();
+	DebugText("ScrollUp");
+
+
+}
+
+void ADragon::ScrollDownSelectProjectile()
+{
+	float _minRange = allProjectileMats.Num() - 1;
+	currentProjectileIndex = FMath::Clamp(currentProjectileIndex -1, 0, _minRange);
+	UpdateProjectileMaterial();
+	DebugText("ScrollDown");
+
+}
+
+void ADragon::UpdateProjectileMaterial()
+{
+	if (!projectileToSpawn)return;
+	AProjectile* _projectileRef = projectileToSpawn.GetDefaultObject();
+	UStaticMeshComponent* _projectileMesh = _projectileRef->
+		GetComponentByClass<UStaticMeshComponent>();
+	UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
+	_projectileMesh->SetMaterial(0, allProjectileMats[currentProjectileIndex]);
 }
 
 void ADragon::FireBreath()
@@ -291,7 +333,8 @@ void ADragon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	_myInputCompo->BindAction(inputToRotateYaw, ETriggerEvent::Triggered, this, &ADragon::RotateYaw);
 	_myInputCompo->BindAction(inputToPitch, ETriggerEvent::Triggered, this, &ADragon::RotatePitch);
 	_myInputCompo->BindAction(inputToAction, ETriggerEvent::Triggered, this, &ADragon::Action);
-	//_myInputCompo->BindAction(inputToGrab, ETriggerEvent::Triggered, grabber, &UGrabber::Grab);
+	_myInputCompo->BindAction(inputToScrollUpSelectProjectile, ETriggerEvent::Triggered, this, &ADragon::ScrollUpSelectProjectile);
+	_myInputCompo->BindAction(inputToScrollDownSelectProjectile, ETriggerEvent::Triggered, this, &ADragon::ScrollDownSelectProjectile);
 
 
 }
@@ -300,9 +343,6 @@ void ADragon::UpdateMinDistanceToSelfDestruct()
 {
 	minDistanceToSelfDestruct = coneTraceRadius / 2;
 }
-
-
-
 
 
 

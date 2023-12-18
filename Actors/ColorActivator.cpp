@@ -95,8 +95,7 @@ void AColorActivator::GiveColor() // Function to be re-used for the projectile s
 	 UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
 	 _projectileMesh->SetMaterial(0, matInterfaceToApply);
 	 //_projectileMesh->SetMaterial(0,matToApply); 
-	
-	// projectileManager->AddMaterial(matToApply);
+	 projectileManager->AddMaterial(matInterfaceToApply);
 
 }
 

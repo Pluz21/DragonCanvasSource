@@ -10,16 +10,20 @@ UCLASS()
 class DRAGONCANVAS_API AProjectileManager : public AActor
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMaterialAcquired, UMaterialInterface*, mat);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMatAlreadyInArrayEvent, UMaterialInterface*, mat);
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FMaterialAcquired onMatAcquired;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FMatAlreadyInArrayEvent onMatAlreadyExists;
 
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
+
 	
 	UPROPERTY(EditAnywhere)
-	TArray<UMaterialInstance*> allCollectedMats;
+	TArray<UMaterialInterface*> allCollectedMats;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -42,14 +46,17 @@ public:
 	TArray<AProjectile*> GetAllProjectiles() { return allProjectiles; }
 	int GetAllProjectilesSize() { return GetAllProjectiles().Num(); }
 
-	void AddMaterial(TObjectPtr<UMaterialInstance> _mat);
-	void RemoveMaterial(TObjectPtr<UMaterialInstance> _mat);
-	bool MatExists(TObjectPtr <UMaterialInstance> _mat);
+	void AddMaterial(TObjectPtr<UMaterialInterface> _mat);
+	void RemoveMaterial(TObjectPtr<UMaterialInterface> _mat);
+	bool MatExists(TObjectPtr <UMaterialInterface> _mat);
+	bool MatExists(TObjectPtr<UMaterialInterface> _mat, TArray<UMaterialInterface*> _arrayToCheck);
 	bool MatExists(const int& _index);
-	TObjectPtr<UMaterialInstance> GetMaterialInstance(const int& _index);
-	TArray<UMaterialInstance*> GetAllCollectedMaterialInstances() { return allCollectedMats; }
+	TObjectPtr<UMaterialInterface> GetMaterial(const int& _index);
+	TArray<UMaterialInterface*> GetAllCollectedMaterialInstances() { return allCollectedMats; }
 	int GetAllCollectedMaterialInstancesSize() { return allCollectedMats.Num(); }
 
 	UFUNCTION()
-	FMaterialAcquired& OnMatAcquired() { return onMatAcquired; }
+	FMaterialAcquired& GetOnMatAcquired() { return onMatAcquired; }
+	UFUNCTION()
+	FMatAlreadyInArrayEvent& GetOnMatAlreadyExists() { return onMatAlreadyExists; }
 };

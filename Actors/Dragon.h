@@ -29,7 +29,10 @@ class DRAGONCANVAS_API ADragon : public ACharacter
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLineTraceCreated);
 	//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FProjectileReachedTarget, UWorld*, world, FHitResult, result);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileReachedTarget);
-	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCurrentProjectileMatEvent, UMaterialInterface*, mat);
+
+	UPROPERTY(EditAnywhere)
+	FCurrentProjectileMatEvent onCurrentProjectileMatReceived;
 
 
 	UPROPERTY(EditAnywhere)
@@ -92,7 +95,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputAction> inputToAction;
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> inputToGrab;
+	TObjectPtr<UInputAction> inputToScrollUpSelectProjectile;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UInputAction> inputToScrollDownSelectProjectile;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
 
@@ -115,6 +120,16 @@ public:
 	// spawn variables
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> projectileToSpawn;
+
+	UPROPERTY(EditAnywhere, Category = "ProjectileSelection")
+	TObjectPtr<UMaterialInterface> currentProjectileMat;
+
+	UPROPERTY(EditAnywhere, Category = "ProjectileSelection")
+	TArray<UMaterialInterface*> allProjectileMats;
+
+	UPROPERTY(EditAnywhere, Category = "ProjectileSelection")
+	int currentProjectileIndex = 0;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector spawnPointLocation;
@@ -176,14 +191,18 @@ protected:
 	virtual void BeginPlay() override;
 	void Init();
 	void InitInput();
-
-	void InitCameraLimit();
+	UFUNCTION()
+	void UpdateCurrentProjectileMat(UMaterialInterface* _mat);
 
 	//Inputs
 	void Move(const FInputActionValue& _value);
 	void RotateYaw(const FInputActionValue& _value);
 	void RotatePitch(const FInputActionValue& _value);
 	void Action();
+	void ScrollUpSelectProjectile();
+	void ScrollDownSelectProjectile();
+	void UpdateProjectileMaterial();	
+	
 	//Dragon actions
 
 	//Debug
@@ -211,7 +230,10 @@ public:
 	UFUNCTION() void StartLineTraceAction();
 	
 	UFUNCTION()
+
 	FProjectileReachedTarget& GetOnProjectileReachedTarget() { return onProjectileTargetReached; }
+	FCurrentProjectileMatEvent GetOnCurrentProjectileMatReceived() {return onCurrentProjectileMatReceived;}
+	
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
