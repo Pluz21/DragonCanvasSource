@@ -163,6 +163,7 @@ void ADragon::Action()
 {
 	//coneTraceCompo->ConeTrace();
 	//targetLocation = coneTraceCompo->GetLineTraceEnd();
+	if (allProjectileMats.Num() <= 0)return;
 	SphereTrace();
 	onLineTraceCreated.Broadcast();
 
