@@ -16,11 +16,13 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	UPROPERTY(EditAnywhere, BlueprintAssignable)
 	FMaterialReceivedEvent onMaterialReceived;
 
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<ECollisionEnabled::Type> initialCollisionSetting;
+
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
-	/*UPROPERTY(EditAnywhere)
-	TObjectPtr<UMaterialInterface> matToCheck;*/
+
 	UPROPERTY(EditAnywhere)
 	TArray<UMaterialInterface*> allMatsToCheck;
 	

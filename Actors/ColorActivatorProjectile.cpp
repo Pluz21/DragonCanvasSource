@@ -36,6 +36,8 @@ void AColorActivatorProjectile::Init()
 {
 	OnActorBeginOverlap.AddDynamic(this, &AColorActivatorProjectile::ManageOverlap);
 	onMaterialReceived.AddDynamic(this, &AColorActivatorProjectile::RevealHiddenActors);
+	initialCollisionSetting = meshCompo->GetCollisionEnabled();
+	meshCompo->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
@@ -46,6 +48,8 @@ void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _over
 	if (!_overlap->IsA(AProjectile::StaticClass()))return;
 	if (canCheckMat)
 	{
+		meshCompo->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+		meshCompo->SetCollisionEnabled(initialCollisionSetting);
 		UStaticMeshComponent* _projectileMeshComponent = _overlap->
 			FindComponentByClass<UStaticMeshComponent>();
 
