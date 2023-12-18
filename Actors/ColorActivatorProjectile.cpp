@@ -3,6 +3,7 @@
 #include "ColorActivatorProjectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "DragonCanvas/MaterialCheckerComponent.h"
+#include "DragonCanvas/HiddenActors.h"
 #include "Projectile.h"
 
 // THIS CLASS IS THE ONE THAT ALLOWS ACTORS TO CHANGE TO THE COLOR OF THE PROJECTILE
@@ -20,7 +21,7 @@ AColorActivatorProjectile::AColorActivatorProjectile()
 void AColorActivatorProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	OnActorBeginOverlap.AddDynamic(this, &AColorActivatorProjectile::ManageOverlap);
+	Init();
 	//initialMat = meshCompo->CreateDynamicMaterialInstance(0);
 }
 
@@ -29,6 +30,12 @@ void AColorActivatorProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AColorActivatorProjectile::Init()
+{
+	OnActorBeginOverlap.AddDynamic(this, &AColorActivatorProjectile::ManageOverlap);
+	onMaterialReceived.AddDynamic(this, &AColorActivatorProjectile::RevealHiddenActors);
 }
 
 void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
@@ -41,20 +48,19 @@ void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _over
 	{
 		UStaticMeshComponent* _projectileMeshComponent = _overlap->
 			FindComponentByClass<UStaticMeshComponent>();
-			int _size = allMatsToCheck.Num();
-	for (int i = 0; i < _size; i++)
-	{
-		if (_projectileMeshComponent->GetMaterial(0) == allMatsToCheck[i])
-		ReceiveColor(_overlap);
-		UE_LOG(LogTemp, Warning, TEXT("matToCheck is true : mattocheck = %s"), *matToCheck.GetName());
-			
-	}
-	//if(_projectileMeshComponent->GetMaterial(0) )
-	//	if (_projectileMeshComponent->GetMaterial(0) == matToCheck)
-		/*else
+
+	int _size = allMatsToCheck.Num();
+		for (int i = 0; i < _size; i++)
 		{
-		UE_LOG(LogTemp, Warning, TEXT("matToCheck is false : mattocheck = %s"), *matToCheck.GetName());
-		}*/
+			if (_projectileMeshComponent->GetMaterial(0) == allMatsToCheck[i])
+			{
+			ReceiveColor(_overlap);
+			onMaterialReceived.Broadcast();
+			UE_LOG(LogTemp, Warning, TEXT("matToCheck is true : mattocheck = %s"), *matToCheck.GetName());
+
+			}
+			
+		}
 
 	}
 	else
@@ -73,6 +79,19 @@ void AColorActivatorProjectile::ReceiveColor(AActor* _targetToGetColorFrom)
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), *_projectileMat->GetName());
 	meshCompo->SetMaterial(0, _projectileMat);
 
+}
+
+void AColorActivatorProjectile::RevealHiddenActors()
+{
+	UE_LOG(LogTemp, Error, TEXT("REVEAL HIDDEN ACTORS CALLED"));
+	int _size = allHiddenActors.Num();
+	for (int i = 0; i < _size; i++)
+	{
+		if (allHiddenActors[i] == nullptr)return;
+		allHiddenActors[i]->GetComponentByClass<UStaticMeshComponent>()->
+			SetVisibility(true,true);
+
+	}
 }
 
 

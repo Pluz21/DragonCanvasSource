@@ -6,9 +6,16 @@
 #include "ColorActivatorProjectile.generated.h"
 
 class UMaterialCheckerComponent; 
+class AHiddenActors;
+
 UCLASS()
 class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 {
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMaterialReceivedEvent);
+
+	UPROPERTY(EditAnywhere, BlueprintAssignable)
+	FMaterialReceivedEvent onMaterialReceived;
+
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
@@ -16,6 +23,11 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	TObjectPtr<UMaterialInterface> matToCheck;
 	UPROPERTY(EditAnywhere)
 	TArray<UMaterialInterface*> allMatsToCheck;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AHiddenActors> hiddenActorToFind;
+	UPROPERTY(EditAnywhere)
+	TArray<AHiddenActors*> allHiddenActors;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialCheckerComponent> materialChecker;
@@ -39,7 +51,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime);
+	void Init();
+
 	UFUNCTION()
 	void ManageOverlap(AActor* overlapped, AActor* _overlap);
 	void ReceiveColor(AActor* _projectile);
+	UFUNCTION()
+	void RevealHiddenActors();
 };
