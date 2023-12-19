@@ -4,10 +4,10 @@
 
 #include "DragonCanvas/World/CustomGameMode.h"
 #include "ProjectileManager.h"
-
+#include "Enemy.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "DragonCanvas/MaterialCheckerComponent.h"
 #include "DragonCanvas/Components/MoveComponent.h"
 
 
@@ -89,7 +89,24 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	else 
 		UE_LOG(LogTemp, Warning, TEXT("FAILED OVERLAPCALL"));
 
-
+	AEnemy* _enemy = Cast<AEnemy>(_overlap);
+	if (_enemy != nullptr)
+	{
+		UMaterialCheckerComponent* _matChecker = _enemy->GetMaterialCheckerComponent();
+		int _size = _matChecker->GetAllMatsSize();
+		for (int i = 0; i < _size; i++)
+		{
+			if (meshCompo->GetMaterial(0) == _matChecker->GetAllMatsToCheck()[i])
+			{
+				_enemy->moveCompo->SetChaseSpeed(0);
+				_enemy->SetEnemyMaterial(_matChecker->GetAllMatsToCheck()[i]);
+				//_enemy->SetCanStartDestroyTimer(true);
+				_enemy->SetLifeSpan(5);
+				//_enemy->Destroy();
+			}
+		}
+	}
+		
 	if (_overlap->ActorHasTag("Destroy"))
 	{
 		 _overlap->Destroy();

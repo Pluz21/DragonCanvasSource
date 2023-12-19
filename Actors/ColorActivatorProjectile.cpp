@@ -53,10 +53,10 @@ void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _over
 		UStaticMeshComponent* _projectileMeshComponent = _overlap->
 			FindComponentByClass<UStaticMeshComponent>();
 
-	int _size = allMatsToCheck.Num();
+		int _size = materialChecker->GetAllMatsSize();
 		for (int i = 0; i < _size; i++)
 		{
-			if (_projectileMeshComponent->GetMaterial(0) == allMatsToCheck[i])
+			if (_projectileMeshComponent->GetMaterial(0) == materialChecker->GetAllMatsToCheck()[i])
 			{
 			ReceiveColor(_overlap);
 			onMaterialReceived.Broadcast();

@@ -5,6 +5,7 @@
 #include "DragonCanvas/Actors/Dragon.h"
 #include "DragonCanvas/Components/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "DragonCanvas/MaterialCheckerComponent.h"
 #include "UObject/ConstructorHelpers.h"
 
 
@@ -19,6 +20,7 @@ AEnemy::AEnemy()
 	baseMesh = CreateDefaultSubobject<UStaticMeshComponent>("baseMesh");
 	secondMesh = CreateDefaultSubobject<UStaticMeshComponent>("secondMesh");
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
+	materialCheckerCompo = CreateDefaultSubobject<UMaterialCheckerComponent>("MaterialChecker");
 	soundToPlay = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Enemy_Hit_sound.Enemy_Hit_sound")).Object;
 	baseMesh->SetupAttachment(root);
 	secondMesh->SetupAttachment(baseMesh);
@@ -46,6 +48,7 @@ void AEnemy::Tick(float DeltaTime)
 	if (!moveCompo)return;
 	moveCompo->ChasePlayer();
 	SelfDestroy();
+	currentTime = IncreaseTime(currentTime, maxTime);
 
 }
 
@@ -86,6 +89,27 @@ void AEnemy::PlaySound(USoundBase* _audioToPlay)
 	if (!_audioToPlay)return;
 	UGameplayStatics::PlaySound2D(GetWorld(), _audioToPlay);
 
+}
+
+
+float AEnemy::IncreaseTime(float _current, float _max)
+{
+	/*if (!canStartDestroytimer)return _current;
+	currentTime = _current + GetWorld()->DeltaTimeSeconds;
+	if (currentTime >= maxTime)
+	{
+		currentTime = 0;
+		Destroy();
+		return _current;
+	}
+
+	*/
+	return _current;
+}
+
+void AEnemy::SetCanStartDestroyTimer(bool _value)
+{
+	//canStartDestroytimer = _value;
 }
 
 

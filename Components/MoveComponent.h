@@ -47,6 +47,8 @@ public:
 	void Rotate();
 
 	float GetMoveSpeed() { return moveSpeed; }
+	void SetMoveSpeed(float _newMoveSpeed) { moveSpeed = _newMoveSpeed; }
+	void SetChaseSpeed(float _newChaseSpeed) { chaseSpeed = _newChaseSpeed; }
 	ADragon* GetChaseTarget() { return playerRef; }
 		
 };
