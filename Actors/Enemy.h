@@ -33,7 +33,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ADragon> playerRef;
-
+	
+	UPROPERTY(EditAnywhere)
+	float lifeSpan = 20;
 	UPROPERTY(EditAnywhere)
 	float minDistanceAllowed = 150.f;
 	UPROPERTY(EditAnywhere)

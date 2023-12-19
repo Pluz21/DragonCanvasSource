@@ -38,7 +38,7 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Init()
 {
-	SetLifeSpan(20);  // TODO Make variable
+	SetLifeSpan(lifeSpan);  // TODO Make variable
 	playerRef = moveCompo->GetChaseTarget();
 }
 
