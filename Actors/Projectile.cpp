@@ -58,15 +58,13 @@ void AProjectile::Init()
 
 	if (!gameMode)return;
 	projectileManager = gameMode->GetProjectileManager();
-	if (projectileManager)return;
 
-	projectileManager->AddItem(this); // Not necessary. Safety extra call but already called on spawn from Dragon
+	//projectileManager->AddItem(this); // Not necessary. Safety extra call but already called on spawn from Dragon
 	actorSpawnLocation = GetActorLocation();
 	forwardVector = GetActorForwardVector();
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
 	
-	SetLifeSpan(20);
-	meshCompo->SetOverlayMaterial(initialMat);
+	SetLifeSpan(lifeSpan);
 
 }
 
@@ -107,7 +105,6 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	
 
 }
-
 
 
 void AProjectile::SelfMove(const FVector& _actorForwardVector)

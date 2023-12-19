@@ -52,8 +52,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	float deltaSeconds;
 	
-	UPROPERTY(VisibleAnywhere)
-	float lifeSpan = 5;
+	UPROPERTY(EditAnywhere)
+	float lifeSpan = 2;
 	UPROPERTY(VisibleAnywhere)
 	float moveSpeed;
 	UPROPERTY(VisibleAnywhere)

@@ -171,6 +171,7 @@ void ADragon::Action()
 
 void ADragon::ScrollUpSelectProjectile()
 {
+	if (!allProjectileMats.IsValidIndex(currentProjectileIndex))return;
 	float _minRange = allProjectileMats.Num() - 1 ;
 	currentProjectileIndex = FMath::Clamp(currentProjectileIndex + 1, 0, _minRange);
 	UpdateProjectileMaterial();
@@ -181,6 +182,7 @@ void ADragon::ScrollUpSelectProjectile()
 
 void ADragon::ScrollDownSelectProjectile()
 {
+	if (!allProjectileMats.IsValidIndex(currentProjectileIndex))return;
 	float _minRange = allProjectileMats.Num() - 1;
 	currentProjectileIndex = FMath::Clamp(currentProjectileIndex -1, 0, _minRange);
 	UpdateProjectileMaterial();
