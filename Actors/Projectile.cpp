@@ -92,19 +92,20 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	AEnemy* _enemy = Cast<AEnemy>(_overlap);
 	if (_enemy != nullptr)
 	{
+		onEnemyHit.Broadcast();
 		UMaterialCheckerComponent* _matChecker = _enemy->GetMaterialCheckerComponent();
 		int _size = _matChecker->GetAllMatsSize();
 		for (int i = 0; i < _size; i++)
 		{
 			if (meshCompo->GetMaterial(0) == _matChecker->GetAllMatsToCheck()[i])
 			{
-				_enemy->moveCompo->SetChaseSpeed(0);
 				_enemy->SetEnemyMaterial(_matChecker->GetAllMatsToCheck()[i]);
-				//_enemy->SetCanStartDestroyTimer(true);
+				_enemy->moveCompo->SetChaseSpeed(0);
 				_enemy->SetLifeSpan(5);
-				//_enemy->Destroy();
 			}
 		}
+		//_enemy->SetCanStartDestroyTimer(true);
+		//_enemy->Destroy();
 	}
 		
 	if (_overlap->ActorHasTag("Destroy"))

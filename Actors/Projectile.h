@@ -16,7 +16,10 @@ class DRAGONCANVAS_API AProjectile : public AActor
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTargetAcquired);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileCreated);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCanStartMoving);
-
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyHitEvent);
+	
+	UPROPERTY(EditAnywhere)
+	FEnemyHitEvent onEnemyHit;
 	UPROPERTY(EditAnywhere)
 	FCanStartMoving onCanMove;
 
