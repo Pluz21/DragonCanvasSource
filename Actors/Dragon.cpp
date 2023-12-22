@@ -18,6 +18,7 @@
 #include "DragonCanvas/Components/ManaComponent.h"
 #include "DragonCanvas/Components/AttackComponent.h"
 
+#include "DragonCanvas/MainMenuWidget.h"
 
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -77,18 +78,16 @@ void ADragon::Init()
 	if (!gameMode)return;
 	projectileManager = gameMode->GetProjectileManager();
 	if (!projectileManager)return;
-	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
-
-	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
-	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
 	//onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::ScrollUpSelectProjectile);
 	//onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::ScrollDownSelectProjectile);
 	
 	world = GetWorld();
 	playerController = GetWorld()->GetFirstPlayerController();
 	if (!playerController)return;
+
 	InitInput();
-	//InitProjectiles();
+	InitEvents();
+
 	currentAmmo = maxAmmo;
 	UpdateMinDistanceToSelfDestruct();
 
@@ -104,6 +103,15 @@ void ADragon::InitInput()
 	//UE_LOG(LogTemp, Warning, TEXT("Init inputs"));
 	//playerController->bShowMouseCursor = true;
 
+}
+
+void ADragon::InitEvents()
+{
+	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
+
+	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
+	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
+	
 }
 
 void ADragon::UpdateCurrentProjectileMat(UMaterialInterface* _mat)
@@ -205,6 +213,8 @@ void ADragon::UpdateProjectileMaterial()
 void ADragon::OpenMainMenu()
 {
 	onMenuOpened.Broadcast();
+	GEngine->AddOnScreenDebugMessage(1, 0.5, FColor::Black, TEXT("OpeningMenu"));
+
 }
 
 void ADragon::FireBreath()
@@ -345,6 +355,7 @@ void ADragon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	_myInputCompo->BindAction(inputToAction, ETriggerEvent::Triggered, this, &ADragon::Action);
 	_myInputCompo->BindAction(inputToScrollUpSelectProjectile, ETriggerEvent::Triggered, this, &ADragon::ScrollUpSelectProjectile);
 	_myInputCompo->BindAction(inputToScrollDownSelectProjectile, ETriggerEvent::Triggered, this, &ADragon::ScrollDownSelectProjectile);
+	_myInputCompo->BindAction(inputToOpenMenu, ETriggerEvent::Triggered, this, &ADragon::OpenMainMenu);
 
 
 }

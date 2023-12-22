@@ -175,6 +175,10 @@ public:
 	TEnumAsByte<ECollisionChannel> _coneTraceChannel;
 
 
+
+	//Not in use
+	UPROPERTY(EditAnywhere, Category = "LineTrace")
+	float lineTraceEffectMultiplier = 200;
 	UPROPERTY(EditAnywhere, Category = "LineTrace")
 	float sphereTracedistance = 3000;
 
@@ -186,24 +190,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool canSelfDestruct = false;
 
-	UPROPERTY(EditAnywhere)
-	float currentTime = 0;
-	UPROPERTY(EditAnywhere)
-	float maxTime = 2;
-
-	UPROPERTY(EditAnywhere)
-	bool canStartAlphaCount = false;
-
-	//Actions
-	UPROPERTY(EditAnywhere, Category = "LineTrace")
-	float lineTraceEffectMultiplier = 200;
-
 
 
 protected:
 	virtual void BeginPlay() override;
 	void Init();
 	void InitInput();
+	void InitEvents();
 	UFUNCTION()
 	void UpdateCurrentProjectileMat(UMaterialInterface* _mat);
 
@@ -243,10 +236,14 @@ public:
 	UFUNCTION() void LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult);
 	UFUNCTION() void StartLineTraceAction();
 
+	// Event getters
 	UFUNCTION()
 	FProjectileReachedTarget& GetOnProjectileReachedTarget() { return onProjectileTargetReached; }
-	FCurrentProjectileMatEvent GetOnCurrentProjectileMatReceived() { return onCurrentProjectileMatReceived; }
-	
+	UFUNCTION()
+	FCurrentProjectileMatEvent& GetOnCurrentProjectileMatReceived() { return onCurrentProjectileMatReceived; }
+	UFUNCTION()
+	FOpenMenuEvent& GetOnMenuOpened() { return onMenuOpened; }
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int GetCurrentProjectileIndex() { return currentProjectileIndex; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
