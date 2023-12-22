@@ -16,7 +16,6 @@ UGrabber::UGrabber()
 	// ...
 }
 
-
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
@@ -90,30 +89,18 @@ void UGrabber::Grab()
 
 		return;
 	}
-	if (hitResult.GetActor()->ActorHasTag("Grabbed"))
-	{
-		SetIsGrabbing();
-		return;
-	}
+
 	UPrimitiveComponent* _hitComponent = _hitResult.GetComponent();
 	hitComponent = _hitComponent;
 	_hitComponent->WakeAllRigidBodies();
 	_hitComponent->SetSimulatePhysics(true);   // might need to be actor
-	if (!_hitResult.GetActor()->ActorHasTag("Grabbed"))
-	{
-	_hitResult.GetActor()->Tags.Add("Grabbed");
-	}
+
 	_hitResult.GetActor()->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	physicsHandle->GrabComponentAtLocationWithRotation(
 		_hitComponent, NAME_None,		// might need to be actor
 		_hitResult.ImpactPoint,
 		_hitComponent->GetComponentRotation());
 	SetIsGrabbing();
-
-	
-
-
-
 }
 
 void UGrabber::Hold()
@@ -142,7 +129,6 @@ void UGrabber::Release()
 		AActor* _heldActor = physicsHandle->GetGrabbedComponent()->GetOwner();
 
 		physicsHandle->ReleaseComponent();
-		_heldActor->Tags.Remove("Grabbed");
 		UE_LOG(LogTemp, Warning, TEXT("Removing tag from %s"), *_heldActor->GetName()); 
 		SetIsGrabbing();
 	}

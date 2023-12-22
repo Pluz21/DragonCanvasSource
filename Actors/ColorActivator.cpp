@@ -75,8 +75,8 @@ void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
 	if (!_overlap || !_overlapped) return;
 
-	if (_overlap->IsA(APickUps::StaticClass()) && _overlap->ActorHasTag("Grabbed"))
-	{ // ADD CHECK MATERIAL
+	if (_overlap->IsA(APickUps::StaticClass()))
+	{
 		UE_LOG(LogTemp, Warning, TEXT("Overlapping with %s"), *_overlap->GetName());
 		if(materialChecker->ActorMaterialCheck(_overlap))
 			{
@@ -84,7 +84,6 @@ void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 				if (!triggerCompo)return;
 				triggerCompo->SnapTarget(_overlap);
 			}
-			//ProjectileTriggerComponent->Activate 
 	}
 }
 
