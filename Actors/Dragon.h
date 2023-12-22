@@ -92,6 +92,8 @@ public:
 	// inputs Movement
 	UPROPERTY(EditAnywhere, Category = "Inputs")
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputMappingContext> menuMappingContext = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Inputs")
 	TObjectPtr<UInputAction> inputToMove;

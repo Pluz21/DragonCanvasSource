@@ -12,6 +12,7 @@ class APickUps;
 class AColorActivator;
 class AProjectileManager;
 class ACustomGameMode;
+class UMaterialCheckerComponent;
 
 UCLASS()
 class DRAGONCANVAS_API AColorActivator : public AActor
@@ -35,6 +36,11 @@ public:
 	TObjectPtr<UStaticMeshComponent> secondMesh;
 	
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<ACustomGameMode> gameMode;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AProjectileManager> projectileManager;
+
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UProjectileTriggerComponent> triggerCompo;
 
 	//Projectile 
@@ -47,9 +53,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialInterface> matInterfaceToApply; // This is the one to add to the projectile manager
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<ACustomGameMode> gameMode;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<AProjectileManager> projectileManager;
+	TObjectPtr<UMaterialCheckerComponent> materialChecker; // This is the one to add to the projectile manager
+
 
 	UPROPERTY(EditAnywhere)
 	bool isSpawner = false;
@@ -67,10 +72,6 @@ public:
 	UFUNCTION()
 	virtual void ManageOverlap(AActor* _overlapped, AActor* _overlap);
 	void GiveColor();
-	UFUNCTION()
-	void Test(UMaterialInterface* _mat);
-	UFUNCTION()
-	void ApplyMatToApply(UMaterialInterface* _mat);
 	void SetIsSpawner(bool _value) { isSpawner = _value; }
 	bool GetIsSpawner() { return isSpawner; }
 	UProjectileTriggerComponent* GetTriggerCompo() { return triggerCompo; }

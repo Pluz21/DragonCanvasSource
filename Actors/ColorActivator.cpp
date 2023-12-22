@@ -7,6 +7,8 @@
 #include "ProjectileManager.h"
 #include "DragonCanvas/World/CustomGameMode.h"
 
+#include "DragonCanvas/MaterialCheckerComponent.h"
+
 #include "DragonCanvas/Components/ProjectileTriggerComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile.h"
@@ -21,6 +23,7 @@ AColorActivator::AColorActivator()
 	baseMesh = CreateDefaultSubobject<UStaticMeshComponent>("baseMesh");
 	secondMesh = CreateDefaultSubobject<UStaticMeshComponent>("secondMesh");
 	triggerCompo = CreateDefaultSubobject<UProjectileTriggerComponent>("trigger");
+	materialChecker = CreateDefaultSubobject<UMaterialCheckerComponent>("matChecker");
 	baseMesh->SetupAttachment(root);
 	secondMesh->SetupAttachment(baseMesh);
 	AddOwnedComponent(triggerCompo);
@@ -30,8 +33,6 @@ AColorActivator::AColorActivator()
 void AColorActivator::BeginPlay()
 {
 	Super::BeginPlay();
-	onMaterialReceived.AddDynamic(this, &AColorActivator::Test);
-	onMaterialReceived.AddDynamic(this, &AColorActivator::ApplyMatToApply);
 	OnActorBeginOverlap.AddDynamic(this, &AColorActivator::ManageOverlap);
 	Init();
 	
@@ -75,14 +76,16 @@ void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	if (!_overlap || !_overlapped) return;
 
 	if (_overlap->IsA(APickUps::StaticClass()) && _overlap->ActorHasTag("Grabbed"))
-	{
-	UE_LOG(LogTemp, Warning, TEXT("Overlapping with %s"), *_overlap->GetName());
-	GiveColor();
-	if (!triggerCompo)return; 
-	triggerCompo->SnapTarget(_overlap);
-	//ProjectileTriggerComponent->Activate 
+	{ // ADD CHECK MATERIAL
+		UE_LOG(LogTemp, Warning, TEXT("Overlapping with %s"), *_overlap->GetName());
+		if(materialChecker->ActorMaterialCheck(_overlap))
+			{
+				GiveColor();
+				if (!triggerCompo)return;
+				triggerCompo->SnapTarget(_overlap);
+			}
+			//ProjectileTriggerComponent->Activate 
 	}
-	
 }
 
 void AColorActivator::GiveColor() // Function to be re-used for the projectile selection
@@ -95,22 +98,11 @@ void AColorActivator::GiveColor() // Function to be re-used for the projectile s
 	 UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
 	 _projectileMesh->SetMaterial(0, matInterfaceToApply);
 	 //_projectileMesh->SetMaterial(0,matToApply); 
+	 
 	 projectileManager->AddMaterial(matInterfaceToApply);
 
 }
 
-void AColorActivator::Test(UMaterialInterface* _mat)
-{
 
-	UE_LOG(LogTemp, Warning, TEXT("mat test is %s"), *_mat->GetName());
-}
-
-void AColorActivator::ApplyMatToApply(UMaterialInterface* _mat)
-{
-	if (!_mat)return;
-	//matToApply = secondMesh->CreateDynamicMaterialInstance(0, _mat);
-	//matInterfaceToApply = secondMesh->CreateDynamicMaterialInstance(0, _mat);
-//	projectileManager->AddMaterial(matToApply);
-}
 
 
