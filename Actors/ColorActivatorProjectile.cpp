@@ -46,34 +46,18 @@ void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _over
 
 	if (!_overlap || !_overlapped) return;
 	if (!_overlap->IsA(AProjectile::StaticClass()))return;
-	if (canCheckMat)
+	if (!canCheckMat)return;
 	{
-		meshCompo->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-		meshCompo->SetCollisionEnabled(initialCollisionSetting);
-		UStaticMeshComponent* _projectileMeshComponent = _overlap->
-			FindComponentByClass<UStaticMeshComponent>();
-
-		int _size = materialChecker->GetAllMatsSize();
-		for (int i = 0; i < _size; i++)
+		if(materialChecker->ActorMaterialCheck(_overlap))
 		{
-			if (_projectileMeshComponent->GetMaterial(0) == materialChecker->GetAllMatsToCheck()[i])
-			{
+			meshCompo->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+			meshCompo->SetCollisionEnabled(initialCollisionSetting);
 			ReceiveColor(_overlap);
 			onMaterialReceived.Broadcast();
-			UE_LOG(LogTemp, Warning, TEXT("matToCheck is true : mattocheck = %s"), *allMatsToCheck[i]->GetName());
 
-			}
-			
 		}
-
+			
 	}
-	else
-	{
-		ReceiveColor(_overlap);
-	}
-	
-
-
 }
 
 void AColorActivatorProjectile::ReceiveColor(AActor* _targetToGetColorFrom)
