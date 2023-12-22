@@ -198,6 +198,13 @@ void ADragon::UpdateProjectileMaterial()
 		GetComponentByClass<UStaticMeshComponent>();
 	UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
 	_projectileMesh->SetMaterial(0, allProjectileMats[currentProjectileIndex]);
+	onCurrentProjectileMatReceived.Broadcast(_projectileMaterial);
+	allProjectileMats.Sort();
+}
+
+void ADragon::OpenMainMenu()
+{
+	onMenuOpened.Broadcast();
 }
 
 void ADragon::FireBreath()

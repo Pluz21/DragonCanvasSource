@@ -119,6 +119,7 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 		FVector _overlapLocation = _overlap->GetActorLocation();
 		FVector _displacedLocation = _overlapLocation + forwardVector * 200;
 		_overlap->SetActorLocation(_displacedLocation);
+		SelfDestruct();
 	}
 	
 
@@ -142,7 +143,6 @@ void AProjectile::SetCanMove(bool _value)
 
 void AProjectile::SelfDestruct()
 {
-	//CallLineTraceDisplacement();
 	projectileManager->RemoveItem(this);
 	Destroy();
 	UE_LOG(LogTemp, Warning, TEXT("DESTRUCTION"));

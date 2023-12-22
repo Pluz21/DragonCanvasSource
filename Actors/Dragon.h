@@ -30,31 +30,36 @@ class DRAGONCANVAS_API ADragon : public ACharacter
 	//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FProjectileReachedTarget, UWorld*, world, FHitResult, result);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileReachedTarget);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCurrentProjectileMatEvent, UMaterialInterface*, mat);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOpenMenuEvent);
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintAssignable)
 	FCurrentProjectileMatEvent onCurrentProjectileMatReceived;
 
-
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	FLineTraceCreated onLineTraceCreated;
+	
+	UPROPERTY()
+	FProjectileReachedTarget onProjectileTargetReached;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOpenMenuEvent onMenuOpened;
+
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
-	FProjectileReachedTarget onProjectileTargetReached;
 	// Sets default values for this character's properties
 	ADragon();
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TObjectPtr<UWorld> world;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TObjectPtr<ACustomGameMode> gameMode;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TObjectPtr<AProjectileManager> projectileManager;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USceneComponent> spawnPoint;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TObjectPtr<APlayerController> playerController;
 
 #pragma region Components
@@ -64,42 +69,50 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UAttackComponent> attackCompo;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UGrabber> grabber;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UPhysicsHandleComponent> physicsHandle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UHealthComponent> healthCompo;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UManaComponent> manaCompo;
 
 #pragma endregion Components 
 
 
-	UPROPERTY(EditAnywhere)
-	TArray<AProjectile*> allProjectiles;
+	
 	UPROPERTY(EditAnywhere)
 	FHitResult hitResult;
 
 
 #pragma region Inputs
-	// inputs
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> inputToMove;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> inputToRotateYaw;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> inputToPitch;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> inputToAction;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> inputToScrollUpSelectProjectile;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> inputToScrollDownSelectProjectile;
-	UPROPERTY(EditAnywhere)
+	// inputs Movement
+	UPROPERTY(EditAnywhere, Category = "Inputs")
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputAction> inputToMove;
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputAction> inputToRotateYaw;
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputAction> inputToPitch;
+	// inputs Movement
+	// inputs Interactions
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputAction> inputToAction;
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputAction> inputToScrollUpSelectProjectile;
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputAction> inputToScrollDownSelectProjectile;
+	// inputs Interactions
+	// inputs Menu
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputAction> inputToOpenMenu;
+	
+	// inputs Menu
 
 	//input variables
 
@@ -107,35 +120,36 @@ public:
 	float moveSpeed = 500.f;
 	UPROPERTY(EditAnywhere)
 	float rotateSpeed = 20.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inputs")
 	float forwardInputValue;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inputs")
 	float rightInputValue;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inputs")
 	float rotateInputValue;
 
 #pragma endregion Inputs
 
 #pragma region Spawn
 	// spawn variables
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "ProjectileSelection")
 	TSubclassOf<AProjectile> projectileToSpawn;
 
-	UPROPERTY(EditAnywhere, Category = "ProjectileSelection")
+	UPROPERTY(VisibleAnywhere, Category = "ProjectileSelection")
 	TObjectPtr<UMaterialInterface> currentProjectileMat;
 
-	UPROPERTY(EditAnywhere, Category = "ProjectileSelection")
+	UPROPERTY(VisibleAnywhere, Category = "ProjectileSelection")
 	TArray<UMaterialInterface*> allProjectileMats;
 
-	UPROPERTY(EditAnywhere, Category = "ProjectileSelection")
+	UPROPERTY(VisibleAnywhere, Category = "ProjectileSelection")
 	int currentProjectileIndex = 0;
-	
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector spawnPointLocation;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 	FVector spawnedInitialLocation;
+
 #pragma endregion Spawn
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (UIMin = "10", ClampMin = "10", UIMax = "100", ClampMax = "100"))
@@ -143,19 +157,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float currentAmmo;
 
-	
-	UPROPERTY(EditAnywhere)
-	FVector targetLocation; 
-	UPROPERTY(EditAnywhere)
-	FVector locationOnLineTraceSpawn; 
-	
+
+	UPROPERTY(EditAnywhere, Category = "LineTrace")
+	FVector targetLocation;
+	UPROPERTY(EditAnywhere, Category = "LineTrace")
+	FVector locationOnLineTraceSpawn;
+
 	//camera
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Custom Camera Settings")
 	float minPitchRotation = -65;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Custom Camera Settings")
 	float maxPitchRotation = 40;
-	
-	
+
+
 	//Debug
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<ECollisionChannel> _coneTraceChannel;
@@ -166,28 +180,27 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "LineTrace")
 	float coneTraceRadius = 300;
-	
+
 	UPROPERTY(EditAnywhere)
 	float minDistanceToSelfDestruct;
 	UPROPERTY(EditAnywhere)
 	bool canSelfDestruct = false;
-	
+
 	UPROPERTY(EditAnywhere)
 	float currentTime = 0;
 	UPROPERTY(EditAnywhere)
 	float maxTime = 2;
-	
+
 	UPROPERTY(EditAnywhere)
 	bool canStartAlphaCount = false;
 
 	//Actions
 	UPROPERTY(EditAnywhere, Category = "LineTrace")
 	float lineTraceEffectMultiplier = 200;
-	
+
 
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	void Init();
 	void InitInput();
@@ -201,39 +214,44 @@ protected:
 	void Action();
 	void ScrollUpSelectProjectile();
 	void ScrollDownSelectProjectile();
-	void UpdateProjectileMaterial();	
-	
-	//Dragon actions
+	void UpdateProjectileMaterial();
 
+	// Interface Inputs
+	void OpenMainMenu();
+
+	//Dragon actions
 	//Debug
 	void SphereTrace();
 	// attack compo needs
-	
+
 	//Projectile
 	float GetCurrentAmmo() { return currentAmmo; }
 
 	//Debug
 	void DebugText(FString _string);
 
-public:	
+public:
 	UFUNCTION() void FireBreath();
 	// Called every frame
 	FVector  GetSpawnLocation() { return spawnPoint->GetComponentLocation(); }
 	FVector GetProjectileTargetLocation() { return targetLocation; }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
-	TArray<AProjectile*> GetAllProjectiles() { return allProjectiles; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TSubclassOf<AProjectile>GetProjectileToSpawn() { return projectileToSpawn; }
 
 	UFUNCTION() void LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult);
 	UFUNCTION() void StartLineTraceAction();
-	
-	UFUNCTION()
 
+	UFUNCTION()
 	FProjectileReachedTarget& GetOnProjectileReachedTarget() { return onProjectileTargetReached; }
-	FCurrentProjectileMatEvent GetOnCurrentProjectileMatReceived() {return onCurrentProjectileMatReceived;}
+	FCurrentProjectileMatEvent GetOnCurrentProjectileMatReceived() { return onCurrentProjectileMatReceived; }
 	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetCurrentProjectileIndex() { return currentProjectileIndex; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	TArray<UMaterialInterface*> GetAllProjectileMats() { return allProjectileMats; };
+
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
