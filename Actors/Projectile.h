@@ -57,6 +57,8 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	float lifeSpan = 2;
+	UPROPERTY(EditAnywhere)
+	float enemyLifeSpan = 4;
 	UPROPERTY(VisibleAnywhere)
 	float moveSpeed;
 	UPROPERTY(VisibleAnywhere)
@@ -110,8 +112,9 @@ public:
 	UFUNCTION() void CheckDistance(FVector& _targetLocation);
 	UFUNCTION() void CallLineTraceDisplacement();
 
-	
-
+	TArray<UStaticMeshComponent*> FindAllChildMeshes(UStaticMeshComponent*& _parentMesh);
+	void ApplyHitEffect(TArray<UStaticMeshComponent*> _allStaticMeshesToHit);
+	void UpdateOverlapPhysics(AActor*& _actorToActivatePhysicsOn);
 
 	UFUNCTION() void SelfDestruct();
 

@@ -12,6 +12,9 @@ class UMaterialCheckerComponent;
 UCLASS()
 class DRAGONCANVAS_API AEnemy : public AActor
 {
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathEvent);
+	UPROPERTY()
+	FDeathEvent onDeath;
 	GENERATED_BODY()
 
 public:
@@ -29,7 +32,9 @@ public:
 	TObjectPtr<UMaterialCheckerComponent> materialCheckerCompo;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<USoundBase> soundToPlay;
+	TObjectPtr<USoundBase> hitPlayerSound;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> onDeathSound;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ADragon> playerRef;
@@ -40,6 +45,8 @@ public:
 	float minDistanceAllowed = 150.f;
 	UPROPERTY(EditAnywhere)
 	int damageToApply = 1;
+	UPROPERTY(EditAnywhere)
+	bool hasBeenhit = false;
 
 	// Timer
 	UPROPERTY(EditAnywhere)
@@ -68,12 +75,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamage();
 	UFUNCTION(BlueprintCallable)
-	void PlaySound(USoundBase* _audioToPlay);
+	void PlayHitSound(USoundBase* _audioToPlay);
+	UFUNCTION(BlueprintCallable)
+	void PlayDeathSound(USoundBase* _audioToPlay);
 
 	// Timer functions
 	void StartDestroyTimer();
 	float IncreaseTime(float _current, float _max);
 	void SetCanStartDestroyTimer(bool _value);
+
+	void SetHasBeenHit(bool _value) { hasBeenhit = _value; }
+
+	FDeathEvent& GetOnDeath() { return onDeath; }
+	UFUNCTION()
+	void ManageOnDeath();
 
 	UStaticMeshComponent* GetBaseMesh() { return baseMesh; }
 	UStaticMeshComponent* GetSecondMesh() { return secondMesh; }

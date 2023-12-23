@@ -11,19 +11,14 @@
 #include "DragonCanvas/Components/MoveComponent.h"
 
 
-// Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//UE_LOG(LogTemp, Warning, TEXT("Projectile Constructor!"));
 
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("mymesh");
 	meshCompo->SetupAttachment(RootComponent);
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
-	//coneLineTraceCompo = CreateDefaultSubobject<UConeLineTrace>("coneTraceCompohere");
 	AddOwnedComponent(moveCompo);
-	//AddOwnedComponent(coneLineTraceCompo);
 
 }
 
@@ -45,10 +40,7 @@ void AProjectile::Tick(float DeltaTime)
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
 	CheckDistance(targetLocation);
 	SelfMove(forwardVector);
-	moveCompo->Rotate();
-	// or call 
-	//moveCompo->Move();
-
+	moveCompo->Rotate();// or call moveCompo->Move();
 }
 
 void AProjectile::Init()
@@ -83,7 +75,7 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 
 	if (_overlap && (_overlap != this))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING"));
+		UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING PROJECTILE "));
 		//onTargetReached.Broadcast(); // Calls SelfDestruct
 	}
 	else 
@@ -95,17 +87,26 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 		onEnemyHit.Broadcast();
 		UMaterialCheckerComponent* _matChecker = _enemy->GetMaterialCheckerComponent();
 		int _size = _matChecker->GetAllMatsSize();
+
+			TArray<UStaticMeshComponent*> _allStaticMeshes;
+			UStaticMeshComponent* _baseMesh = _enemy->GetBaseMesh();
+			_allStaticMeshes = FindAllChildMeshes(_baseMesh);
 		for (int i = 0; i < _size; i++)
 		{
-			if (meshCompo->GetMaterial(0) == _matChecker->GetAllMatsToCheck()[i])
+			UMaterialInterface* _matToApply = meshCompo->
+				GetMaterial(0);
+			if(_matToApply == _matChecker->allMatsToCheck[i]) 
 			{
-				_enemy->SetEnemyMaterial(_matChecker->GetAllMatsToCheck()[i]);
+				_enemy->SetEnemyMaterial(_matToApply);
 				_enemy->moveCompo->SetChaseSpeed(0);
-				_enemy->SetLifeSpan(5);
+				_enemy->SetLifeSpan(enemyLifeSpan);
+				ApplyHitEffect(_allStaticMeshes);  // Dismantles static meshes
+				_enemy->GetOnDeath().Broadcast();
+				_enemy->SetHasBeenHit(true);
+				onEnemyHit.Broadcast();
 			}
 		}
-		//_enemy->SetCanStartDestroyTimer(true);
-		//_enemy->Destroy();
+
 	}
 		
 	if (_overlap->ActorHasTag("Destroy"))
@@ -184,6 +185,38 @@ void AProjectile::CallLineTraceDisplacement()
 
 	//ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	//_dragonRef->StartLineTraceAction();
+}
+
+TArray<UStaticMeshComponent*> AProjectile::FindAllChildMeshes(UStaticMeshComponent*& _parentMesh)
+{
+	TArray<USceneComponent*> _allSceneCompos;
+	_allSceneCompos = _parentMesh->GetAttachChildren();
+	TArray<UStaticMeshComponent*> _allStaticMeshes;
+	for (USceneComponent* _childCompo : _allSceneCompos)  // FOREACH DIDNT WORK HERE
+	{
+		UStaticMeshComponent* _mesh = Cast<UStaticMeshComponent>(_childCompo);
+		_allStaticMeshes.Add(_mesh);
+
+	}
+	return _allStaticMeshes;
+}
+
+void AProjectile::ApplyHitEffect(TArray<UStaticMeshComponent*> _allStaticMeshesToHit)
+{
+	int _size = _allStaticMeshesToHit.Num();
+	for (int i = 0; i < _size; i++)
+	{
+		_allStaticMeshesToHit[i]->SetSimulatePhysics(true);
+		_allStaticMeshesToHit[i]->SetMassOverrideInKg(NAME_None, 0.01f);
+	}
+}
+
+void AProjectile::UpdateOverlapPhysics(AActor*& _actorToActivatePhysicsOn)
+{
+	meshCompo->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	//meshCompo->SetCollisionEnabled(initialCollisionSetting);
+//	initialCollisionSetting = meshCompo->GetCollisionEnabled();
+
 }
 
 

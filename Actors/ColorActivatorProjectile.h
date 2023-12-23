@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Sound/SoundCue.h"
 #include "ColorActivatorProjectile.generated.h"
 
 class UMaterialCheckerComponent; 
@@ -12,16 +13,21 @@ UCLASS()
 class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMaterialReceivedEvent);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRevealedEvent);
 
 	UPROPERTY(EditAnywhere, BlueprintAssignable)
 	FMaterialReceivedEvent onMaterialReceived;
+	UPROPERTY(EditAnywhere, BlueprintAssignable)
+	FRevealedEvent onReveal;
 
+	
+	GENERATED_BODY()
+	
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<ECollisionEnabled::Type> initialCollisionSetting;
 
-	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UStaticMeshComponent> meshCompo;
+	TObjectPtr<UStaticMeshComponent> meshCompo = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	TArray<UMaterialInterface*> allMatsToCheck;
@@ -29,7 +35,9 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	
 	UPROPERTY(EditAnywhere)
 	TArray<AHiddenActors*> allHiddenActors;
-
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> onRevealSound;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialCheckerComponent> materialChecker;
 	UPROPERTY(EditAnywhere)
@@ -38,7 +46,7 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 	float TargetParameterValue = 1.0f;
 	
 	UPROPERTY(EditAnywhere)
-	bool canCheckMat = false;
+	bool isRevealed = false;
 
 
 public:	
@@ -57,6 +65,13 @@ public:
 	UFUNCTION()
 	void ManageOverlap(AActor* overlapped, AActor* _overlap);
 	void ReceiveColor(AActor* _projectile);
+
+	UFUNCTION()
+	void SetIsRevealed();
 	UFUNCTION()
 	void RevealHiddenActors();
+	UFUNCTION()
+	void PlayRevealSound(USoundBase* _soundSource);
+	UFUNCTION()
+	void PlaySound();
 };

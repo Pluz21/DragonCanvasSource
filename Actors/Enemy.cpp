@@ -21,7 +21,8 @@ AEnemy::AEnemy()
 	secondMesh = CreateDefaultSubobject<UStaticMeshComponent>("secondMesh");
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
 	materialCheckerCompo = CreateDefaultSubobject<UMaterialCheckerComponent>("MaterialChecker");
-	soundToPlay = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Enemy_Hit_sound.Enemy_Hit_sound")).Object;
+	hitPlayerSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Enemy_Hit_sound.Enemy_Hit_sound")).Object;
+	onDeathSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("Game/Sounds/Enemy_breaking")).Object;
 	baseMesh->SetupAttachment(root);
 	secondMesh->SetupAttachment(baseMesh);
 	AddOwnedComponent(moveCompo);
@@ -40,6 +41,8 @@ void AEnemy::Init()
 {
 	SetLifeSpan(lifeSpan);  // TODO Make variable
 	playerRef = moveCompo->GetChaseTarget();
+	//OnDestroyed.AddDynamic(this, &AEnemy::ManageOnDeath);
+	onDeath.AddDynamic(this, &AEnemy::ManageOnDeath);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -54,7 +57,7 @@ void AEnemy::Tick(float DeltaTime)
 
 bool AEnemy::CheckDistance()
 {
-	if (!playerRef)return false;
+	if (!playerRef || hasBeenhit == true)return false;
 	float _distance = FVector::Dist(playerRef->GetActorLocation(), GetActorLocation());
 	if(_distance < minDistanceAllowed)
 		return true;
@@ -69,8 +72,8 @@ void AEnemy::SelfDestroy()
 		Destroy(); // Play Animation
 		if (playerRef->healthCompo->isDead)return;
 		ApplyDamage();
-		PlaySound(soundToPlay);
-		UE_LOG(LogTemp, Warning, TEXT("You got hit by a Flamito!"));
+		PlayHitSound(hitPlayerSound);
+		UE_LOG(LogTemp, Warning, TEXT("You got hit by an enemy!"));
 
 	}
 	// TO DO 
@@ -84,11 +87,17 @@ void AEnemy::ApplyDamage()
 	playerRef->healthCompo->RemoveHealth(damageToApply);
 }
 
-void AEnemy::PlaySound(USoundBase* _audioToPlay)
+void AEnemy::PlayHitSound(USoundBase* _audioToPlay)
 {
 	if (!_audioToPlay)return;
 	UGameplayStatics::PlaySound2D(GetWorld(), _audioToPlay);
 
+}
+
+void AEnemy::PlayDeathSound(USoundBase* _audioToPlay)
+{
+	if (!_audioToPlay || hasBeenhit)return;
+	UGameplayStatics::PlaySound2D(GetWorld(), _audioToPlay);
 }
 
 
@@ -110,6 +119,13 @@ float AEnemy::IncreaseTime(float _current, float _max)
 void AEnemy::SetCanStartDestroyTimer(bool _value)
 {
 	//canStartDestroytimer = _value;
+}
+
+void AEnemy::ManageOnDeath()
+{
+	PlayDeathSound(onDeathSound);
+	UE_LOG(LogTemp, Warning, TEXT("SoundPLayed!"));
+
 }
 
 
