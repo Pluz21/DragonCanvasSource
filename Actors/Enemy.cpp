@@ -43,6 +43,9 @@ void AEnemy::Init()
 	playerRef = moveCompo->GetChaseTarget();
 	//OnDestroyed.AddDynamic(this, &AEnemy::ManageOnDeath);
 	onDeath.AddDynamic(this, &AEnemy::ManageOnDeath);
+	onHit.AddDynamic(this, &AEnemy::PlayProjectileHitSound);
+	secondMesh->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlapBegin);
+
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -72,7 +75,7 @@ void AEnemy::SelfDestroy()
 		Destroy(); // Play Animation
 		if (playerRef->healthCompo->isDead)return;
 		ApplyDamage();
-		PlayHitSound(hitPlayerSound);
+		PlayHitPlayerSound(hitPlayerSound);
 		UE_LOG(LogTemp, Warning, TEXT("You got hit by an enemy!"));
 
 	}
@@ -87,14 +90,14 @@ void AEnemy::ApplyDamage()
 	playerRef->healthCompo->RemoveHealth(damageToApply);
 }
 
-void AEnemy::PlayHitSound(USoundBase* _audioToPlay)
+void AEnemy::PlayHitPlayerSound(USoundBase* _audioToPlay)
 {
 	if (!_audioToPlay)return;
 	UGameplayStatics::PlaySound2D(GetWorld(), _audioToPlay);
 
 }
 
-void AEnemy::PlayDeathSound(USoundBase* _audioToPlay)
+void AEnemy::PlaySound(USoundBase* _audioToPlay)
 {
 	if (!_audioToPlay || hasBeenhit)return;
 	UGameplayStatics::PlaySound2D(GetWorld(), _audioToPlay);
@@ -123,8 +126,14 @@ void AEnemy::SetCanStartDestroyTimer(bool _value)
 
 void AEnemy::ManageOnDeath()
 {
-	PlayDeathSound(onDeathSound);
-	UE_LOG(LogTemp, Warning, TEXT("SoundPLayed!"));
+	PlaySound(onDeathSound);
+	UE_LOG(LogTemp, Warning, TEXT("Enemy killed!"));
+
+}
+
+void AEnemy::PlayProjectileHitSound()
+{
+	PlaySound(onDeathSound);
 
 }
 
@@ -135,6 +144,12 @@ void AEnemy::SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesT
 		{
 			_meshesToAffect[i]->SetMaterial(0, _newMat);
 		}
+}
+
+void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("SecondMesgOverlapped!"));
+	canBeDestroyed = true;
 }
 
 

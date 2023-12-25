@@ -121,7 +121,7 @@ void AProjectile::ManageBossEnemyHit(AActor* _actor)
 	{
 		ABossEnemy* _bossEnemy = Cast<ABossEnemy>(_actor);
 		if (!_bossEnemy) return;
-		UE_LOG(LogTemp, Warning, TEXT(" BossEnemy Manager called"));
+		if (!_bossEnemy->GetCanBeDestroyed()) return;
 		UMaterialCheckerComponent* _matChecker1 = _bossEnemy->GetMaterialCheckerComponent();
 		int _size = _matChecker1->GetAllMatsSize();
 		UMaterialCheckerComponent* _matChecker2 = _bossEnemy->GetMaterialCheckerComponent2();
@@ -134,16 +134,19 @@ void AProjectile::ManageBossEnemyHit(AActor* _actor)
 		UStaticMeshComponent* _thirdMesh = _bossEnemy->GetThirdMesh();
 		_allStaticMeshes = FindAllChildMeshes(_baseMesh, _secondMesh, _thirdMesh);
 		_allStaticMeshesFromSecondMesh = FindAllChildMeshes(_secondMesh);
+		
 		for (int i = 0; i < _size; i++)
 		{
 			UMaterialInterface* _matToApply = meshCompo->
 				GetMaterial(0);
-			if (_matToApply == _matChecker2->allMatsToCheck[i]) // testing with the fire arm
+			// 
+			if (_matToApply == _matChecker2->allMatsToCheck[i] && _secondMesh->GetMaterial(0) != _matChecker2->allMatsToCheck[i]) // testing with the fire arm
 			{
 				_bossEnemy->SetSecondMeshMaterial(_matToApply); // parent
 				_bossEnemy->SetMeshMaterialChildIncluded(_allStaticMeshesFromSecondMesh, _matToApply);
 				ApplyHitEffect(_secondMesh);
 				ApplyHitEffect(_allStaticMeshesFromSecondMesh);
+				_bossEnemy->GetOnHit().Broadcast(); // mat to apply will return true even after destruction
 				//_bossEnemy->moveCompo->SetChaseSpeed(0);
 				//_bossEnemy->SetLifeSpan(enemyLifeSpan);
 				//ApplyHitEffect(_allStaticMeshes);  // Dismantles static meshes
@@ -297,6 +300,9 @@ void AProjectile::UpdateOverlapPhysics(AActor*& _actorToActivatePhysicsOn)
 //	initialCollisionSetting = meshCompo->GetCollisionEnabled();
 
 }
+
+
+
 
 
 

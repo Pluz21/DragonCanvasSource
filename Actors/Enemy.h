@@ -13,8 +13,11 @@ UCLASS()
 class DRAGONCANVAS_API AEnemy : public AActor
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathEvent);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHitEvent);
 	UPROPERTY()
 	FDeathEvent onDeath;
+	UPROPERTY()
+	FHitEvent onHit;
 	GENERATED_BODY()
 
 public:
@@ -47,7 +50,8 @@ public:
 	int damageToApply = 1;
 	UPROPERTY(EditAnywhere)
 	bool hasBeenhit = false;
-
+	UPROPERTY(EditAnywhere)
+	bool canBeDestroyed = false;
 	// Timer
 	UPROPERTY(EditAnywhere)
 	float currentTime = 0;
@@ -75,9 +79,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamage();
 	UFUNCTION(BlueprintCallable)
-	void PlayHitSound(USoundBase* _audioToPlay);
+	void PlayHitPlayerSound(USoundBase* _audioToPlay);
 	UFUNCTION(BlueprintCallable)
-	void PlayDeathSound(USoundBase* _audioToPlay);
+	void PlaySound(USoundBase* _audioToPlay);
 
 	// Timer functions
 	void StartDestroyTimer();
@@ -87,8 +91,11 @@ public:
 	void SetHasBeenHit(bool _value) { hasBeenhit = _value; }
 
 	FDeathEvent& GetOnDeath() { return onDeath; }
+	FHitEvent& GetOnHit() { return onHit; }
 	UFUNCTION()
 	void ManageOnDeath();
+	UFUNCTION()
+	void PlayProjectileHitSound();
 
 	UStaticMeshComponent* GetBaseMesh() { return baseMesh; }
 	UStaticMeshComponent* GetSecondMesh() { return secondMesh; }
@@ -98,4 +105,9 @@ public:
 	virtual void SetSecondMeshMaterial(UMaterialInterface* _newMat) { secondMesh->SetMaterial(0, _newMat);};
 	virtual void SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesToAffect, UMaterialInterface* _newMat);
 
+	UFUNCTION()
+	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	void SetCanBeDestroyed(bool _value) { canBeDestroyed = _value; }
+	bool GetCanBeDestroyed() { return canBeDestroyed; }
 };

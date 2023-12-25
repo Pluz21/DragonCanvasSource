@@ -121,8 +121,7 @@ public:
 	void ApplyHitEffect(TArray<UStaticMeshComponent*> _allStaticMeshesToHit);
 	void ApplyHitEffect(UStaticMeshComponent* _staticMeshToAffect);
 	void UpdateOverlapPhysics(AActor*& _actorToActivatePhysicsOn);
-
-	void ManageBossEnemyHit(AActor* _actor);
+		void ManageBossEnemyHit(AActor* _actor);
 	void ManageEnemyHit(AActor* _actor);
 	void ManageDestroyTagHit(AActor* _actor);
 	void ManageCanMoveHit(AActor* _actor);
