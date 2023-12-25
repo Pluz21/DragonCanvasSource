@@ -51,7 +51,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool hasBeenhit = false;
 	UPROPERTY(EditAnywhere)
-	bool canBeDestroyed = false;
+	bool canDestroySecondMesh = false;
 	// Timer
 	UPROPERTY(EditAnywhere)
 	float currentTime = 0;
@@ -106,8 +106,8 @@ public:
 	virtual void SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesToAffect, UMaterialInterface* _newMat);
 
 	UFUNCTION()
-	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void OnSecondMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	void SetCanBeDestroyed(bool _value) { canBeDestroyed = _value; }
-	bool GetCanBeDestroyed() { return canBeDestroyed; }
+	void SetSecondMeshCanBeDestroyed(bool _value) { canDestroySecondMesh = _value; }
+	bool GetCanDestroySecondMesh() { return canDestroySecondMesh; }
 };

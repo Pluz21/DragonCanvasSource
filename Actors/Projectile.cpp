@@ -121,7 +121,7 @@ void AProjectile::ManageBossEnemyHit(AActor* _actor)
 	{
 		ABossEnemy* _bossEnemy = Cast<ABossEnemy>(_actor);
 		if (!_bossEnemy) return;
-		if (!_bossEnemy->GetCanBeDestroyed()) return;
+		if (!_bossEnemy->GetCanDestroySecondMesh()) return; // Onlyi for secondMesh
 		UMaterialCheckerComponent* _matChecker1 = _bossEnemy->GetMaterialCheckerComponent();
 		int _size = _matChecker1->GetAllMatsSize();
 		UMaterialCheckerComponent* _matChecker2 = _bossEnemy->GetMaterialCheckerComponent2();
