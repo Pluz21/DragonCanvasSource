@@ -113,9 +113,19 @@ public:
 	UFUNCTION() void CallLineTraceDisplacement();
 
 	TArray<UStaticMeshComponent*> FindAllChildMeshes(UStaticMeshComponent*& _parentMesh);
+	TArray<UStaticMeshComponent*> FindAllChildMeshes(UStaticMeshComponent*& _parentMesh, UStaticMeshComponent*& _parentMesh2, UStaticMeshComponent*& _parentMesh3);
+	/**
+	* Sets simulate physics to true and Mass to 0.01f kg
+	*/
+	UFUNCTION()
 	void ApplyHitEffect(TArray<UStaticMeshComponent*> _allStaticMeshesToHit);
+	void ApplyHitEffect(UStaticMeshComponent* _staticMeshToAffect);
 	void UpdateOverlapPhysics(AActor*& _actorToActivatePhysicsOn);
 
+	void ManageBossEnemyHit(AActor* _actor);
+	void ManageEnemyHit(AActor* _actor);
+	void ManageDestroyTagHit(AActor* _actor);
+	void ManageCanMoveHit(AActor* _actor);
 	UFUNCTION() void SelfDestruct();
 
 };

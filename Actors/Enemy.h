@@ -92,8 +92,10 @@ public:
 
 	UStaticMeshComponent* GetBaseMesh() { return baseMesh; }
 	UStaticMeshComponent* GetSecondMesh() { return secondMesh; }
-	void SetEnemyMaterial(UMaterialInterface* _newMat) { baseMesh->SetMaterial(0,_newMat) ; }
+	void SetBaseMeshMaterial(UMaterialInterface* _newMat) { baseMesh->SetMaterial(0,_newMat) ; }
 	UMaterialCheckerComponent* GetMaterialCheckerComponent() { return materialCheckerCompo; }
 
+	virtual void SetSecondMeshMaterial(UMaterialInterface* _newMat) { secondMesh->SetMaterial(0, _newMat);};
+	virtual void SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesToAffect, UMaterialInterface* _newMat);
 
 };

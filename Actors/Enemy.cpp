@@ -128,5 +128,14 @@ void AEnemy::ManageOnDeath()
 
 }
 
+void AEnemy::SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesToAffect, UMaterialInterface* _newMat)
+{
+		int _size = _meshesToAffect.Num();
+		for (int i = 0; i < _size; i++)
+		{
+			_meshesToAffect[i]->SetMaterial(0, _newMat);
+		}
+}
+
 
 
