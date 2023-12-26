@@ -21,8 +21,8 @@ AEnemy::AEnemy()
 	secondMesh = CreateDefaultSubobject<UStaticMeshComponent>("secondMesh");
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
 	materialCheckerCompo = CreateDefaultSubobject<UMaterialCheckerComponent>("MaterialChecker");
-	hitPlayerSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Enemy_Hit_sound.Enemy_Hit_sound")).Object;
-	onDeathSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("Game/Sounds/Enemy_breaking")).Object;
+	//hitPlayerSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Enemy_Sounds/Enemy_Hit_Meta")).Object;
+	//onDeathSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("Game/Sounds/Enemy_Sounds/Enemy_Breaking_Meta")).Object;
 	baseMesh->SetupAttachment(root);
 	secondMesh->SetupAttachment(baseMesh);
 	AddOwnedComponent(moveCompo);
@@ -135,6 +135,11 @@ void AEnemy::PlayProjectileHitSound()
 {
 	PlaySound(onDeathSound);
 
+}
+
+void AEnemy::SetMeshMaterialAtIndex(TArray<UStaticMeshComponent*> _meshArray, int _index, UMaterialInterface* _newMat)
+{
+	_meshArray[_index]->SetMaterial(0, _newMat);
 }
 
 void AEnemy::SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesToAffect, UMaterialInterface* _newMat)

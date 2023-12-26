@@ -13,7 +13,7 @@ AColorActivatorProjectile::AColorActivatorProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("meshCompo");
 	materialChecker = CreateDefaultSubobject<UMaterialCheckerComponent>("materiaChecker");
-	onRevealSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/RevealSoundSource.RevealSoundSource")).Object;
+	onRevealSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Interaction_Sounds/RevealSoundSource.RevealSoundSource")).Object;
 	meshCompo->SetupAttachment(RootComponent);
 	AddOwnedComponent(materialChecker);
 

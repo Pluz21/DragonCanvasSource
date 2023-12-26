@@ -103,6 +103,7 @@ public:
 	UMaterialCheckerComponent* GetMaterialCheckerComponent() { return materialCheckerCompo; }
 
 	virtual void SetSecondMeshMaterial(UMaterialInterface* _newMat) { secondMesh->SetMaterial(0, _newMat);};
+	virtual void SetMeshMaterialAtIndex(TArray<UStaticMeshComponent*> _meshArray, int _index, UMaterialInterface* _newMat);
 	virtual void SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesToAffect, UMaterialInterface* _newMat);
 
 	UFUNCTION()

@@ -27,6 +27,7 @@ UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLineTraceCreated);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileShotEvent);
 	//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FProjectileReachedTarget, UWorld*, world, FHitResult, result);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileReachedTarget);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCurrentProjectileMatEvent, UMaterialInterface*, mat);
@@ -34,6 +35,9 @@ class DRAGONCANVAS_API ADragon : public ACharacter
 
 	UPROPERTY(BlueprintAssignable)
 	FCurrentProjectileMatEvent onCurrentProjectileMatReceived;
+
+	UPROPERTY()
+	FProjectileShotEvent onProjectileShot;
 
 	UPROPERTY()
 	FLineTraceCreated onLineTraceCreated;
@@ -177,6 +181,9 @@ public:
 	TEnumAsByte<ECollisionChannel> _coneTraceChannel;
 
 
+	// Audio
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> projectileSound;
 
 	//Not in use
 	UPROPERTY(EditAnywhere, Category = "LineTrace")
@@ -224,6 +231,11 @@ protected:
 
 	//Debug
 	void DebugText(FString _string);
+
+	// Audio
+	void PlaySound(USoundBase* _audioToPlay);
+	UFUNCTION()
+	void PlayProjectileSound();
 
 public:
 	UFUNCTION() void FireBreath();

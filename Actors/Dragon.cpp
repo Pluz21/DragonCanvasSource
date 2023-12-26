@@ -42,7 +42,7 @@ ADragon::ADragon()
 	healthCompo = CreateDefaultSubobject<UHealthComponent>("healthCompo");
 	manaCompo = CreateDefaultSubobject<UManaComponent>("manaCompo");
 
-
+	projectileSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Player_Sounds/Shoot_Sound_Meta.Shoot_Sound_Meta")).Object;
 	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
@@ -54,6 +54,7 @@ ADragon::ADragon()
 	
 
 }
+
 
 
 // Called every frame
@@ -111,7 +112,7 @@ void ADragon::InitEvents()
 
 	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
 	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
-	
+	onProjectileShot.AddDynamic(this, &ADragon::PlayProjectileSound);
 }
 
 void ADragon::UpdateCurrentProjectileMat(UMaterialInterface* _mat)
@@ -252,6 +253,8 @@ void ADragon::FireBreath()
 		_spawnedProjectile->SetCanMove(true);
 
 	}
+	onProjectileShot.Broadcast();
+
 	
 
 	
@@ -365,6 +368,17 @@ void ADragon::UpdateMinDistanceToSelfDestruct()
 	minDistanceToSelfDestruct = coneTraceRadius / 2;
 }
 
+//Audio
+
+void ADragon::PlaySound(USoundBase* _audioToPlay)
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), _audioToPlay);
+
+}
+void ADragon::PlayProjectileSound()
+{
+	PlaySound(projectileSound);
+}
 
 
 

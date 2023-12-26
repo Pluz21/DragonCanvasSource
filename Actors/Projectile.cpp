@@ -122,38 +122,51 @@ void AProjectile::ManageBossEnemyHit(AActor* _actor)
 		ABossEnemy* _bossEnemy = Cast<ABossEnemy>(_actor);
 		if (!_bossEnemy) return;
 		if (!_bossEnemy->GetCanDestroySecondMesh()) return; // Onlyi for secondMesh
-		UMaterialCheckerComponent* _matChecker1 = _bossEnemy->GetMaterialCheckerComponent();
-		int _size = _matChecker1->GetAllMatsSize();
-		UMaterialCheckerComponent* _matChecker2 = _bossEnemy->GetMaterialCheckerComponent2();
-		int _size2 = _matChecker2->GetAllMatsSize();
+		UMaterialCheckerComponent* _matChecker = _bossEnemy->GetMaterialCheckerComponent();
+		int _size = _matChecker->GetAllMatsSize();
+		//UMaterialCheckerComponent* _matChecker2 = _bossEnemy->GetMaterialCheckerComponent2();
+		//int _size2 = _matChecker2->GetAllMatsSize();
+		UE_LOG(LogTemp, Warning, TEXT("Array size on boss = %i"), _size);
 
-		TArray<UStaticMeshComponent*> _allStaticMeshes;
-		TArray<UStaticMeshComponent*> _allStaticMeshesFromSecondMesh;
-		UStaticMeshComponent* _baseMesh = _bossEnemy->GetBaseMesh();
-		UStaticMeshComponent* _secondMesh = _bossEnemy->GetSecondMesh();
-		UStaticMeshComponent* _thirdMesh = _bossEnemy->GetThirdMesh();
-		_allStaticMeshes = FindAllChildMeshes(_baseMesh, _secondMesh, _thirdMesh);
-		_allStaticMeshesFromSecondMesh = FindAllChildMeshes(_secondMesh);
-		
+		UMaterialInterface* _matToApply = meshCompo->GetMaterial(0);
+		TArray<UStaticMeshComponent*> _allChildStaticMeshes;
 		for (int i = 0; i < _size; i++)
 		{
-			UMaterialInterface* _matToApply = meshCompo->
-				GetMaterial(0);
-			// 
-			if (_matToApply == _matChecker2->allMatsToCheck[i] && _secondMesh->GetMaterial(0) != _matChecker2->allMatsToCheck[i]) // testing with the fire arm
-			{
-				_bossEnemy->SetSecondMeshMaterial(_matToApply); // parent
-				_bossEnemy->SetMeshMaterialChildIncluded(_allStaticMeshesFromSecondMesh, _matToApply);
-				ApplyHitEffect(_secondMesh);
-				ApplyHitEffect(_allStaticMeshesFromSecondMesh);
-				_bossEnemy->GetOnHit().Broadcast(); // mat to apply will return true even after destruction
-				//_bossEnemy->moveCompo->SetChaseSpeed(0);
-				//_bossEnemy->SetLifeSpan(enemyLifeSpan);
-				//ApplyHitEffect(_allStaticMeshes);  // Dismantles static meshes
-				//_bossEnemy->GetOnDeath().Broadcast();
-				//_bossEnemy->SetHasBeenHit(true);
-				//onEnemyHit.Broadcast();
-			}
+			UE_LOG(LogTemp, Warning, TEXT("Entered Boss Loop"));
+			if (i < _bossEnemy->GetAllMeshes().Num() && i < _matChecker->allMatsToCheck.Num())
+				{  
+				if (_matToApply == _matChecker->allMatsToCheck[i] && _bossEnemy->GetAllMeshes()[i]->GetMaterial(0) != _matChecker->allMatsToCheck[i]) // testing with the fire arm
+					{
+						//UE_LOG(LogTemp, Warning, TEXT("Checking mat in list : %s"), *_matChecker->allMatsToCheck[i]->GetName());
+						//UE_LOG(LogTemp, Warning, TEXT("Checking MESH in list : %s"), *_bossEnemy->GetAllMeshes()[i]->GetMaterial(0)->GetName());
+						//
+						_allChildStaticMeshes = FindAllChildMeshes(_bossEnemy->GetAllMeshes()[i]);
+						_bossEnemy->SetMeshMaterialAtIndex(_bossEnemy->GetAllMeshes(), i, _matToApply); // parent
+						//_bossEnemy->SetSecondMeshMaterial(_matToApply); // parent
+						//_bossEnemy->SetMeshMaterialChildIncluded(_allStaticMeshesFromSecondMesh, _matToApply);
+						_bossEnemy->SetMeshMaterialChildIncluded(_allChildStaticMeshes, _matToApply);
+						ApplyHitEffect(_allChildStaticMeshes[i]);
+						ApplyHitEffect(_bossEnemy->GetAllMeshes()[i]);
+						//ApplyHitEffect(_allChildStaticMeshes[i]);
+						//ApplyHitEffect(_allStaticMeshesFromSecondMesh);
+						_bossEnemy->GetOnHit().Broadcast();
+						_bossEnemy->RemoveMesh(i);
+						_matChecker->allMatsToCheck.RemoveAt(i);
+						_bossEnemy->GetOnMeshLoss().Broadcast();
+						i--;
+
+						// mat to apply will return true even after destruction
+						//_bossEnemy->GetOnHit().Broadcast(); // mat to apply will return true even after destruction
+						//_bossEnemy->moveCompo->SetChaseSpeed(0);
+						//_bossEnemy->SetLifeSpan(enemyLifeSpan);
+						//ApplyHitEffect(_allStaticMeshes);  // Dismantles static meshes
+						//_bossEnemy->GetOnDeath().Broadcast();
+						//_bossEnemy->SetHasBeenHit(true);
+						//onEnemyHit.Broadcast();
+				}
+				else
+					return;
+				}
 		}
 	}
 
