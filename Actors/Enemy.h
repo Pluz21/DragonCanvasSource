@@ -10,7 +10,7 @@ class ADragon;
 class UMaterialCheckerComponent;
 
 UCLASS()
-class DRAGONCANVAS_API AEnemy : public AActor
+class DRAGONCANVAS_API AEnemy : public APawn
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathEvent);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHitEvent);
@@ -106,7 +106,8 @@ public:
 	virtual void SetMeshMaterialAtIndex(TArray<UStaticMeshComponent*> _meshArray, int _index, UMaterialInterface* _newMat);
 	virtual void SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesToAffect, UMaterialInterface* _newMat);
 
-	
+	virtual void Chase();
+
 	void SetSecondMeshCanBeDestroyed(bool _value) { canDestroySecondMesh = _value; }
 	//bool GetCanDestroySecondMesh() { return canDestroySecondMesh; }
 };

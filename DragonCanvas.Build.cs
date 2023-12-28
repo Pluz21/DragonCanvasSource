@@ -8,7 +8,7 @@ public class DragonCanvas : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "MetasoundEngine" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "MetasoundEngine", "AIModule"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

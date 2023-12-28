@@ -116,3 +116,21 @@ void UMoveComponent::Rotate()
 	ownerRef->SetActorRotation(_newRotation);
 }
 
+void UMoveComponent::MoveToLocation(FVector& _newLocation)
+{
+	if (!ownerRef)return;
+	FVector _direction = _newLocation - ownerRef->GetActorLocation();
+	//UE_LOG(LogTemp, Warning, TEXT("Direction from Enemy is : %s"), *_direction.ToString());
+	FVector _normalizedDirection = _direction.GetSafeNormal();
+	FRotator _newRotate = _normalizedDirection.Rotation();
+	float _clampedPitch = FMath::Clamp(ownerRef->GetActorRotation().Pitch, -20.f, 0.f);
+	FRotator _clampedNewRotate = FRotator(_clampedPitch, _newRotate.Yaw, _newRotate.Roll);
+	
+	FVector _targetLocation = ownerRef->GetActorLocation() + _direction * chaseSpeed * GetWorld()->DeltaTimeSeconds;
+	_targetLocation.Z = bossHeightOffset;
+	ownerRef->SetActorLocation(_targetLocation);
+
+	ownerRef->SetActorRotation(_clampedNewRotate);
+
+}
+

@@ -51,10 +51,10 @@ void AEnemy::Init()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!moveCompo)return;
-	moveCompo->ChasePlayer();
+	
 	SelfDestroy();
 	currentTime = IncreaseTime(currentTime, maxTime);
+	Chase();
 
 }
 
@@ -149,6 +149,12 @@ void AEnemy::SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesT
 		{
 			_meshesToAffect[i]->SetMaterial(0, _newMat);
 		}
+}
+
+void AEnemy::Chase()
+{
+	if (!moveCompo)return;
+	moveCompo->ChasePlayer();
 }
 
 

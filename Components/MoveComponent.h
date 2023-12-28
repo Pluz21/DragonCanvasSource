@@ -29,7 +29,8 @@ public:
 	float moveSpeed = 100.f;
 	UPROPERTY(EditAnywhere)
 	float rotateSpeed = 2000.f;   //Projectile rotateSpeed
-
+	UPROPERTY(EditAnywhere)
+	FRotator maxPitchRotation = FRotator(0, -20.f, 0);
 	UPROPERTY(EditAnywhere)
 	float bossHeightOffset = 250;
 protected:
@@ -47,10 +48,9 @@ public:
 	void ChasePlayer();
 	void BossChasePlayer();
 	void Rotate();
-
 	float GetMoveSpeed() { return moveSpeed; }
 	void SetMoveSpeed(float _newMoveSpeed) { moveSpeed = _newMoveSpeed; }
 	void SetChaseSpeed(float _newChaseSpeed) { chaseSpeed = _newChaseSpeed; }
 	ADragon* GetChaseTarget() { return playerRef; }
-		
+	void MoveToLocation(FVector& _newLocation);
 };
