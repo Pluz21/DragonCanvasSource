@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "DragonCanvas/Components/MoveComponent.h"
 #include "DragonCanvas/Actors/Dragon.h"
+#include "DragonCanvas/Actors/Projectile.h"
 #include "DragonCanvas/Components/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DragonCanvas/MaterialCheckerComponent.h"
@@ -44,8 +45,7 @@ void AEnemy::Init()
 	//OnDestroyed.AddDynamic(this, &AEnemy::ManageOnDeath);
 	onDeath.AddDynamic(this, &AEnemy::ManageOnDeath);
 	onHit.AddDynamic(this, &AEnemy::PlayProjectileHitSound);
-	secondMesh->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnSecondMeshOverlapBegin);
-
+	
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -151,11 +151,7 @@ void AEnemy::SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesT
 		}
 }
 
-void AEnemy::OnSecondMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	UE_LOG(LogTemp, Warning, TEXT("SecondMesgOverlapped!"));
-	canDestroySecondMesh = true;
-}
+
 
 
 

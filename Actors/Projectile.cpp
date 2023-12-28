@@ -67,6 +67,7 @@ void AProjectile::EventsInit()
 	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
 	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
 	onProjectileCreated.Broadcast();
+	onCorrectProjectileMeshOverlap.AddDynamic(this, &AProjectile::ManageBossEnemyHit);
 
 }
 
@@ -81,7 +82,7 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	else 
 		UE_LOG(LogTemp, Warning, TEXT("FAILED OVERLAPCALL"));
 	ManageEnemyHit(_overlap);
-	ManageBossEnemyHit(_overlap);
+	//ManageBossEnemyHit(_overlap);
 
 	onEnemyHit.Broadcast();
 	
@@ -121,52 +122,34 @@ void AProjectile::ManageBossEnemyHit(AActor* _actor)
 	{
 		ABossEnemy* _bossEnemy = Cast<ABossEnemy>(_actor);
 		if (!_bossEnemy) return;
-		if (!_bossEnemy->GetCanDestroySecondMesh()) return; // Onlyi for secondMesh
+		//if (!_bossEnemy->GetCanDestroySecondMesh()) return; // Onlyi for secondMesh
 		UMaterialCheckerComponent* _matChecker = _bossEnemy->GetMaterialCheckerComponent();
 		int _size = _matChecker->GetAllMatsSize();
-		//UMaterialCheckerComponent* _matChecker2 = _bossEnemy->GetMaterialCheckerComponent2();
-		//int _size2 = _matChecker2->GetAllMatsSize();
-		UE_LOG(LogTemp, Warning, TEXT("Array size on boss = %i"), _size);
-
 		UMaterialInterface* _matToApply = meshCompo->GetMaterial(0);
 		TArray<UStaticMeshComponent*> _allChildStaticMeshes;
 		for (int i = 0; i < _size; i++)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Entered Boss Loop"));
 			if (i < _bossEnemy->GetAllMeshes().Num() && i < _matChecker->allMatsToCheck.Num())
-				{  
+			{			
 				if (_matToApply == _matChecker->allMatsToCheck[i] && _bossEnemy->GetAllMeshes()[i]->GetMaterial(0) != _matChecker->allMatsToCheck[i]) // testing with the fire arm
-					{
-						//UE_LOG(LogTemp, Warning, TEXT("Checking mat in list : %s"), *_matChecker->allMatsToCheck[i]->GetName());
-						//UE_LOG(LogTemp, Warning, TEXT("Checking MESH in list : %s"), *_bossEnemy->GetAllMeshes()[i]->GetMaterial(0)->GetName());
-						//
-						_allChildStaticMeshes = FindAllChildMeshes(_bossEnemy->GetAllMeshes()[i]);
-						_bossEnemy->SetMeshMaterialAtIndex(_bossEnemy->GetAllMeshes(), i, _matToApply); // parent
-						//_bossEnemy->SetSecondMeshMaterial(_matToApply); // parent
-						//_bossEnemy->SetMeshMaterialChildIncluded(_allStaticMeshesFromSecondMesh, _matToApply);
-						_bossEnemy->SetMeshMaterialChildIncluded(_allChildStaticMeshes, _matToApply);
-						ApplyHitEffect(_allChildStaticMeshes[i]);
-						ApplyHitEffect(_bossEnemy->GetAllMeshes()[i]);
-						//ApplyHitEffect(_allChildStaticMeshes[i]);
-						//ApplyHitEffect(_allStaticMeshesFromSecondMesh);
-						_bossEnemy->GetOnHit().Broadcast();
-						_bossEnemy->RemoveMesh(i);
-						_matChecker->allMatsToCheck.RemoveAt(i);
-						_bossEnemy->GetOnMeshLoss().Broadcast();
-						i--;
+				{
+					_allChildStaticMeshes = FindAllChildMeshes(_bossEnemy->GetAllMeshes()[i]);
+					_bossEnemy->SetMeshMaterialAtIndex(_bossEnemy->GetAllMeshes(), i, _matToApply); // parent
+					_bossEnemy->SetMeshMaterialChildIncluded(_allChildStaticMeshes, _matToApply);
+					ApplyHitEffect(_allChildStaticMeshes[i]);
+					ApplyHitEffect(_bossEnemy->GetAllMeshes()[i]);
+					_bossEnemy->GetOnHit().Broadcast();
+					_bossEnemy->RemoveMesh(i);
+					_matChecker->allMatsToCheck.RemoveAt(i);
+					_bossEnemy->GetOnMeshLoss().Broadcast();
+					i--;
 
-						// mat to apply will return true even after destruction
-						//_bossEnemy->GetOnHit().Broadcast(); // mat to apply will return true even after destruction
-						//_bossEnemy->moveCompo->SetChaseSpeed(0);
-						//_bossEnemy->SetLifeSpan(enemyLifeSpan);
-						//ApplyHitEffect(_allStaticMeshes);  // Dismantles static meshes
-						//_bossEnemy->GetOnDeath().Broadcast();
-						//_bossEnemy->SetHasBeenHit(true);
-						//onEnemyHit.Broadcast();
 				}
-				else
-					return;
-				}
+				else return;
+
+			}
+			else return;
+			
 		}
 	}
 

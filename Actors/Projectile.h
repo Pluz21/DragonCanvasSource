@@ -17,6 +17,7 @@ class DRAGONCANVAS_API AProjectile : public AActor
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileCreated);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCanStartMoving);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyHitEvent);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCorrectProjectileMeshOverlapEvent, AActor*, actor);
 	
 	UPROPERTY(EditAnywhere)
 	FEnemyHitEvent onEnemyHit;
@@ -31,6 +32,9 @@ class DRAGONCANVAS_API AProjectile : public AActor
 
 	UPROPERTY(EditAnywhere)
 	FProjectileCreated onProjectileCreated;
+	UPROPERTY(EditAnywhere)
+	FCorrectProjectileMeshOverlapEvent onCorrectProjectileMeshOverlap;
+
 	GENERATED_BODY()
 	
 public:	
@@ -114,6 +118,7 @@ public:
 
 	TArray<UStaticMeshComponent*> FindAllChildMeshes(UStaticMeshComponent*& _parentMesh);
 	TArray<UStaticMeshComponent*> FindAllChildMeshes(UStaticMeshComponent*& _parentMesh, UStaticMeshComponent*& _parentMesh2, UStaticMeshComponent*& _parentMesh3);
+	UMaterialInterface* GetCurrentProjectileMat() { return meshCompo->GetMaterial(0); }
 	/**
 	* Sets simulate physics to true and Mass to 0.01f kg
 	*/
@@ -121,10 +126,16 @@ public:
 	void ApplyHitEffect(TArray<UStaticMeshComponent*> _allStaticMeshesToHit);
 	void ApplyHitEffect(UStaticMeshComponent* _staticMeshToAffect);
 	void UpdateOverlapPhysics(AActor*& _actorToActivatePhysicsOn);
-		void ManageBossEnemyHit(AActor* _actor);
+	UFUNCTION()
+	void ManageBossEnemyHit(AActor* _actor);
 	void ManageEnemyHit(AActor* _actor);
 	void ManageDestroyTagHit(AActor* _actor);
 	void ManageCanMoveHit(AActor* _actor);
 	UFUNCTION() void SelfDestruct();
 
+	//Events
+	UFUNCTION()
+	FCorrectProjectileMeshOverlapEvent& GetOnCorrectProjectileMeshOverlap() {
+		return onCorrectProjectileMeshOverlap;
+	}
 };

@@ -30,7 +30,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	float rotateSpeed = 2000.f;   //Projectile rotateSpeed
 
-
+	UPROPERTY(EditAnywhere)
+	float bossHeightOffset = 250;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -44,6 +45,7 @@ public:
 	void MoveAndFollow();
 	void SelfMove(const FVector& _actorForwardVector);
 	void ChasePlayer();
+	void BossChasePlayer();
 	void Rotate();
 
 	float GetMoveSpeed() { return moveSpeed; }

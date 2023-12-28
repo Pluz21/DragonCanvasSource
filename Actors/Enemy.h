@@ -106,9 +106,7 @@ public:
 	virtual void SetMeshMaterialAtIndex(TArray<UStaticMeshComponent*> _meshArray, int _index, UMaterialInterface* _newMat);
 	virtual void SetMeshMaterialChildIncluded(TArray<UStaticMeshComponent*> _meshesToAffect, UMaterialInterface* _newMat);
 
-	UFUNCTION()
-	virtual void OnSecondMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+	
 	void SetSecondMeshCanBeDestroyed(bool _value) { canDestroySecondMesh = _value; }
-	bool GetCanDestroySecondMesh() { return canDestroySecondMesh; }
+	//bool GetCanDestroySecondMesh() { return canDestroySecondMesh; }
 };
