@@ -1,12 +1,16 @@
 //Copyright © 2023 Pluz21(TVL).All rights reserved.
 
 #include "Enemy.h"
-#include "DragonCanvas/Components/MoveComponent.h"
 #include "DragonCanvas/Actors/Dragon.h"
 #include "DragonCanvas/Actors/Projectile.h"
+
+#include "DragonCanvas/Components/MoveComponent.h"
 #include "DragonCanvas/Components/HealthComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "DragonCanvas/MaterialCheckerComponent.h"
+#include "DragonCanvas/Components/AttackComponent.h"
+
+#include "Kismet/GameplayStatics.h"
+
 #include "UObject/ConstructorHelpers.h"
 
 
@@ -20,13 +24,21 @@ AEnemy::AEnemy()
 	root = CreateDefaultSubobject<USceneComponent>("root");
 	baseMesh = CreateDefaultSubobject<UStaticMeshComponent>("baseMesh");
 	secondMesh = CreateDefaultSubobject<UStaticMeshComponent>("secondMesh");
+	spawnPoint = CreateDefaultSubobject<USceneComponent>("spawnLocation");
+	
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
+	attackCompo = CreateDefaultSubobject<UAttackComponent>("attackCompo");
+	
+
 	materialCheckerCompo = CreateDefaultSubobject<UMaterialCheckerComponent>("MaterialChecker");
+	
 	//hitPlayerSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Enemy_Sounds/Enemy_Hit_Meta")).Object;
 	//onDeathSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("Game/Sounds/Enemy_Sounds/Enemy_Breaking_Meta")).Object;
+	spawnPoint->SetupAttachment(root);
 	baseMesh->SetupAttachment(root);
 	secondMesh->SetupAttachment(baseMesh);
 	AddOwnedComponent(moveCompo);
+	AddOwnedComponent(attackCompo);
 }
 
 // Called when the game starts or when spawned
@@ -54,6 +66,7 @@ void AEnemy::Tick(float DeltaTime)
 	
 	SelfDestroy();
 	currentTime = IncreaseTime(currentTime, maxTime);
+
 	Chase();
 
 }
@@ -106,16 +119,14 @@ void AEnemy::PlaySound(USoundBase* _audioToPlay)
 
 float AEnemy::IncreaseTime(float _current, float _max)
 {
-	/*if (!canStartDestroytimer)return _current;
-	currentTime = _current + GetWorld()->DeltaTimeSeconds;
-	if (currentTime >= maxTime)
+	_current += GetWorld()->DeltaTimeSeconds;
+	if (_current >= _max)
 	{
-		currentTime = 0;
-		Destroy();
+		_current = 0;
+		onAttackTimerReset.Broadcast();
 		return _current;
 	}
 
-	*/
 	return _current;
 }
 

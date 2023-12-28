@@ -6,6 +6,7 @@
 #include "Enemy.generated.h"
 
 class UMoveComponent;
+class UAttackComponent;
 class ADragon;
 class UMaterialCheckerComponent;
 
@@ -14,6 +15,11 @@ class DRAGONCANVAS_API AEnemy : public APawn
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathEvent);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHitEvent);
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttackTimerEvent);
+protected:
+	UPROPERTY()
+	FAttackTimerEvent onAttackTimerReset;
 	UPROPERTY()
 	FDeathEvent onDeath;
 	UPROPERTY()
@@ -30,7 +36,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> secondMesh;
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<USceneComponent> spawnPoint;
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UAttackComponent> attackCompo;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialCheckerComponent> materialCheckerCompo;
 
@@ -56,10 +66,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	float currentTime = 0;
 	UPROPERTY(EditAnywhere)
-	float maxTime = 4;
+	float maxTime = 1;
 	UPROPERTY(EditAnywhere)
 	bool canStartDestroytimer = false;
 
+	//AI
+	UPROPERTY(EditAnywhere)
+	FVector spawnLocation = FVector(0);
 
 
 protected:

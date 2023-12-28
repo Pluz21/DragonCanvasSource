@@ -40,7 +40,7 @@ class DRAGONCANVAS_API AProjectile : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProjectile();
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> meshCompo;
 
 	UPROPERTY(EditAnywhere)
@@ -101,6 +101,7 @@ public:
 	void EventsInit();
 	UFUNCTION()
 	void ManageOverlap(AActor* _overlapped, AActor* _overlap);
+	void SelfMove();
 	void SelfMove(const FVector& _actorForwardVector);
 	void SetCanMove(bool _value);
 	void SetForwardVector(const FVector& _ownerVector) { forwardVector = _ownerVector; }
@@ -109,6 +110,7 @@ public:
 	UMoveComponent* GetMoveCompo() { return moveCompo; }
 	FVector GetInitialLocation() { return actorSpawnLocation; }
 	float GetLaunchTime() { return launchTime; }
+	UStaticMeshComponent* GetMeshCompo() { return meshCompo; }
 
 	UFUNCTION() void SetLaunchTime() {launchTime = GetWorld()->GetTimeSeconds();}
 	UFUNCTION() void SetMaxDistance(const float& _maxDistance) { maxDistance = _maxDistance; }
@@ -133,6 +135,7 @@ public:
 	void ManageCanMoveHit(AActor* _actor);
 	UFUNCTION() void SelfDestruct();
 
+	
 	//Events
 	UFUNCTION()
 	FCorrectProjectileMeshOverlapEvent& GetOnCorrectProjectileMeshOverlap() {

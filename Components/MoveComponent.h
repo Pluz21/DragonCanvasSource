@@ -24,6 +24,8 @@ public:
 
 	//Movement variables
 	UPROPERTY(EditAnywhere)
+	bool canChase = false;
+	UPROPERTY(EditAnywhere)
 	float chaseSpeed = 1.f;
 	UPROPERTY(EditAnywhere)
 	float moveSpeed = 100.f;
@@ -49,7 +51,9 @@ public:
 	void BossChasePlayer();
 	void Rotate();
 	float GetMoveSpeed() { return moveSpeed; }
+	bool GetCanChase() { return canChase; }
 	void SetMoveSpeed(float _newMoveSpeed) { moveSpeed = _newMoveSpeed; }
+	void SetCanChase(bool _value) { canChase = _value; }
 	void SetChaseSpeed(float _newChaseSpeed) { chaseSpeed = _newChaseSpeed; }
 	ADragon* GetChaseTarget() { return playerRef; }
 	void MoveToLocation(FVector& _newLocation);

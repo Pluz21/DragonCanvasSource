@@ -17,7 +17,7 @@ AProjectile::AProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("mymesh");
-	meshCompo->SetupAttachment(RootComponent);
+	SetRootComponent(meshCompo);
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
 	AddOwnedComponent(moveCompo);
 
@@ -41,6 +41,7 @@ void AProjectile::Tick(float DeltaTime)
 	deltaSeconds = GetWorld()->DeltaTimeSeconds;
 	CheckDistance(targetLocation);
 	SelfMove(forwardVector);
+	//SelfMove();
 	moveCompo->Rotate();// or call moveCompo->Move();
 }
 
@@ -54,7 +55,10 @@ void AProjectile::Init()
 
 	//projectileManager->AddItem(this); // Not necessary. Safety extra call but already called on spawn from Dragon
 	actorSpawnLocation = GetActorLocation();
-	forwardVector = GetActorForwardVector();
+	if (GetOwner()) 
+	{
+	forwardVector = GetOwner()->GetActorForwardVector();
+	}
 	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
 	
 	SetLifeSpan(lifeSpan);
@@ -92,12 +96,18 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 
 }
 
+void AProjectile::SelfMove()
+{
+	meshCompo->AddImpulse(GetActorForwardVector() * 500, NAME_None, true);
+	//meshCompo->
+}
+
 
 void AProjectile::SelfMove(const FVector& _actorForwardVector)
 {
 	if (canMove)
 	{
-	moveCompo->SelfMove(forwardVector);
+	moveCompo->SelfMove(_actorForwardVector);
 	onCanMove.Broadcast();
 	}
 
