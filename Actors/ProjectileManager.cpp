@@ -1,6 +1,7 @@
 //Copyright © 2023 Pluz21(TVL).All rights reserved.
 
 #include "ProjectileManager.h"
+#include "DragonCanvas/Actors/Dragon.h"
 #include "Projectile.h"
 
 // Sets default values
@@ -16,7 +17,7 @@ void AProjectileManager::BeginPlay()
 {
 	Super::BeginPlay();
 	//onMatAcquired.AddDynamic(this, &AProjectileManager::)
-	
+	Init();
 }
 
 // Called every frame
@@ -24,6 +25,12 @@ void AProjectileManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AProjectileManager::Init()
+{
+	APawn* _playerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+	playerRef = Cast<ADragon>(_playerPawn);
 }
 
 // PROJECTILES
@@ -80,7 +87,8 @@ void AProjectileManager::AddMaterial(TObjectPtr<UMaterialInterface> _mat)
 	{
 	allCollectedMats.EmplaceAt(0,_mat);
 	onMatAcquired.Broadcast(_mat);
-
+	if (!playerRef)return;
+	playerRef->GetOnCurrentProjectileMatReceived().Broadcast(_mat);
 	}
 	else if(MatExists(_mat))
 	{

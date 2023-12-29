@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "ProjectileManager.generated.h"
 class AProjectile;
+class ADragon;
 
 UCLASS()
 class DRAGONCANVAS_API AProjectileManager : public AActor
@@ -20,7 +21,8 @@ class DRAGONCANVAS_API AProjectileManager : public AActor
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
 	TArray<AProjectile*> allProjectiles;
-
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<ADragon> playerRef;
 	
 	UPROPERTY(EditAnywhere)
 	TArray<UMaterialInterface*> allCollectedMats;
@@ -37,7 +39,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	void Init();
 	void AddItem(TObjectPtr<AProjectile> _item);
 	void RemoveItem(TObjectPtr<AProjectile> _item);
 	bool Exists(TObjectPtr<AProjectile> _item);

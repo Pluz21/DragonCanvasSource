@@ -123,6 +123,7 @@ void ADragon::UpdateCurrentProjectileMat(UMaterialInterface* _mat)
 	if (projectileManager->MatExists(_mat, allProjectileMats))return;
 	allProjectileMats.EmplaceAt(0, _mat);
 	currentProjectileMat = allProjectileMats[currentProjectileIndex];
+	//onCurrentProjectileMatReceived.Broadcast(_mat);
 
 }
 

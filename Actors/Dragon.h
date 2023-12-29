@@ -245,6 +245,8 @@ public:
 	FVector GetProjectileTargetLocation() { return targetLocation; }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
+	UFUNCTION(BlueprintCallable) 
+	AProjectileManager* GetProjectileManager() { return projectileManager; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TSubclassOf<AProjectile>GetProjectileToSpawn() { return projectileToSpawn; }
 
@@ -258,7 +260,8 @@ public:
 	FCurrentProjectileMatEvent& GetOnCurrentProjectileMatReceived() { return onCurrentProjectileMatReceived; }
 	UFUNCTION()
 	FOpenMenuEvent& GetOnMenuOpened() { return onMenuOpened; }
-
+	//UFUNCTION()
+	//void BroadcastOnProjectileMatUpdate() { onCurrentProjectileMatReceived.Broadcast(); }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int GetCurrentProjectileIndex() { return currentProjectileIndex; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
