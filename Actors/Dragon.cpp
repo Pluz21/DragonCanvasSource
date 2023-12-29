@@ -18,7 +18,7 @@
 #include "DragonCanvas/Components/ManaComponent.h"
 #include "DragonCanvas/Components/AttackComponent.h"
 
-#include "DragonCanvas/MainMenuWidget.h"
+#include "DragonCanvas/UI/MainMenuWidget.h"
 
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -79,7 +79,7 @@ void ADragon::Init()
 	if (!gameMode)return;
 	projectileManager = gameMode->GetProjectileManager();
 	if (!projectileManager)return;
-	//onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::ScrollUpSelectProjectile);
+	onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::TestMatReceived);
 	//onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::ScrollDownSelectProjectile);
 	
 	world = GetWorld();
@@ -124,7 +124,6 @@ void ADragon::UpdateCurrentProjectileMat(UMaterialInterface* _mat)
 	allProjectileMats.EmplaceAt(0, _mat);
 	currentProjectileMat = allProjectileMats[currentProjectileIndex];
 
-	//onCurrentProjectileMatReceived.Broadcast(_mat);
 }
 
 void ADragon::Move(const FInputActionValue& _value)
@@ -205,9 +204,9 @@ void ADragon::UpdateProjectileMaterial()
 	AProjectile* _projectileRef = projectileToSpawn.GetDefaultObject();
 	UStaticMeshComponent* _projectileMesh = _projectileRef->
 		GetComponentByClass<UStaticMeshComponent>();
-	UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
+	//UMaterialInterface* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
 	_projectileMesh->SetMaterial(0, allProjectileMats[currentProjectileIndex]);
-	onCurrentProjectileMatReceived.Broadcast(_projectileMaterial);
+	onCurrentProjectileMatReceived.Broadcast(allProjectileMats[currentProjectileIndex]); // returns current mat about to shoot
 	allProjectileMats.Sort();
 }
 
@@ -218,6 +217,11 @@ void ADragon::OpenMainMenu()
 
 }
 
+void ADragon::TestMatReceived(UMaterialInterface* _matReceived)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Mat received EVENT! received -> %s!"), *_matReceived->GetName());
+
+}
 void ADragon::FireBreath()
 {
 	if (manaCompo->isOutOfMana || manaCompo->currentMana <= manaCompo->projectileManaCost)return;
@@ -259,6 +263,7 @@ void ADragon::FireBreath()
 
 	
 }
+
 
 void ADragon::SphereTrace()
 {

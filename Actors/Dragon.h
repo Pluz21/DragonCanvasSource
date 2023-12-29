@@ -143,10 +143,10 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "ProjectileSelection")
 	TObjectPtr<UMaterialInterface> currentProjectileMat;
 
-	UPROPERTY(VisibleAnywhere, Category = "ProjectileSelection")
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = "ProjectileSelection")
 	TArray<UMaterialInterface*> allProjectileMats;
 
-	UPROPERTY(VisibleAnywhere, Category = "ProjectileSelection")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ProjectileSelection")
 	int currentProjectileIndex = 0;
 
 
@@ -218,9 +218,10 @@ protected:
 	void ScrollDownSelectProjectile();
 	void UpdateProjectileMaterial();
 
-	// Interface Inputs
+	// Interface 
 	void OpenMainMenu();
-
+	UFUNCTION()
+	void TestMatReceived(UMaterialInterface* _matReceived);
 	//Dragon actions
 	//Debug
 	void SphereTrace();
@@ -262,6 +263,8 @@ public:
 	int GetCurrentProjectileIndex() { return currentProjectileIndex; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TArray<UMaterialInterface*> GetAllProjectileMats() { return allProjectileMats; };
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetAllProjectileMatsSize() { return allProjectileMats.Num(); };
 
 	virtual void Tick(float DeltaTime) override;
 

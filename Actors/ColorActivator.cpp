@@ -7,7 +7,7 @@
 #include "ProjectileManager.h"
 #include "DragonCanvas/World/CustomGameMode.h"
 
-#include "DragonCanvas/MaterialCheckerComponent.h"
+#include "DragonCanvas/Components/MaterialCheckerComponent.h"
 
 #include "DragonCanvas/Components/ProjectileTriggerComponent.h"
 #include "Kismet/GameplayStatics.h"

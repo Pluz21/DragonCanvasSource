@@ -8,7 +8,7 @@
 #include "BossEnemy.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "DragonCanvas/MaterialCheckerComponent.h"
+#include "DragonCanvas/Components/MaterialCheckerComponent.h"
 #include "DragonCanvas/Components/MoveComponent.h"
 
 

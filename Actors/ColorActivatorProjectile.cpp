@@ -2,8 +2,8 @@
 
 #include "ColorActivatorProjectile.h"
 #include "Kismet/GameplayStatics.h"
-#include "DragonCanvas/MaterialCheckerComponent.h"
-#include "DragonCanvas/HiddenActors.h"
+#include "DragonCanvas/Components/MaterialCheckerComponent.h"
+#include "DragonCanvas/Actors/HiddenActors.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Projectile.h"
 

@@ -11,7 +11,7 @@
 #include "DragonCanvas/Actors/ProjectileManager.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "DragonCanvas/Actors/PickUps.h"
-#include "DragonCanvas/MaterialCheckerComponent.h"
+#include "DragonCanvas/Components/MaterialCheckerComponent.h"
 
 #include <Kismet/GameplayStatics.h>
 

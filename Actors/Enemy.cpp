@@ -6,7 +6,7 @@
 
 #include "DragonCanvas/Components/MoveComponent.h"
 #include "DragonCanvas/Components/HealthComponent.h"
-#include "DragonCanvas/MaterialCheckerComponent.h"
+#include "DragonCanvas/Components/MaterialCheckerComponent.h"
 #include "DragonCanvas/Components/AttackComponent.h"
 
 #include "Kismet/GameplayStatics.h"
