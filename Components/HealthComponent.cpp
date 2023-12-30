@@ -1,6 +1,7 @@
 //Copyright © 2023 Pluz21(TVL).All rights reserved.
 
 #include "HealthComponent.h"
+#include "DragonCanvas/Actors/Dragon.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -35,6 +36,7 @@ void UHealthComponent::Init()
 {
 	currentHealth = maxHealth;
 	onDeath.AddDynamic(this, &UHealthComponent::TestDeath);
+	onDeath.AddDynamic(this, &UHealthComponent::HandleDeath);
 	SetHealthColor();
 }
 
@@ -115,5 +117,26 @@ void UHealthComponent::SetHealthColor()
 void UHealthComponent::TestDeath()
 {
 	UE_LOG(LogTemp, Error, TEXT("Triggered Death Event : %d"), onDeath.IsBound());
+
+}
+
+void UHealthComponent::HandleDeath()
+{
+	if (!GetOwner())
+	{
+		UE_LOG(LogTemp, Error, TEXT("No owner FOUND IN HEALTHCOMPO"));
+		return;
+	}
+	APlayerController* _controller = GetWorld()->GetFirstPlayerController();
+	if (!_controller)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No CONTROLLER found in HealthCompo"));
+
+		return;
+	}
+	ADragon* _playerRef = Cast<ADragon>(GetOwner());
+	_playerRef->SetCanUseMoveInputs(false);
+	//GetOwner()->DisableInput(nullptr);
+	UE_LOG(LogTemp, Error, TEXT("Disable inputs"));
 
 }

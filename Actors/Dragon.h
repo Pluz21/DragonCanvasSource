@@ -94,6 +94,9 @@ public:
 
 #pragma region Inputs
 	// inputs Movement
+
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	bool canUseMoveInputs = true;
 	UPROPERTY(EditAnywhere, Category = "Inputs")
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
 	UPROPERTY(EditAnywhere, Category = "Inputs")
@@ -196,8 +199,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float minDistanceToSelfDestruct;
-	UPROPERTY(EditAnywhere)
-	bool canSelfDestruct = false;
+
 
 
 
@@ -245,6 +247,7 @@ public:
 	FVector GetProjectileTargetLocation() { return targetLocation; }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
+	void SetCanUseMoveInputs(bool _value) { canUseMoveInputs = _value; }
 	UFUNCTION(BlueprintCallable) 
 	AProjectileManager* GetProjectileManager() { return projectileManager; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)

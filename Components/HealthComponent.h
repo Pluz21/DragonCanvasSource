@@ -40,6 +40,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor criticalHealthColor = FLinearColor(0,0,0);
 
+	// Health Fractions
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "1", ClampMax = "1.5"))
 	float maxHealthFraction = 1.2f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "1.6", ClampMax = "2.5"))
@@ -52,11 +53,9 @@ public:
 	
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 	void Init();
@@ -79,4 +78,6 @@ public:
 	void SetHealthColor();
 	UFUNCTION(BlueprintCallable)
 	void TestDeath();
+	UFUNCTION(BlueprintCallable)
+	void HandleDeath();
 };

@@ -129,6 +129,8 @@ void ADragon::UpdateCurrentProjectileMat(UMaterialInterface* _mat)
 
 void ADragon::Move(const FInputActionValue& _value)
 {
+	if (!canUseMoveInputs)return;
+
 	if (!inputToMove)return;
 	float _delta = GetWorld()->DeltaTimeSeconds;
 	const FVector _fwd = GetActorForwardVector();
@@ -145,6 +147,8 @@ void ADragon::Move(const FInputActionValue& _value)
 
 void ADragon::RotateYaw(const FInputActionValue& _value)
 {
+	if (!canUseMoveInputs)return;
+
 	const float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _rotateValue = _value.Get<float>() * _delta * rotateSpeed;
 	rotateInputValue = _rotateValue;
@@ -154,6 +158,7 @@ void ADragon::RotateYaw(const FInputActionValue& _value)
 void ADragon::RotatePitch(const FInputActionValue& _value)
 {
 	
+	if (!canUseMoveInputs)return;
 
 	float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _rotateValue = _value.Get<float>() * _delta * rotateSpeed;
@@ -170,6 +175,8 @@ void ADragon::RotatePitch(const FInputActionValue& _value)
 
 void ADragon::Action()
 {
+	if (!canUseMoveInputs)return;
+
 	//coneTraceCompo->ConeTrace();
 	//targetLocation = coneTraceCompo->GetLineTraceEnd();
 	if (allProjectileMats.Num() <= 0)return;
@@ -180,6 +187,8 @@ void ADragon::Action()
 
 void ADragon::ScrollUpSelectProjectile()
 {
+	if (!canUseMoveInputs)return;
+
 	if (!allProjectileMats.IsValidIndex(currentProjectileIndex))return;
 	float _minRange = allProjectileMats.Num() - 1 ;
 	currentProjectileIndex = FMath::Clamp(currentProjectileIndex + 1, 0, _minRange);
@@ -191,6 +200,8 @@ void ADragon::ScrollUpSelectProjectile()
 
 void ADragon::ScrollDownSelectProjectile()
 {
+	if (!canUseMoveInputs)return;
+
 	if (!allProjectileMats.IsValidIndex(currentProjectileIndex))return;
 	float _minRange = allProjectileMats.Num() - 1;
 	currentProjectileIndex = FMath::Clamp(currentProjectileIndex -1, 0, _minRange);
@@ -358,14 +369,15 @@ void ADragon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		DebugText("Failed to cast to input");
 	}
+	
 	_myInputCompo->BindAction(inputToMove, ETriggerEvent::Triggered, this, &ADragon::Move);
 	_myInputCompo->BindAction(inputToRotateYaw, ETriggerEvent::Triggered, this, &ADragon::RotateYaw);
 	_myInputCompo->BindAction(inputToPitch, ETriggerEvent::Triggered, this, &ADragon::RotatePitch);
 	_myInputCompo->BindAction(inputToAction, ETriggerEvent::Triggered, this, &ADragon::Action);
 	_myInputCompo->BindAction(inputToScrollUpSelectProjectile, ETriggerEvent::Triggered, this, &ADragon::ScrollUpSelectProjectile);
 	_myInputCompo->BindAction(inputToScrollDownSelectProjectile, ETriggerEvent::Triggered, this, &ADragon::ScrollDownSelectProjectile);
+	
 	_myInputCompo->BindAction(inputToOpenMenu, ETriggerEvent::Triggered, this, &ADragon::OpenMainMenu);
-
 
 }
 
