@@ -43,6 +43,7 @@ void AProjectile::Tick(float DeltaTime)
 	SelfMove(forwardVector);
 	//SelfMove();
 	moveCompo->Rotate();// or call moveCompo->Move();
+	CheckDistanceToPlayer();
 }
 
 void AProjectile::Init()
@@ -72,7 +73,6 @@ void AProjectile::EventsInit()
 	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
 	onProjectileCreated.Broadcast();
 	onCorrectProjectileMeshOverlap.AddDynamic(this, &AProjectile::ManageBossEnemyHit);
-
 }
 
 void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
@@ -243,6 +243,23 @@ void AProjectile::CheckDistance(FVector& _targetLocation)
 		onTargetReached.Broadcast(); // Calling destruct
 	}
 	//}
+}
+
+void AProjectile::CheckDistanceToPlayer()
+{
+	
+	if (!GetWorld()->GetFirstPlayerController()) return;
+	ADragon* _playerRef = Cast<ADragon>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (!_playerRef) return;
+	FVector _playerLocation = _playerRef->GetActorLocation();
+	float _distance = FVector::Dist(GetActorLocation(), _playerLocation);
+
+	if (_distance <= minDistanceToHitPlayer)
+	{
+		onPlayerHit.Broadcast();
+		projectileManager->RemoveItem(this);
+		SelfDestruct();
+	}
 }
 
 void AProjectile::CallLineTraceDisplacement()

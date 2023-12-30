@@ -38,8 +38,11 @@ void UAttackComponent::Attack()
 
 AProjectile* UAttackComponent::SpawnProjectile(const FVector& _spawnLocation,AActor* _owner)
 {
-	
-	AProjectile* _spawned = GetWorld()->SpawnActor<AProjectile>(projectileRef,  _spawnLocation, FRotator::ZeroRotator);
+	FActorSpawnParameters _projectileSpawnParams;
+	_projectileSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	AProjectile* _spawned = GetWorld()->
+		SpawnActor<AProjectile>(projectileRef,  _spawnLocation,
+			FRotator::ZeroRotator, _projectileSpawnParams);
 	if (_spawned && _owner)
 	{
 		_spawned->SetOwner(_owner);

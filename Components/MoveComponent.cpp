@@ -104,7 +104,7 @@ void UMoveComponent::BossChasePlayer()
 	FVector _normalizedDirection = _direction.GetSafeNormal();
 	FRotator _newRotate = _normalizedDirection.Rotation();
 	FVector _targetLocation = ownerRef->GetActorLocation() + _direction * chaseSpeed * GetWorld()->DeltaTimeSeconds;
-	_targetLocation.Z = bossHeightOffset;
+	//_targetLocation.Z = bossHeightOffset;
 	ownerRef->SetActorRotation(_newRotate);
 	ownerRef->SetActorLocation(_targetLocation);
 }

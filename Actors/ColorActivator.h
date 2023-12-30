@@ -32,7 +32,7 @@ public:
 	TObjectPtr<USceneComponent> root;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> baseMesh;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> secondMesh;
 	
 	UPROPERTY(EditAnywhere)

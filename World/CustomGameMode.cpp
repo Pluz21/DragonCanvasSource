@@ -7,6 +7,7 @@ void ACustomGameMode::InitGame(const FString& MapName, const FString& Options, F
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 	InitProjectileManager();
+
 }
 
 void ACustomGameMode::InitProjectileManager()
