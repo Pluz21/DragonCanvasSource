@@ -22,6 +22,19 @@ void APickUps::BeginPlay()
 void APickUps::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UPrimitiveComponent* _compo = GetComponentByClass<UPrimitiveComponent>();
+	Rotate();
+}
+
+void APickUps::Rotate()
+{
+	
+	if (!canRotate) return;
+
+	float _rotateValue = rotateSpeed * GetWorld()->DeltaTimeSeconds;
+	FRotator _currentRotation = GetActorRotation();
+	FRotator _newRotation = FRotator(0, _rotateValue, 0);
+
+	SetActorRotation(_currentRotation + _newRotation);
+	
 }
 

@@ -18,6 +18,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool isSnapped = false;
 
+	UPROPERTY(EditAnywhere)
+	bool canRotate = true;
+	UPROPERTY(EditAnywhere)
+	float rotateSpeed = 50;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,4 +32,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SetIsSnapped() { isSnapped = true; }
+	void Rotate();
 };
