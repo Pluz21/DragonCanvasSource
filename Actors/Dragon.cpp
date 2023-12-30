@@ -113,6 +113,7 @@ void ADragon::InitEvents()
 	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
 	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
 	onProjectileShot.AddDynamic(this, &ADragon::PlayProjectileSound);
+	
 }
 
 void ADragon::UpdateCurrentProjectileMat(UMaterialInterface* _mat)

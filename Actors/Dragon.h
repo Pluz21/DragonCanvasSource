@@ -246,6 +246,7 @@ public:
 	FVector  GetSpawnLocation() { return spawnPoint->GetComponentLocation(); }
 	FVector GetProjectileTargetLocation() { return targetLocation; }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
+	UHealthComponent* GetHealthComponent() { return healthCompo; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
 	void SetCanUseMoveInputs(bool _value) { canUseMoveInputs = _value; }
 	UFUNCTION(BlueprintCallable) 

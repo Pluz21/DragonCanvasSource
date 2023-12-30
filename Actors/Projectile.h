@@ -17,7 +17,7 @@ class DRAGONCANVAS_API AProjectile : public AActor
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileCreated);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCanStartMoving);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyHitEvent);
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerHitEvent);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerHitEvent, ADragon*, playerRef);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCorrectProjectileMeshOverlapEvent, AActor*, actor);
 	
 	UPROPERTY(EditAnywhere)
@@ -64,6 +64,8 @@ public:
 	float deltaSeconds;
 	
 	UPROPERTY(EditAnywhere)
+	int damage = 1;
+	UPROPERTY(EditAnywhere)
 	float lifeSpan = 2;
 	UPROPERTY(EditAnywhere)
 	float enemyLifeSpan = 4;
@@ -90,7 +92,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float minDistanceToSelfDestruct = 150; // equal to radius of our linetrace/2
 	UPROPERTY(EditAnywhere)
-	float minDistanceToHitPlayer = 75;
+	float minDistanceToHitPlayer = 200;
 	UPROPERTY(EditAnywhere)
 	float targetDistanceMultiplier = 100;
 
@@ -148,4 +150,5 @@ public:
 		return onCorrectProjectileMeshOverlap;}
 	UFUNCTION()
 	FPlayerHitEvent& GetOnPlayerHitEvent() { return onPlayerHit;}
+	UFUNCTION() void HandlePlayerHit(ADragon* _playerRef);
 };
