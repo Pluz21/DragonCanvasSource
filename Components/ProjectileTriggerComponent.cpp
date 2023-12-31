@@ -11,7 +11,9 @@
 #include "DragonCanvas/Actors/ProjectileManager.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "DragonCanvas/Actors/PickUps.h"
+
 #include "DragonCanvas/Components/MaterialCheckerComponent.h"
+#include "DragonCanvas/Components/RevealHiddenComponent.h"
 
 #include <Kismet/GameplayStatics.h>
 
@@ -41,9 +43,12 @@ void UProjectileTriggerComponent::Init()
 	
 	onSnap.AddDynamic(this, &UProjectileTriggerComponent::HandleSnap);
 	onSnap.AddDynamic(this, &UProjectileTriggerComponent::PlaySound);
+	onSnap.AddDynamic(this, &UProjectileTriggerComponent::HandleReveal);
 	
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	dragonRef = _dragonRef;
+	if(GetOwner())
+	revealHiddenCompo = GetOwner()->GetComponentByClass<URevealHiddenComponent>();
 }
 
 
@@ -134,21 +139,16 @@ void UProjectileTriggerComponent::PlaySound()
 
 bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
 {
-	
-	//UMaterialCheckerComponent _checker;
-	//_checker.MaterialChecker(_targetToCheck);
 	AActor* _owner = GetOwner(); 
 
 	if (!_owner)return false; 
 	UStaticMeshComponent* _ownerMesh =
 		_owner->GetComponentByClass<UStaticMeshComponent>();
-	//if(UMaterialInterface* _currentMaterial = _ownerMesh->GetMaterial(0))
-	//mat = _currentMaterial;
+	
 	UMaterialInterface* _currentMaterial = _ownerMesh->GetMaterial(0);
 	UStaticMeshComponent* _targetMesh = _targetToCheck->
 		GetComponentByClass<UStaticMeshComponent>();
 	UMaterialInterface* _targetMaterial = _targetMesh->GetMaterial(0);
-	//targetMat = _targetMaterial;
 	if (_targetMaterial != _currentMaterial)
 	{
 		
@@ -161,5 +161,14 @@ bool UProjectileTriggerComponent::MaterialChecker(AActor*& _targetToCheck)
 		targetMat = _targetMaterial;
 		//projectileManager->AddMaterial(UMaterialInstanceDynamic::Create(_currentMaterial, _ownerMesh));
 		return true;
+	}
+}
+
+void UProjectileTriggerComponent::HandleReveal()
+{
+
+	if (revealHiddenCompo)
+	{
+		revealHiddenCompo->GetOnConditionToRevealIsMet().Broadcast();
 	}
 }

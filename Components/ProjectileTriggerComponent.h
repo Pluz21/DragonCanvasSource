@@ -13,6 +13,8 @@ class AEnemy;
 class AColorActivator; 
 class AProjectileManager;
 
+class URevealHiddenComponent;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 
@@ -39,6 +41,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AProjectileManager> projectileManager;
 	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<URevealHiddenComponent> revealHiddenCompo;
+
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> allSpawnedFromSnap;
 	UPROPERTY(EditAnywhere)
@@ -79,5 +84,9 @@ public:
 	void HandleSnap();
 	UFUNCTION()
 	void PlaySound();
+
+	//Other interactions
+	UFUNCTION()
+	void HandleReveal();
 
 };

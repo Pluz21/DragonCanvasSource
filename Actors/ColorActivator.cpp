@@ -58,6 +58,7 @@ void AColorActivator::Init()
 	baseMesh->SetMaterial(0, _secondMeshMat);
 	onMaterialReceived.Broadcast(_secondMeshMat);
 	matInterfaceToApply = secondMesh->GetMaterial(0);
+
 }
 
 void AColorActivator::InitGameMode()
@@ -101,6 +102,8 @@ void AColorActivator::GiveColor() // Function to be re-used for the projectile s
 	 projectileManager->AddMaterial(matInterfaceToApply);
 
 }
+
+
 
 
 

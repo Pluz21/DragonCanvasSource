@@ -146,7 +146,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "ProjectileSelection")
 	TObjectPtr<UMaterialInterface> currentProjectileMat;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = "ProjectileSelection")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "ProjectileSelection")
 	TArray<UMaterialInterface*> allProjectileMats;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ProjectileSelection")

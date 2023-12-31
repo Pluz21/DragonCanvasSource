@@ -198,7 +198,7 @@ void AProjectile::ManageEnemyHit(AActor* _actor)
 			_enemy->moveCompo->SetChaseSpeed(0);
 			_enemy->SetLifeSpan(enemyLifeSpan);
 			ApplyHitEffect(_allStaticMeshes);  // Dismantles static meshes
-			_enemy->GetOnDeath().Broadcast();
+			_enemy->GetOnDeath().Broadcast(); // not ideal
 			_enemy->SetHasBeenHit(true);
 			onEnemyHit.Broadcast();
 		}

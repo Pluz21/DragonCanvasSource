@@ -55,8 +55,9 @@ void AEnemy::Init()
 	SetLifeSpan(lifeSpan);  // TODO Make variable
 	playerRef = moveCompo->GetChaseTarget();
 	//OnDestroyed.AddDynamic(this, &AEnemy::ManageOnDeath);
-	onDeath.AddDynamic(this, &AEnemy::ManageOnDeath);
 	onHit.AddDynamic(this, &AEnemy::PlayProjectileHitSound);
+	onDeath.AddDynamic(this, &AEnemy::ManageOnDeath);
+	revealHiddenCompo = GetComponentByClass<URevealHiddenComponent>();
 	
 }
 

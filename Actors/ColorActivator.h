@@ -41,20 +41,20 @@ public:
 	TObjectPtr<AProjectileManager> projectileManager;
 
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialCheckerComponent> materialChecker; // This is the one to add to the projectile manager
+
+
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UProjectileTriggerComponent> triggerCompo;
 
 	//Projectile 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> projectileMeshRef;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UMaterial> projectileMatRef;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialInstance> matToApply; // This is the one to add to the projectile manager
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialInterface> matInterfaceToApply; // This is the one to add to the projectile manager
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UMaterialCheckerComponent> materialChecker; // This is the one to add to the projectile manager
-
 
 	UPROPERTY(EditAnywhere)
 	bool isSpawner = false;
@@ -79,7 +79,7 @@ public:
 	UMaterialInterface* GetMatToApply() { return matToApply; }
 	UFUNCTION(BlueprintCallable)
 	void SetMatToApply(UMaterialInstance* _mat) { matToApply = _mat; }
-	
+
 
 
 

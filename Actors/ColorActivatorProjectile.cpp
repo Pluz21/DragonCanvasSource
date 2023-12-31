@@ -2,9 +2,12 @@
 
 #include "ColorActivatorProjectile.h"
 #include "Kismet/GameplayStatics.h"
-#include "DragonCanvas/Components/MaterialCheckerComponent.h"
-#include "DragonCanvas/Actors/HiddenActors.h"
 #include "UObject/ConstructorHelpers.h"
+
+#include "DragonCanvas/Components/MaterialCheckerComponent.h"
+#include "DragonCanvas/Components/RevealHiddenComponent.h"
+
+#include "DragonCanvas/Actors/HiddenActors.h" // can be deleted since we use compo
 #include "Projectile.h"
 
 // THIS CLASS IS THE ONE THAT ALLOWS ACTORS TO CHANGE TO THE COLOR OF THE PROJECTILE
@@ -13,7 +16,7 @@ AColorActivatorProjectile::AColorActivatorProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("meshCompo");
 	materialChecker = CreateDefaultSubobject<UMaterialCheckerComponent>("materiaChecker");
-	onRevealSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Interaction_Sounds/RevealSoundSource.RevealSoundSource")).Object;
+	onReceiveMaterialSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Interaction_Sounds/RevealSoundSource.RevealSoundSource")).Object;
 	meshCompo->SetupAttachment(RootComponent);
 	AddOwnedComponent(materialChecker);
 
@@ -37,9 +40,8 @@ void AColorActivatorProjectile::Tick(float DeltaTime)
 void AColorActivatorProjectile::Init()
 {
 	OnActorBeginOverlap.AddDynamic(this, &AColorActivatorProjectile::ManageOverlap);
-	onMaterialReceived.AddDynamic(this, &AColorActivatorProjectile::RevealHiddenActors);
-	onReveal.AddDynamic(this, &AColorActivatorProjectile::PlaySound);
-	onReveal.AddDynamic(this, &AColorActivatorProjectile::SetIsRevealed);
+	onMaterialReceived.AddDynamic(this, &AColorActivatorProjectile::PlaySound);
+	onMaterialReceived.AddDynamic(this, &AColorActivatorProjectile::SetHasReceivedMaterial);
 	
 	//FRevealedEvent::FDelegate _lambdaDelegate	
 	/*_lambdaDelegate.AddLambda([this]() {
@@ -49,6 +51,7 @@ void AColorActivatorProjectile::Init()
 
 	initialCollisionSetting = meshCompo->GetCollisionEnabled();
 	meshCompo->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	revealHiddenCompo = GetComponentByClass<URevealHiddenComponent>();
 }
 
 void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
@@ -57,15 +60,17 @@ void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _over
 
 	if (!_overlap || !_overlapped) return;
 	if (!_overlap->IsA(AProjectile::StaticClass()))return;
-	if (isRevealed)return;
+	if (hasReceivedMaterial)return;
 	{
 		if(materialChecker->ActorMaterialCheck(_overlap))
 		{
 			meshCompo->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 			meshCompo->SetCollisionEnabled(initialCollisionSetting);
 			ReceiveColor(_overlap);
-			onMaterialReceived.Broadcast();
-			onReveal.Broadcast();
+			if (revealHiddenCompo)
+			{
+				revealHiddenCompo->GetOnConditionToRevealIsMet().Broadcast();
+			}
 
 
 		}
@@ -78,24 +83,13 @@ void AColorActivatorProjectile::ReceiveColor(AActor* _targetToGetColorFrom)
 	UStaticMeshComponent* _projectileMesh = _targetToGetColorFrom->GetComponentByClass < UStaticMeshComponent >();
 	UMaterialInterface* _projectileMat = _projectileMesh->GetMaterial(0);
 	meshCompo->SetMaterial(0, _projectileMat);
-
+	onMaterialReceived.Broadcast();
 }
 
-void AColorActivatorProjectile::RevealHiddenActors()
-{
-	int _size = allHiddenActors.Num();
-	for (int i = 0; i < _size; i++)
-	{
-		if (allHiddenActors[i] == nullptr)return;
-		allHiddenActors[i]->GetComponentByClass<UStaticMeshComponent>()->
-			SetVisibility(true,true);
 
-	}
-}
-
-void AColorActivatorProjectile::SetIsRevealed()
+void AColorActivatorProjectile::SetHasReceivedMaterial()
 {
-	isRevealed = true;
+	hasReceivedMaterial = true;
 }
 
 void AColorActivatorProjectile::PlayRevealSound(USoundBase* _soundSource)
@@ -108,7 +102,7 @@ void AColorActivatorProjectile::PlayRevealSound(USoundBase* _soundSource)
 
 void AColorActivatorProjectile::PlaySound()
 {
-	PlayRevealSound(onRevealSound);
+	PlayRevealSound(onReceiveMaterialSound);
 	UE_LOG(LogTemp, Error, TEXT("REVEAL HIDDEN ACTORS SOUND CALLED"));
 
 }

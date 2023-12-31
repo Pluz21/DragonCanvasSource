@@ -7,6 +7,7 @@
 #include "ColorActivatorProjectile.generated.h"
 
 class UMaterialCheckerComponent; 
+class URevealHiddenComponent;
 class AHiddenActors;
 
 UCLASS()
@@ -17,8 +18,7 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 
 	UPROPERTY(EditAnywhere, BlueprintAssignable)
 	FMaterialReceivedEvent onMaterialReceived;
-	UPROPERTY(EditAnywhere, BlueprintAssignable)
-	FRevealedEvent onReveal;
+	
 
 	
 	GENERATED_BODY()
@@ -28,25 +28,24 @@ class DRAGONCANVAS_API AColorActivatorProjectile : public AActor
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> meshCompo = nullptr;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UMaterialCheckerComponent> materialChecker;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<URevealHiddenComponent> revealHiddenCompo;
 
 	UPROPERTY(EditAnywhere)
 	TArray<UMaterialInterface*> allMatsToCheck;
 	
 	
 	UPROPERTY(EditAnywhere)
-	TArray<AHiddenActors*> allHiddenActors;
-	
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<USoundBase> onRevealSound;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UMaterialCheckerComponent> materialChecker;
+	TObjectPtr<USoundBase> onReceiveMaterialSound;
 	UPROPERTY(EditAnywhere)
 	float InterpolationSpeed = 0.5f;
 	UPROPERTY(EditAnywhere)
 	float TargetParameterValue = 1.0f;
 	
 	UPROPERTY(EditAnywhere)
-	bool isRevealed = false;
+	bool hasReceivedMaterial = false;
 
 
 public:	
@@ -67,9 +66,7 @@ public:
 	void ReceiveColor(AActor* _projectile);
 
 	UFUNCTION()
-	void SetIsRevealed();
-	UFUNCTION()
-	void RevealHiddenActors();
+	void SetHasReceivedMaterial();
 	UFUNCTION()
 	void PlayRevealSound(USoundBase* _soundSource);
 	UFUNCTION()

@@ -9,17 +9,21 @@ class UMoveComponent;
 class UAttackComponent;
 class ADragon;
 class UMaterialCheckerComponent;
+class URevealHiddenComponent;
 
 UCLASS()
 class DRAGONCANVAS_API AEnemy : public APawn
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathEvent);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDestructionEvent);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHitEvent);
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttackTimerEvent);
 protected:
 	UPROPERTY()
 	FAttackTimerEvent onAttackTimerReset;
+	UPROPERTY()
+	FDestructionEvent onDestruction;
 	UPROPERTY()
 	FDeathEvent onDeath;
 	UPROPERTY()
@@ -43,6 +47,8 @@ public:
 	TObjectPtr<UAttackComponent> attackCompo;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMaterialCheckerComponent> materialCheckerCompo;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<URevealHiddenComponent> revealHiddenCompo;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> hitPlayerSound;
