@@ -205,12 +205,16 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	//Debug
+	void DebugText(const FString& _string, const float& _floatToDebug = 0);
+
 	void Init();
 	void InitInput();
 	void InitEvents();
 	UFUNCTION()
-	void UpdateCurrentProjectileMat(UMaterialInterface* _mat);
-
+	void EmplaceMatInList(UMaterialInterface* _mat);
+	UFUNCTION()
+	void UpdateProjectileMaterial(int _allProjectileMatsIndexToUpdate);
 	//Inputs
 	void Move(const FInputActionValue& _value);
 	void RotateYaw(const FInputActionValue& _value);
@@ -218,7 +222,6 @@ protected:
 	void Action();
 	void ScrollUpSelectProjectile();
 	void ScrollDownSelectProjectile();
-	void UpdateProjectileMaterial();
 
 	// Interface 
 	void OpenMainMenu();
@@ -232,8 +235,6 @@ protected:
 	//Projectile
 	float GetCurrentAmmo() { return currentAmmo; }
 
-	//Debug
-	void DebugText(FString _string);
 
 	// Audio
 	void PlaySound(USoundBase* _audioToPlay);

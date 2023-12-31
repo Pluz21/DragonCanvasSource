@@ -110,23 +110,12 @@ void ADragon::InitEvents()
 {
 	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
 
-	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
-	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::UpdateCurrentProjectileMat);
+	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::EmplaceMatInList);
+	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::EmplaceMatInList);
 	onProjectileShot.AddDynamic(this, &ADragon::PlayProjectileSound);
 	
 }
 
-void ADragon::UpdateCurrentProjectileMat(UMaterialInterface* _mat)
-{
-
-
-	//allProjectileMats.Add(_mat);
-	if (projectileManager->MatExists(_mat, allProjectileMats))return;
-	allProjectileMats.EmplaceAt(0, _mat);
-	currentProjectileMat = allProjectileMats[currentProjectileIndex];
-	//onCurrentProjectileMatReceived.Broadcast(_mat);
-
-}
 
 void ADragon::Move(const FInputActionValue& _value)
 {
@@ -190,10 +179,18 @@ void ADragon::ScrollUpSelectProjectile()
 {
 	if (!canUseMoveInputs)return;
 
-	if (!allProjectileMats.IsValidIndex(currentProjectileIndex))return;
+	if (!allProjectileMats.IsValidIndex(currentProjectileIndex + 1))
+	{
+		DebugText(TEXT("You are out of array by "),1);
+		currentProjectileIndex = 0;	
+		UpdateProjectileMaterial(1);
+
+
+		return;
+	}
 	float _minRange = allProjectileMats.Num() - 1 ;
 	currentProjectileIndex = FMath::Clamp(currentProjectileIndex + 1, 0, _minRange);
-	UpdateProjectileMaterial();
+	UpdateProjectileMaterial(1);
 	DebugText("ScrollUp");
 
 
@@ -203,24 +200,39 @@ void ADragon::ScrollDownSelectProjectile()
 {
 	if (!canUseMoveInputs)return;
 
-	if (!allProjectileMats.IsValidIndex(currentProjectileIndex))return;
+	if (!allProjectileMats.IsValidIndex(currentProjectileIndex - 1))
+	{
+		DebugText(TEXT("You are out of array by "), 1);
+		currentProjectileIndex = allProjectileMats.Num() - 1;
+		UpdateProjectileMaterial(-1);
+		return;
+	}
 	float _minRange = allProjectileMats.Num() - 1;
 	currentProjectileIndex = FMath::Clamp(currentProjectileIndex -1, 0, _minRange);
-	UpdateProjectileMaterial();
+	UpdateProjectileMaterial(-1);
 	DebugText("ScrollDown");
 
 }
 
-void ADragon::UpdateProjectileMaterial()
+void ADragon::UpdateProjectileMaterial(int _allProjectileMatsIndexToUpdate)
 {
 	if (!projectileToSpawn)return;
 	AProjectile* _projectileRef = projectileToSpawn.GetDefaultObject();
 	UStaticMeshComponent* _projectileMesh = _projectileRef->
 		GetComponentByClass<UStaticMeshComponent>();
-	//UMaterialInterface* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
-	_projectileMesh->SetMaterial(0, allProjectileMats[currentProjectileIndex]);
+	UMaterialInterface* _newProjectileMat = _projectileMesh->GetMaterial(_allProjectileMatsIndexToUpdate);
+		_projectileMesh->SetMaterial(0, allProjectileMats[currentProjectileIndex]);
 	onCurrentProjectileMatReceived.Broadcast(allProjectileMats[currentProjectileIndex]); // returns current mat about to shoot
-	allProjectileMats.Sort();
+	currentProjectileMat = allProjectileMats[currentProjectileIndex];
+
+}
+
+void ADragon::EmplaceMatInList(UMaterialInterface* _mat)
+{
+
+	if (projectileManager->MatExists(_mat, allProjectileMats))return;
+	allProjectileMats.EmplaceAt(0, _mat);
+
 }
 
 void ADragon::OpenMainMenu()
@@ -353,9 +365,10 @@ void ADragon::StartLineTraceAction()
 
 
 
-void ADragon::DebugText(FString _string)
+void ADragon::DebugText(const FString& _string, const float& _floatToDebug)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s"),*_string);
+	
+	UE_LOG(LogTemp, Warning, TEXT("%s, %f"),*_string, _floatToDebug);
 
 }
 

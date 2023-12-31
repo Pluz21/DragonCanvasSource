@@ -19,7 +19,7 @@ public:
 	UGrabber();
 
 	UPROPERTY(EditAnywhere)
-	float sphereRadius = 100;
+	float sphereRadius = 200;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool isGrabbing = false;
