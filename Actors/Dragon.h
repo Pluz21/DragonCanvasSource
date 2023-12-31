@@ -19,6 +19,7 @@ class UGrabber;
 class UHealthComponent;
 class UManaComponent;
 class UAttackComponent;
+class UUpgradeComponent;
 
 class AProjectileManager;
 class AProjectile;
@@ -74,6 +75,8 @@ public:
 	TObjectPtr<UCameraComponent> camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UUpgradeComponent> upgradeComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UAttackComponent> attackCompo;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UGrabber> grabber;
@@ -112,6 +115,8 @@ public:
 	// inputs Interactions
 	UPROPERTY(EditAnywhere, Category = "Inputs")
 	TObjectPtr<UInputAction> inputToAction;
+	UPROPERTY(EditAnywhere, Category = "Inputs")
+	TObjectPtr<UInputAction> inputToJump;
 	UPROPERTY(EditAnywhere, Category = "Inputs")
 	TObjectPtr<UInputAction> inputToScrollUpSelectProjectile;
 	UPROPERTY(EditAnywhere, Category = "Inputs")
@@ -222,6 +227,7 @@ protected:
 	void Action();
 	void ScrollUpSelectProjectile();
 	void ScrollDownSelectProjectile();
+	void Jump() override;
 
 	// Interface 
 	void OpenMainMenu();

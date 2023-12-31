@@ -17,6 +17,7 @@
 #include "DragonCanvas/Components/HealthComponent.h"
 #include "DragonCanvas/Components/ManaComponent.h"
 #include "DragonCanvas/Components/AttackComponent.h"
+#include "DragonCanvas/Components/UpgradeComponent.h"
 
 #include "DragonCanvas/UI/MainMenuWidget.h"
 
@@ -41,6 +42,7 @@ ADragon::ADragon()
 	physicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>("PhysicsHandle");
 	healthCompo = CreateDefaultSubobject<UHealthComponent>("healthCompo");
 	manaCompo = CreateDefaultSubobject<UManaComponent>("manaCompo");
+	upgradeComponent = CreateDefaultSubobject<UUpgradeComponent>("upgradeCompo");
 
 	projectileSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Player_Sounds/Shoot_Sound_Meta.Shoot_Sound_Meta")).Object;
 	spawnPoint->SetupAttachment(RootComponent);
@@ -212,6 +214,12 @@ void ADragon::ScrollDownSelectProjectile()
 	UpdateProjectileMaterial(-1);
 	DebugText("ScrollDown");
 
+}
+
+void ADragon::Jump()
+{
+	if (!upgradeComponent->hasJumpUpgrade)return;
+	Super::Jump();
 }
 
 void ADragon::UpdateProjectileMaterial(int _allProjectileMatsIndexToUpdate)
@@ -390,6 +398,7 @@ void ADragon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	_myInputCompo->BindAction(inputToAction, ETriggerEvent::Triggered, this, &ADragon::Action);
 	_myInputCompo->BindAction(inputToScrollUpSelectProjectile, ETriggerEvent::Triggered, this, &ADragon::ScrollUpSelectProjectile);
 	_myInputCompo->BindAction(inputToScrollDownSelectProjectile, ETriggerEvent::Triggered, this, &ADragon::ScrollDownSelectProjectile);
+	_myInputCompo->BindAction(inputToJump, ETriggerEvent::Triggered, this, &ADragon::Jump);
 	
 	_myInputCompo->BindAction(inputToOpenMenu, ETriggerEvent::Triggered, this, &ADragon::OpenMainMenu);
 
