@@ -61,8 +61,8 @@ void AProjectile::Init()
 	{
 	forwardVector = GetOwner()->GetActorForwardVector();
 	}
-	moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
-	
+	//moveSpeed = moveCompo->GetMoveSpeed(); // MoveSpeed will always be set through the component
+	SelfMove();
 	SetLifeSpan(lifeSpan);
 
 }
@@ -100,7 +100,12 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 
 void AProjectile::SelfMove()
 {
-	meshCompo->AddImpulse(GetActorForwardVector() * 500, NAME_None, true);
+	APawn* _pawnRef = GetWorld()->GetFirstPlayerController()->GetPawn();
+	if (!_pawnRef)return;
+	ADragon* _dragonRef = Cast<ADragon>(_pawnRef);
+	if (!_dragonRef)return;
+	FVector _playerForwardVector = _dragonRef->gunMesh->GetForwardVector();
+	meshCompo->AddImpulse(_playerForwardVector * impulseSpeed, NAME_None, true);
 	//meshCompo->
 }
 

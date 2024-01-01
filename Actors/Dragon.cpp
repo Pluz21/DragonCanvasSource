@@ -37,6 +37,9 @@ ADragon::ADragon()
 	spawnPoint = CreateDefaultSubobject<USceneComponent>("SpawnPoint");
 	springArm = CreateDefaultSubobject<USpringArmComponent>("Springarm");
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
+	gunMesh = CreateDefaultSubobject<UStaticMeshComponent>("gunMesh");
+	
+	
 	attackCompo = CreateDefaultSubobject<UAttackComponent>("attackCompo");
 	grabber = CreateDefaultSubobject<UGrabber>("Grabber");
 	physicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>("PhysicsHandle");
@@ -45,9 +48,10 @@ ADragon::ADragon()
 	upgradeComponent = CreateDefaultSubobject<UUpgradeComponent>("upgradeCompo");
 
 	projectileSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Player_Sounds/Shoot_Sound_Meta.Shoot_Sound_Meta")).Object;
-	spawnPoint->SetupAttachment(RootComponent);
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
+	gunMesh->SetupAttachment(camera);
+	spawnPoint->SetupAttachment(gunMesh);
 
 	AddOwnedComponent(grabber);
 	AddOwnedComponent(physicsHandle);

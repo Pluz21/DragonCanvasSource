@@ -70,6 +70,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	float enemyLifeSpan = 4;
 	UPROPERTY(VisibleAnywhere)
+	float impulseSpeed = 2000;
+	UPROPERTY(VisibleAnywhere)
 	float moveSpeed;
 	UPROPERTY(VisibleAnywhere)
 	bool canMove = false;

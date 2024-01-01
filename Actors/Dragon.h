@@ -73,6 +73,9 @@ public:
 	TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> gunMesh;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UUpgradeComponent> upgradeComponent;
@@ -252,6 +255,7 @@ public:
 	// Called every frame
 	FVector  GetSpawnLocation() { return spawnPoint->GetComponentLocation(); }
 	FVector GetProjectileTargetLocation() { return targetLocation; }
+	FVector GetGunMeshLocation() { return gunMesh->GetComponentLocation(); }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	UHealthComponent* GetHealthComponent() { return healthCompo; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }
