@@ -6,10 +6,12 @@
 #include "Enemy.generated.h"
 
 class UMoveComponent;
-class UAttackComponent;
-class ADragon;
 class UMaterialCheckerComponent;
+class UAttackComponent;
 class URevealHiddenComponent;
+
+class ADragon;
+class AItemPickUp;
 
 UCLASS()
 class DRAGONCANVAS_API AEnemy : public APawn
@@ -54,7 +56,9 @@ public:
 	TObjectPtr<USoundBase> hitPlayerSound;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> onDeathSound;
-
+protected:
+	UPROPERTY(EditAnywhere,meta = (MetaClass = IsBlueprintBase = "true"))
+	TArray<TSubclassOf<AItemPickUp>> allItemsToDrop;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ADragon> playerRef;
 	
@@ -89,11 +93,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void Init();
+	void InitEvents();
 
 	bool CheckDistance();
 
 	UFUNCTION(BlueprintCallable)
 	void SelfDestroy();
+	UFUNCTION()
+	virtual void SpawnItem(AActor* _actor);
+
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamage();

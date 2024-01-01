@@ -8,6 +8,7 @@
 #include "DragonCanvas/Components/HealthComponent.h"
 #include "DragonCanvas/Components/MaterialCheckerComponent.h"
 #include "DragonCanvas/Components/AttackComponent.h"
+#include "DragonCanvas/Actors/ItemPickUp.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -52,13 +53,21 @@ void AEnemy::BeginPlay()
 
 void AEnemy::Init()
 {
+	InitEvents();
 	SetLifeSpan(lifeSpan);  // TODO Make variable
 	playerRef = moveCompo->GetChaseTarget();
-	//OnDestroyed.AddDynamic(this, &AEnemy::ManageOnDeath);
-	onHit.AddDynamic(this, &AEnemy::PlayProjectileHitSound);
-	onDeath.AddDynamic(this, &AEnemy::ManageOnDeath);
+
+
 	revealHiddenCompo = GetComponentByClass<URevealHiddenComponent>();
 	
+}
+
+void AEnemy::InitEvents()
+{
+
+	onHit.AddDynamic(this, &AEnemy::PlayProjectileHitSound);
+	onDeath.AddDynamic(this, &AEnemy::ManageOnDeath);
+	OnDestroyed.AddDynamic(this, &AEnemy::SpawnItem);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -97,6 +106,25 @@ void AEnemy::SelfDestroy()
 	// EnemyManager->RemoveEnemy(this);
 	// Add explosion effect
 	// Add health loss to player
+}
+
+void AEnemy::SpawnItem(AActor* _actor)
+{
+	if (allItemsToDrop.Num() <= 0)return;
+	FVector _itemSpawnLocation = baseMesh->GetComponentLocation();
+	FActorSpawnParameters _itemToDropParams;
+	_itemToDropParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	int _size = allItemsToDrop.Num();
+	for (int i = 0; i < _size; i++)
+	{
+		//find location of first [i] add 100 y and x to i +1 location
+		AItemPickUp* _itemDropped = GetWorld()->SpawnActor<AItemPickUp>(allItemsToDrop[i],
+			_itemSpawnLocation, FRotator::ZeroRotator, _itemToDropParams);
+		FVector _itemLocation = _itemDropped->GetActorLocation();
+		_itemSpawnLocation = _itemLocation + FVector(100, 0, 100);
+		//allItemsToDrop.Remove(allItemsToDrop[i]);
+	}
+
 }
 
 void AEnemy::ApplyDamage()
