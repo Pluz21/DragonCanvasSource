@@ -17,12 +17,8 @@ class DRAGONCANVAS_API AProjectile : public AActor
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FProjectileCreated);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCanStartMoving);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyHitEvent);
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerHitEvent, ADragon*, playerRef);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCorrectProjectileMeshOverlapEvent, AActor*, actor);
 	
-	UPROPERTY(EditAnywhere)
-	FPlayerHitEvent onPlayerHit;
-
 	UPROPERTY(EditAnywhere)
 	FEnemyHitEvent onEnemyHit;
 	UPROPERTY(EditAnywhere)
@@ -69,7 +65,9 @@ public:
 	float lifeSpan = 2;
 	UPROPERTY(EditAnywhere)
 	float enemyLifeSpan = 4;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
+	float initialImpulseSpeed = 10000;
+	UPROPERTY(EditAnywhere)
 	float impulseSpeed = 2000;
 	UPROPERTY(VisibleAnywhere)
 	float moveSpeed;
@@ -93,8 +91,7 @@ public:
 	float lineTraceDistance;
 	UPROPERTY(EditAnywhere)
 	float minDistanceToSelfDestruct = 150; // equal to radius of our linetrace/2
-	UPROPERTY(EditAnywhere)
-	float minDistanceToHitPlayer = 200;
+	
 	UPROPERTY(EditAnywhere)
 	float targetDistanceMultiplier = 100;
 
@@ -125,7 +122,6 @@ public:
 	UFUNCTION() void SetMaxDistance(const float& _maxDistance) { maxDistance = _maxDistance; }
 	UFUNCTION() void FindEndLocation();
 	UFUNCTION() void CheckDistance(FVector& _targetLocation);
-	UFUNCTION() void CheckDistanceToPlayer();
 	UFUNCTION() void CallLineTraceDisplacement();
 
 	TArray<UStaticMeshComponent*> FindAllChildMeshes(UStaticMeshComponent*& _parentMesh);
@@ -150,7 +146,4 @@ public:
 	UFUNCTION()
 	FCorrectProjectileMeshOverlapEvent& GetOnCorrectProjectileMeshOverlap() {
 		return onCorrectProjectileMeshOverlap;}
-	UFUNCTION()
-	FPlayerHitEvent& GetOnPlayerHitEvent() { return onPlayerHit;}
-	UFUNCTION() void HandlePlayerHit(ADragon* _playerRef);
 };

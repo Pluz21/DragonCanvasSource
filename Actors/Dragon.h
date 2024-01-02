@@ -21,6 +21,7 @@ class UManaComponent;
 class UAttackComponent;
 class UUpgradeComponent;
 
+class AGun;
 class AProjectileManager;
 class AProjectile;
 
@@ -63,7 +64,9 @@ public:
 	TObjectPtr<AProjectileManager> projectileManager;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<USceneComponent> spawnPoint;
+	TObjectPtr<USceneComponent> projectileSpawnPoint;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USceneComponent> gunSpawnPoint;
 	UPROPERTY()
 	TObjectPtr<APlayerController> playerController;
 
@@ -73,8 +76,7 @@ public:
 	TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCameraComponent> camera;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UStaticMeshComponent> gunMesh;
+
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
@@ -167,6 +169,12 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	FVector spawnedInitialLocation;
 
+	// Gun
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AGun> baseGunToSpawn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<AGun> baseGunRef;
+
 #pragma endregion Spawn
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (UIMin = "10", ClampMin = "10", UIMax = "100", ClampMax = "100"))
@@ -203,7 +211,7 @@ public:
 	float sphereTracedistance = 3000;
 
 	UPROPERTY(EditAnywhere, Category = "LineTrace")
-	float coneTraceRadius = 300;
+	float coneTraceRadius = 50;
 
 	UPROPERTY(EditAnywhere)
 	float minDistanceToSelfDestruct;
@@ -217,8 +225,10 @@ protected:
 	void DebugText(const FString& _string, const float& _floatToDebug = 0);
 
 	void Init();
+	void InitManagers();
 	void InitInput();
 	void InitEvents();
+	void InitGun();
 	UFUNCTION()
 	void EmplaceMatInList(UMaterialInterface* _mat);
 	UFUNCTION()
@@ -234,8 +244,6 @@ protected:
 
 	// Interface 
 	void OpenMainMenu();
-	UFUNCTION()
-	void TestMatReceived(UMaterialInterface* _matReceived);
 	//Dragon actions
 	//Debug
 	void SphereTrace();
@@ -252,10 +260,9 @@ protected:
 
 public:
 	UFUNCTION() void FireBreath();
-	// Called every frame
-	FVector  GetSpawnLocation() { return spawnPoint->GetComponentLocation(); }
+	UFUNCTION() void AdjustProjectileSpeed(UStaticMeshComponent* _projectileMeshToAdjust);
+	FVector  GetSpawnLocation() { return projectileSpawnPoint->GetComponentLocation(); }
 	FVector GetProjectileTargetLocation() { return targetLocation; }
-	FVector GetGunMeshLocation() { return gunMesh->GetComponentLocation(); }
 	float GetSphereTraceDistance() { return sphereTracedistance; }
 	UHealthComponent* GetHealthComponent() { return healthCompo; }
 	float GetMinDistanceToSelfDestruct() { return minDistanceToSelfDestruct; }

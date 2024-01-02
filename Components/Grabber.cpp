@@ -48,7 +48,7 @@ bool UGrabber::FindTargetInReach(FHitResult& _outHitResult)   //maybe transform 
 	FRotator _ownerRotation = GetOwner()->GetActorRotation();
 	FCollisionShape _sphere = FCollisionShape::MakeSphere(20);
 	DrawDebugSphere(GetWorld(), _targetLocation,
-		_sphere.GetSphereRadius(), 12, FColor::Green, false, 1, 0, 3);
+		_sphere.GetSphereRadius(), 12, FColor::Magenta, false, 1, 0, 3);
 
 
 	FCollisionQueryParams _customParams;
@@ -115,7 +115,7 @@ void UGrabber::Hold()
 		
 			physicsHandle->SetTargetLocationAndRotation(_targetLocation,
 				GetOwner()->GetActorRotation());
-			DrawDebugSphere(GetWorld(), _targetLocation, 50, 10, FColor::Emerald);
+			DrawDebugSphere(GetWorld(), _targetLocation, 20, 10, FColor::Blue);
 	}
 		
 }

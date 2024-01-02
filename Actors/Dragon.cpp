@@ -8,6 +8,7 @@
 #include "DragonCanvas/World/CustomGameMode.h"
 
 #include "Projectile.h"
+#include "Gun.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -27,17 +28,15 @@
 
 
 
-// Sets default values
 ADragon::ADragon()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//UE_LOG(LogTemp, Warning, TEXT("Dragon Constructor!"));
 
-	spawnPoint = CreateDefaultSubobject<USceneComponent>("SpawnPoint");
+	projectileSpawnPoint = CreateDefaultSubobject<USceneComponent>("projectileSpawnPoint");
+	gunSpawnPoint = CreateDefaultSubobject<USceneComponent>("gunSpawnPoint");
+	
 	springArm = CreateDefaultSubobject<USpringArmComponent>("Springarm");
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
-	gunMesh = CreateDefaultSubobject<UStaticMeshComponent>("gunMesh");
 	
 	
 	attackCompo = CreateDefaultSubobject<UAttackComponent>("attackCompo");
@@ -50,8 +49,8 @@ ADragon::ADragon()
 	projectileSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("/Game/Sounds/Player_Sounds/Shoot_Sound_Meta.Shoot_Sound_Meta")).Object;
 	camera->SetupAttachment(springArm);
 	springArm->SetupAttachment(RootComponent);
-	gunMesh->SetupAttachment(camera);
-	spawnPoint->SetupAttachment(gunMesh);
+	gunSpawnPoint->SetupAttachment(springArm);
+	projectileSpawnPoint->SetupAttachment(gunSpawnPoint);
 
 	AddOwnedComponent(grabber);
 	AddOwnedComponent(physicsHandle);
@@ -63,13 +62,12 @@ ADragon::ADragon()
 
 
 
-// Called every frame
 void ADragon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	DrawDebugSphere(GetWorld(), spawnPointLocation, 100, 12, FColor::Red);
 
 }
-// Called when the game starts or when spawned
 void ADragon::BeginPlay()
 {
 	Super::BeginPlay();
@@ -81,22 +79,28 @@ void ADragon::BeginPlay()
 void ADragon::Init()
 {
 
+	
+	InitManagers();
+	InitInput();
+	InitEvents();
+	InitGun();
+	currentAmmo = maxAmmo;
+	UpdateMinDistanceToSelfDestruct();
+
+}
+
+void ADragon::InitManagers()
+{
 	gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>(); // Grab game mode
 	if (!gameMode)return;
 	projectileManager = gameMode->GetProjectileManager();
 	if (!projectileManager)return;
-	onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::TestMatReceived);
 	//onCurrentProjectileMatReceived.AddDynamic(this, &ADragon::ScrollDownSelectProjectile);
-	
+
 	world = GetWorld();
 	playerController = GetWorld()->GetFirstPlayerController();
 	if (!playerController)return;
 
-	InitInput();
-	InitEvents();
-
-	currentAmmo = maxAmmo;
-	UpdateMinDistanceToSelfDestruct();
 
 }
 
@@ -114,12 +118,20 @@ void ADragon::InitInput()
 
 void ADragon::InitEvents()
 {
-	onLineTraceCreated.AddDynamic(this, &ADragon::FireBreath);
-
 	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::EmplaceMatInList);
 	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::EmplaceMatInList);
 	onProjectileShot.AddDynamic(this, &ADragon::PlayProjectileSound);
 	
+}
+
+void ADragon::InitGun()
+{
+	if (!baseGunToSpawn)return;
+	AGun* _baseGun = GetWorld()->SpawnActor<AGun>(baseGunToSpawn);
+	if (!_baseGun)return;
+	baseGunRef = _baseGun;
+	baseGunRef->AttachToComponent(gunSpawnPoint, FAttachmentTransformRules::KeepRelativeTransform);
+
 }
 
 
@@ -176,9 +188,10 @@ void ADragon::Action()
 	//coneTraceCompo->ConeTrace();
 	//targetLocation = coneTraceCompo->GetLineTraceEnd();
 	if (allProjectileMats.Num() <= 0)return;
+	//FTimerHandle TimerHandle;
+	//GetWorldTimerManager().SetTimer(TimerHandle, this, &ADragon::FireBreath, 0.1f, false);
+	FireBreath();
 	SphereTrace();
-	onLineTraceCreated.Broadcast();
-
 }
 
 void ADragon::ScrollUpSelectProjectile()
@@ -194,6 +207,7 @@ void ADragon::ScrollUpSelectProjectile()
 
 		return;
 	}
+	
 	float _minRange = allProjectileMats.Num() - 1 ;
 	currentProjectileIndex = FMath::Clamp(currentProjectileIndex + 1, 0, _minRange);
 	UpdateProjectileMaterial(1);
@@ -233,7 +247,8 @@ void ADragon::UpdateProjectileMaterial(int _allProjectileMatsIndexToUpdate)
 	UStaticMeshComponent* _projectileMesh = _projectileRef->
 		GetComponentByClass<UStaticMeshComponent>();
 	UMaterialInterface* _newProjectileMat = _projectileMesh->GetMaterial(_allProjectileMatsIndexToUpdate);
-		_projectileMesh->SetMaterial(0, allProjectileMats[currentProjectileIndex]);
+	if (!_projectileMesh || allProjectileMats.Num() <= 0)return;
+	_projectileMesh->SetMaterial(0, allProjectileMats[currentProjectileIndex]);
 	onCurrentProjectileMatReceived.Broadcast(allProjectileMats[currentProjectileIndex]); // returns current mat about to shoot
 	currentProjectileMat = allProjectileMats[currentProjectileIndex];
 
@@ -254,21 +269,17 @@ void ADragon::OpenMainMenu()
 
 }
 
-void ADragon::TestMatReceived(UMaterialInterface* _matReceived)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Mat received EVENT! received -> %s!"), *_matReceived->GetName());
 
-}
 void ADragon::FireBreath()
 {
 	if (manaCompo->isOutOfMana || manaCompo->currentMana <= manaCompo->projectileManaCost)return;
-	spawnPointLocation = spawnPoint->GetComponentLocation();	
+
+
 	FVector _location;
 	FRotator _rotation;					
 	playerController->GetPlayerViewPoint(_location,_rotation);
 	FVector _fwdVector = _rotation.Vector();
 	locationOnLineTraceSpawn = _fwdVector;
-
 	//DebugText("Doing Action");
 	if (!(projectileToSpawn))
 	{
@@ -278,20 +289,24 @@ void ADragon::FireBreath()
 	if (!projectileToSpawn)return;
 
 	if (!attackCompo)return;
-	AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,GetOwner());
+	//spawnPointLocation = projectileSpawnPoint->GetComponentLocation();
+	FVector _spawnPointLocation = projectileSpawnPoint->GetComponentLocation();
+	//AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,GetOwner());
+	AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, _spawnPointLocation, FRotator::ZeroRotator);
 	if (!_spawnedProjectile)return;
 	manaCompo->RemoveMana(manaCompo->projectileManaCost);    
 	_spawnedProjectile->
 		projectileManager->AddItem(_spawnedProjectile);
+	//AdjustProjectileSpeed(_spawnedProjectile->meshCompo);
 	float _size = projectileManager->GetAllProjectilesSize();
 	for (int i = 0; i < _size; i++)
 	{
 		
-		_spawnedProjectile->SetLaunchTime();
+		/*_spawnedProjectile->SetLaunchTime();
 		_spawnedProjectile->SetMaxDistance(sphereTracedistance-100);
 		_spawnedProjectile->SetTargetLocation(targetLocation);
 		_spawnedProjectile->SetForwardVector(_fwdVector);
-		_spawnedProjectile->SetCanMove(true);
+		_spawnedProjectile->SetCanMove(true);*/
 
 	}
 	onProjectileShot.Broadcast();
@@ -299,6 +314,12 @@ void ADragon::FireBreath()
 	
 
 	
+}
+
+void ADragon::AdjustProjectileSpeed(UStaticMeshComponent* _projectileMeshToAdjust)
+{
+	_projectileMeshToAdjust->AddImpulse(GetActorForwardVector() * -5000, NAME_None, true);
+
 }
 
 

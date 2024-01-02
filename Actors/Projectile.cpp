@@ -3,9 +3,12 @@
 #include "Dragon.h"
 
 #include "DragonCanvas/World/CustomGameMode.h"
+
 #include "ProjectileManager.h"
 #include "Enemy.h"
 #include "BossEnemy.h"
+#include "Gun.h"
+
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "DragonCanvas/Components/MaterialCheckerComponent.h"
@@ -44,7 +47,6 @@ void AProjectile::Tick(float DeltaTime)
 	SelfMove(forwardVector);
 	//SelfMove();
 	moveCompo->Rotate();// or call moveCompo->Move();
-	CheckDistanceToPlayer();
 }
 
 void AProjectile::Init()
@@ -74,7 +76,6 @@ void AProjectile::EventsInit()
 	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
 	onProjectileCreated.Broadcast();
 	onCorrectProjectileMeshOverlap.AddDynamic(this, &AProjectile::ManageBossEnemyHit);
-	onPlayerHit.AddDynamic(this, &AProjectile::HandlePlayerHit);
 }
 
 void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
@@ -83,7 +84,7 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 
 	if (_overlap && (_overlap != this))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING PROJECTILE "));
+		UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING PROJECTILE WITH %s "), *_overlap->GetName());
 	}
 	else 
 		UE_LOG(LogTemp, Warning, TEXT("FAILED OVERLAPCALL"));
@@ -103,8 +104,9 @@ void AProjectile::SelfMove()
 	APawn* _pawnRef = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (!_pawnRef)return;
 	ADragon* _dragonRef = Cast<ADragon>(_pawnRef);
-	if (!_dragonRef)return;
-	FVector _playerForwardVector = _dragonRef->gunMesh->GetForwardVector();
+	if (!_dragonRef || !_dragonRef->baseGunRef)return;
+	FVector _playerForwardVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
+	//FVector _projectileSpawnLocationFVector = _dragonRef->baseGunRef->GetActorForwardVector() * 20;
 	meshCompo->AddImpulse(_playerForwardVector * impulseSpeed, NAME_None, true);
 	//meshCompo->
 }
@@ -133,14 +135,6 @@ void AProjectile::SelfDestruct()
 
 }
 
-void AProjectile::HandlePlayerHit(ADragon* _playerRef)
-{
-
-	if (!_playerRef)return;
-	_playerRef->healthCompo->RemoveHealth(damage);
-	UE_LOG(LogTemp, Warning, TEXT("Finished event handleplayer"));
-
-}
 
 void AProjectile::ManageBossEnemyHit(AActor* _actor)
 {
@@ -261,23 +255,7 @@ void AProjectile::CheckDistance(FVector& _targetLocation)
 	//}
 }
 
-void AProjectile::CheckDistanceToPlayer()
-{
-	
-	if (!GetWorld()->GetFirstPlayerController()) return;
-	ADragon* _playerRef = Cast<ADragon>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (!_playerRef) return;
-	FVector _playerLocation = _playerRef->GetActorLocation();
-	float _distance = FVector::Dist(GetActorLocation(), _playerLocation);
-	//UE_LOG(LogTemp, Warning, TEXT("Distance to player %f"), _distance);
 
-	if (_distance <= minDistanceToHitPlayer)
-	{
-		onPlayerHit.Broadcast(_playerRef);
-		projectileManager->RemoveItem(this);
-		SelfDestruct();
-	}
-}
 
 void AProjectile::CallLineTraceDisplacement()
 {	
