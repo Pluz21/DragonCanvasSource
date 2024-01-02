@@ -121,7 +121,6 @@ void ADragon::InitEvents()
 	projectileManager->GetOnMatAcquired().AddDynamic(this, &ADragon::EmplaceMatInList);
 	projectileManager->GetOnMatAlreadyExists().AddDynamic(this, &ADragon::EmplaceMatInList);
 	onProjectileShot.AddDynamic(this, &ADragon::PlayProjectileSound);
-	
 }
 
 void ADragon::InitGun()
@@ -318,7 +317,7 @@ void ADragon::FireBreath()
 
 void ADragon::AdjustProjectileSpeed(UStaticMeshComponent* _projectileMeshToAdjust)
 {
-	_projectileMeshToAdjust->AddImpulse(GetActorForwardVector() * -5000, NAME_None, true);
+	//_projectileMeshToAdjust->AddImpulse(GetActorForwardVector() * -5000, NAME_None, true);
 
 }
 

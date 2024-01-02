@@ -105,9 +105,10 @@ void AProjectile::SelfMove()
 	if (!_pawnRef)return;
 	ADragon* _dragonRef = Cast<ADragon>(_pawnRef);
 	if (!_dragonRef || !_dragonRef->baseGunRef)return;
-	FVector _playerForwardVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
-	//FVector _projectileSpawnLocationFVector = _dragonRef->baseGunRef->GetActorForwardVector() * 20;
-	meshCompo->AddImpulse(_playerForwardVector * impulseSpeed, NAME_None, true);
+	//FVector _playerForwardVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
+	FVector _projectileSpawnLocationFVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
+	meshCompo->AddImpulse(_projectileSpawnLocationFVector * impulseSpeed, NAME_None, true);
+	
 	//meshCompo->
 }
 
