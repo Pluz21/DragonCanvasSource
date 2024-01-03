@@ -125,8 +125,6 @@ void UProjectileTriggerComponent::HandleSnap()
 		if (_spawnerRef)
 		{
 			AActor* _spawnedEnemy = _spawnerRef->Spawn();
-			allSpawnedFromSnap.Add(_spawnedEnemy);
-			//TODO : EnemyManager->AddEnemy(_spawnedEnemy);
 		}
 	}
 

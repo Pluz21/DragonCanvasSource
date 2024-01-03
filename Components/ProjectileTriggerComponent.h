@@ -44,8 +44,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<URevealHiddenComponent> revealHiddenCompo;
 
-	UPROPERTY(EditAnywhere)
-	TArray<AActor*> allSpawnedFromSnap;
+
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> allSpawners;
 	UPROPERTY(EditAnywhere)

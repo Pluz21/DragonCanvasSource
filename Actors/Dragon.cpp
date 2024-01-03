@@ -295,19 +295,8 @@ void ADragon::FireBreath()
 	if (!_spawnedProjectile)return;
 	manaCompo->RemoveMana(manaCompo->projectileManaCost);    
 	_spawnedProjectile->
-		projectileManager->AddItem(_spawnedProjectile);
-	//AdjustProjectileSpeed(_spawnedProjectile->meshCompo);
-	float _size = projectileManager->GetAllProjectilesSize();
-	for (int i = 0; i < _size; i++)
-	{
-		
-		/*_spawnedProjectile->SetLaunchTime();
-		_spawnedProjectile->SetMaxDistance(sphereTracedistance-100);
-		_spawnedProjectile->SetTargetLocation(targetLocation);
-		_spawnedProjectile->SetForwardVector(_fwdVector);
-		_spawnedProjectile->SetCanMove(true);*/
+	projectileManager->AddItem(_spawnedProjectile);
 
-	}
 	onProjectileShot.Broadcast();
 
 	
