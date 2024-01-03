@@ -243,6 +243,7 @@ protected:
 	void Jump() override;
 
 	// Interface 
+	void SetMouseFocusOnGame();
 	void OpenMainMenu();
 	//Dragon actions
 	//Debug

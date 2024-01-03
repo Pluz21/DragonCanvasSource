@@ -191,6 +191,8 @@ void ADragon::Action()
 	//GetWorldTimerManager().SetTimer(TimerHandle, this, &ADragon::FireBreath, 0.1f, false);
 	FireBreath();
 	SphereTrace();
+	SetMouseFocusOnGame();
+
 }
 
 void ADragon::ScrollUpSelectProjectile()
@@ -259,6 +261,13 @@ void ADragon::EmplaceMatInList(UMaterialInterface* _mat)
 	if (projectileManager->MatExists(_mat, allProjectileMats))return;
 	allProjectileMats.EmplaceAt(0, _mat);
 
+}
+
+void ADragon::SetMouseFocusOnGame()
+{
+	playerController->SetShowMouseCursor(false);
+	FInputModeGameAndUI _inputMode;
+	_inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 }
 
 void ADragon::OpenMainMenu()
