@@ -140,3 +140,14 @@ void UHealthComponent::HandleDeath()
 	UE_LOG(LogTemp, Error, TEXT("Disable inputs"));
 
 }
+
+void UHealthComponent::SetMouseCursor()
+{
+	APlayerController* _controller = GetWorld()->GetFirstPlayerController();
+
+	FInputModeGameAndUI _inputMode;
+	_inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	_controller->SetInputMode(_inputMode);
+}
+
+

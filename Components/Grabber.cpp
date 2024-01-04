@@ -39,17 +39,41 @@ bool UGrabber::FindTargetInReach(FHitResult& _outHitResult)   //maybe transform 
 {
 	FVector _ownerLocation = GetOwner()->GetActorLocation();
 	//DrawDebugSphere(GetWorld(), _ownerLocation, sphereRadius, 12, FColor::Blue);
+	//FVector _spawnPointRef;
 	FVector _cameraNormalDirection =  GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraRotation().Vector();
+	//FRotator CameraRotation;
+	//GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(_spawnPointRef, CameraRotation);
+
+	//FVector _cameraForwardVector = FRotationMatrix(CameraRotation).GetScaledAxis(EAxis::X);
+
 	FVector _targetLocation = _ownerLocation + _cameraNormalDirection * maxGrabDistance;
 
 	//DrawDebugSphere(GetWorld(), _targetLocation,
 	//	sphereRadius, 12, FColor::Red, true, -1, 0, 3);	// ...
 	FQuat _ownerQuat = GetOwner()->GetActorQuat();
 	FRotator _ownerRotation = GetOwner()->GetActorRotation();
-	FCollisionShape _sphere = FCollisionShape::MakeSphere(20);
+	FCollisionShape _sphere = FCollisionShape::MakeSphere(grabRadius);
 	DrawDebugSphere(GetWorld(), _targetLocation,
 		_sphere.GetSphereRadius(), 12, FColor::Magenta, false, 1, 0, 3);
+	/*
+	
+	FRotator CameraRotation;
+	FVector _cameraForwardVector;
+	FVector _spawnPointRef; // only used to get the rotation from GetPlayerViewPoint since it OUTs FVector and FRotator;
 
+	FVector _spawnPointVector = _dragonRef->baseGunRef->materialChangerMesh->GetComponentLocation();
+	_dragonRef->playerController->GetPlayerViewPoint(_spawnPointRef, CameraRotation);
+	_cameraForwardVector = FRotationMatrix(CameraRotation).GetScaledAxis(EAxis::X);
+
+	FVector _lookAtLocation = _spawnPointVector + (_cameraForwardVector * 10000);
+
+	//DrawDebugSphere(GetWorld(), _spawnPointVector, 10, 12, FColor::Orange,true);
+	//DrawDebugLine(GetWorld(), _spawnPointVector, _lookAtLocation, FColor::Red, true);
+
+	FVector _projectileSpawnLocationFVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
+	FVector _projectileDirection = (_lookAtLocation - _spawnPointVector).GetSafeNormal();
+	meshCompo->AddImpulse(_projectileDirection * impulseSpeed, NAME_None, true);
+	*/
 
 	FCollisionQueryParams _customParams;
 	_customParams.AddIgnoredActor(GetOwner());

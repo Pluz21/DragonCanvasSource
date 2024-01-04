@@ -105,11 +105,27 @@ void AProjectile::SelfMove()
 	if (!_pawnRef)return;
 	ADragon* _dragonRef = Cast<ADragon>(_pawnRef);
 	if (!_dragonRef || !_dragonRef->baseGunRef)return;
-	//FVector _playerForwardVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
+	//_dragonRef->GetPawnViewLocation();
+	FRotator CameraRotation;
+	FVector _cameraForwardVector;
+	FVector _spawnPointRef; // only used to get the rotation from GetPlayerViewPoint since it OUTs FVector and FRotator;
+
+	FVector _spawnPointVector = _dragonRef->baseGunRef->materialChangerMesh->GetComponentLocation();
+	_dragonRef->playerController->GetPlayerViewPoint(_spawnPointRef, CameraRotation);
+	_cameraForwardVector = FRotationMatrix(CameraRotation).GetScaledAxis(EAxis::X);
+
+	FVector _lookAtLocation = _spawnPointVector + (_cameraForwardVector * 10000);
+
+	//DrawDebugSphere(GetWorld(), _spawnPointVector, 10, 12, FColor::Orange,true);
+	//DrawDebugLine(GetWorld(), _spawnPointVector, _lookAtLocation, FColor::Red, true);
+
 	FVector _projectileSpawnLocationFVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
-	meshCompo->AddImpulse(_projectileSpawnLocationFVector * impulseSpeed, NAME_None, true);
+	FVector _projectileDirection = (_lookAtLocation - _spawnPointVector).GetSafeNormal();
+	meshCompo->AddImpulse(_projectileDirection * impulseSpeed, NAME_None, true);
 	
-	//meshCompo->
+
+	
+	
 }
 
 

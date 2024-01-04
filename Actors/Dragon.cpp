@@ -323,43 +323,43 @@ void ADragon::AdjustProjectileSpeed(UStaticMeshComponent* _projectileMeshToAdjus
 void ADragon::SphereTrace()
 {
 
-	if (!IsValid(GetOwner()))
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
-		return;
-	}
-	FVector _location;
-	FRotator _rotation;
-	playerController->GetPlayerViewPoint(_location, _rotation);
+	//if (!IsValid(GetOwner()))
+	//{
+	//	//UE_LOG(LogTemp, Warning, TEXT("Failed to find owner"));
+	//	return;
+	//}
+	//FVector _location;
+	//FRotator _rotation;
+	//playerController->GetPlayerViewPoint(_location, _rotation);
 
-	//DrawDebugSphere(GetWorld(), _location,
-		//100, 25, FColor::Yellow, true, -1, 0, 3);
-	//FVector _startLocation = _location;
-	FVector _startLocation = GetSpawnLocation();
-	FRotator _ownerRotation = GetActorRotation();
-	//FVector _forwardVector = GetActorForwardVector();
-	FVector _forwardVector = _rotation.Vector();
+	////DrawDebugSphere(GetWorld(), _location,
+	//	//100, 25, FColor::Yellow, true, -1, 0, 3);
+	////FVector _startLocation = _location;
+	//FVector _startLocation = GetSpawnLocation();
+	//FRotator _ownerRotation = GetActorRotation();
+	////FVector _forwardVector = GetActorForwardVector();
+	//FVector _forwardVector = _rotation.Vector();
 
 
-	//UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());
+	////UE_LOG(LogTemp, Error, TEXT("startLocation %s "),*_startLocation.ToString());
 
-	FVector _endLocation = _startLocation + (_forwardVector * (sphereTracedistance + coneTraceRadius));
-	//DrawDebugLine(world, _startLocation, _endLocation, FColor::Blue, true, -1, 0, 3);
+	//FVector _endLocation = _startLocation + (_forwardVector * (sphereTracedistance + coneTraceRadius));
+	////DrawDebugLine(world, _startLocation, _endLocation, FColor::Blue, true, -1, 0, 3);
 
-	targetLocation = _endLocation;
-	//UE_LOG(LogTemp, Error, TEXT("DRAGON ENDLOCATION %s "), *_endLocation.ToString());
-	DrawDebugSphere(GetWorld(), _endLocation,
-		200, 25, FColor::Black, false, -1, 0, 3);
-	FCollisionQueryParams _collisionParams;
-	_collisionParams.AddIgnoredActor(GetOwner());
-	TArray<FHitResult> _allHits;
-	FQuat _quat = FQuat(GetActorRotation());
-	FHitResult _hitResult;
-	bool _hit = GetWorld()->LineTraceSingleByChannel(
-		_hitResult, _location, _endLocation,
-		_coneTraceChannel, _collisionParams
-	);
-	hitResult = _hitResult;
+	//targetLocation = _endLocation;
+	////UE_LOG(LogTemp, Error, TEXT("DRAGON ENDLOCATION %s "), *_endLocation.ToString());
+	//DrawDebugSphere(GetWorld(), _endLocation,
+	//	200, 25, FColor::Black, false, -1, 0, 3);
+	//FCollisionQueryParams _collisionParams;
+	//_collisionParams.AddIgnoredActor(GetOwner());
+	//TArray<FHitResult> _allHits;
+	//FQuat _quat = FQuat(GetActorRotation());
+	//FHitResult _hitResult;
+	//bool _hit = GetWorld()->LineTraceSingleByChannel(
+	//	_hitResult, _location, _endLocation,
+	//	_coneTraceChannel, _collisionParams
+	//);
+	//hitResult = _hitResult;
 	
 }
 

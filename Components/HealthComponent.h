@@ -80,4 +80,6 @@ public:
 	void TestDeath();
 	UFUNCTION(BlueprintCallable)
 	void HandleDeath();
+	UFUNCTION(BlueprintCallable)
+	void SetMouseCursor();
 };
