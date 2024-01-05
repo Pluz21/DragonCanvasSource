@@ -1,7 +1,7 @@
 //Copyright © 2023 Pluz21(TVL).All rights reserved.
 
 #include "AttackComponent.h"
-#include "DragonCanvas/Actors/Projectile.h"
+#include "DragonCanvas/Actors/PlayerProjectile.h"
 
 // Sets default values for this component's properties
 UAttackComponent::UAttackComponent()
@@ -36,12 +36,12 @@ void UAttackComponent::Attack()
 {
 }
 
-AProjectile* UAttackComponent::SpawnProjectile(const FVector& _spawnLocation,AActor* _owner)
+ABaseProjectile* UAttackComponent::SpawnProjectile(const FVector& _spawnLocation,AActor* _owner)
 {
 	FActorSpawnParameters _projectileSpawnParams;
 	_projectileSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	AProjectile* _spawned = GetWorld()->
-		SpawnActor<AProjectile>(projectileRef,  _spawnLocation,
+	ABaseProjectile* _spawned = GetWorld()->
+		SpawnActor<ABaseProjectile>(projectileRef,  _spawnLocation,
 			FRotator::ZeroRotator, _projectileSpawnParams);
 	if (_spawned && _owner)
 	{

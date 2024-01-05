@@ -23,7 +23,7 @@ class UUpgradeComponent;
 
 class AGun;
 class AProjectileManager;
-class AProjectile;
+class APlayerProjectile;
 
 UCLASS()
 class DRAGONCANVAS_API ADragon : public ACharacter
@@ -151,7 +151,7 @@ public:
 #pragma region Spawn
 	// spawn variables
 	UPROPERTY(EditAnywhere, Category = "ProjectileSelection")
-	TSubclassOf<AProjectile> projectileToSpawn;
+	TSubclassOf<APlayerProjectile> projectileToSpawn;
 
 	UPROPERTY(VisibleAnywhere, Category = "ProjectileSelection")
 	TObjectPtr<UMaterialInterface> currentProjectileMat;
@@ -271,7 +271,7 @@ public:
 	UFUNCTION(BlueprintCallable) 
 	AProjectileManager* GetProjectileManager() { return projectileManager; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	TSubclassOf<AProjectile>GetProjectileToSpawn() { return projectileToSpawn; }
+	TSubclassOf<APlayerProjectile>GetProjectileToSpawn() { return projectileToSpawn; }
 
 	UFUNCTION() void LineTraceDisplacement(UWorld* _world, const FHitResult& _hitResult);
 	UFUNCTION() void StartLineTraceAction();

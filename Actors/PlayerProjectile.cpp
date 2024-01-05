@@ -1,5 +1,5 @@
 //Copyright © 2023 Pluz21(TVL).All rights reserved.
-#include "Projectile.h"
+#include "PlayerProjectile.h"
 #include "Dragon.h"
 
 #include "DragonCanvas/World/CustomGameMode.h"
@@ -16,19 +16,18 @@
 #include "DragonCanvas/Components/HealthComponent.h"
 
 
-AProjectile::AProjectile()
+APlayerProjectile::APlayerProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	meshCompo = CreateDefaultSubobject<UStaticMeshComponent>("mymesh");
-	SetRootComponent(meshCompo);
+
 	moveCompo = CreateDefaultSubobject<UMoveComponent>("moveCompo");
 	AddOwnedComponent(moveCompo);
 
 }
 
 // Called when the game starts or when spawned
-void AProjectile::BeginPlay()
+void APlayerProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -38,7 +37,7 @@ void AProjectile::BeginPlay()
 
 
 // Called every frame
-void AProjectile::Tick(float DeltaTime)
+void APlayerProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -49,13 +48,10 @@ void AProjectile::Tick(float DeltaTime)
 	moveCompo->Rotate();// or call moveCompo->Move();
 }
 
-void AProjectile::Init()
+void APlayerProjectile::Init()
 {
 	EventsInit();
-	gameMode = GetWorld()->GetAuthGameMode<ACustomGameMode>();
-
-	if (!gameMode)return;
-	projectileManager = gameMode->GetProjectileManager();
+	
 
 	//projectileManager->AddItem(this); // Not necessary. Safety extra call but already called on spawn from Dragon
 	actorSpawnLocation = GetActorLocation();
@@ -69,16 +65,16 @@ void AProjectile::Init()
 
 }
 
-void AProjectile::EventsInit()
+void APlayerProjectile::EventsInit()
 {
-	OnActorBeginOverlap.AddDynamic(this, &AProjectile::ManageOverlap);
-	onTargetReached.AddDynamic(this, &AProjectile::SelfDestruct);
-	onCanMove.AddDynamic(this, &AProjectile::FindEndLocation);
+	OnActorBeginOverlap.AddDynamic(this, &APlayerProjectile::ManageOverlap);
+	onTargetReached.AddDynamic(this, &APlayerProjectile::SelfDestruct);
+	onCanMove.AddDynamic(this, &APlayerProjectile::FindEndLocation);
 	onProjectileCreated.Broadcast();
-	onCorrectProjectileMeshOverlap.AddDynamic(this, &AProjectile::ManageBossEnemyHit);
+	onCorrectProjectileMeshOverlap.AddDynamic(this, &APlayerProjectile::ManageBossEnemyHit);
 }
 
-void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
+void APlayerProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 {
 	
 
@@ -99,7 +95,7 @@ void AProjectile::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 
 }
 
-void AProjectile::SelfMove()
+void APlayerProjectile::SelfMove()
 {
 	APawn* _pawnRef = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (!_pawnRef)return;
@@ -112,12 +108,13 @@ void AProjectile::SelfMove()
 
 	FVector _spawnPointVector = _dragonRef->baseGunRef->materialChangerMesh->GetComponentLocation();
 	_dragonRef->playerController->GetPlayerViewPoint(_spawnPointRef, CameraRotation);
+	
 	_cameraForwardVector = FRotationMatrix(CameraRotation).GetScaledAxis(EAxis::X);
 
 	FVector _lookAtLocation = _spawnPointVector + (_cameraForwardVector * 10000);
 
-	//DrawDebugSphere(GetWorld(), _spawnPointVector, 10, 12, FColor::Orange,true);
-	//DrawDebugLine(GetWorld(), _spawnPointVector, _lookAtLocation, FColor::Red, true);
+	DrawDebugSphere(GetWorld(), _spawnPointVector, 10, 12, FColor::Orange,true);
+	DrawDebugLine(GetWorld(), _spawnPointVector, _lookAtLocation, FColor::Red, true);
 
 	FVector _projectileSpawnLocationFVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
 	FVector _projectileDirection = (_lookAtLocation - _spawnPointVector).GetSafeNormal();
@@ -129,7 +126,7 @@ void AProjectile::SelfMove()
 }
 
 
-void AProjectile::SelfMove(const FVector& _actorForwardVector)
+void APlayerProjectile::SelfMove(const FVector& _actorForwardVector)
 {
 	if (canMove)
 	{
@@ -139,21 +136,15 @@ void AProjectile::SelfMove(const FVector& _actorForwardVector)
 
 }
 
-void AProjectile::SetCanMove(bool _value)
+void APlayerProjectile::SetCanMove(bool _value)
 {
 	canMove = _value;
 }
 
-void AProjectile::SelfDestruct()
-{
-	projectileManager->RemoveItem(this);
-	Destroy();
-	UE_LOG(LogTemp, Warning, TEXT("DESTRUCTION"));
-
-}
 
 
-void AProjectile::ManageBossEnemyHit(AActor* _actor)
+
+void APlayerProjectile::ManageBossEnemyHit(AActor* _actor)
 {
 	if (_actor->IsA(ABossEnemy::StaticClass()))
 	{
@@ -193,7 +184,7 @@ void AProjectile::ManageBossEnemyHit(AActor* _actor)
 
 }
 
-void AProjectile::ManageEnemyHit(AActor* _actor)
+void APlayerProjectile::ManageEnemyHit(AActor* _actor)
 {
 	if (_actor->IsA(ABossEnemy::StaticClass()))return;
 	AEnemy* _enemy = Cast<AEnemy>(_actor);
@@ -222,7 +213,7 @@ void AProjectile::ManageEnemyHit(AActor* _actor)
 
 }
 
-void AProjectile::ManageDestroyTagHit(AActor* _actor)
+void APlayerProjectile::ManageDestroyTagHit(AActor* _actor)
 {
 	if (_actor->ActorHasTag("Destroy"))
 	{
@@ -231,7 +222,7 @@ void AProjectile::ManageDestroyTagHit(AActor* _actor)
 	}
 
 }
-void AProjectile::ManageCanMoveHit(AActor* _actor)
+void APlayerProjectile::ManageCanMoveHit(AActor* _actor)
 {
 	if (_actor->ActorHasTag("CanMove"))
 	{
@@ -245,7 +236,7 @@ void AProjectile::ManageCanMoveHit(AActor* _actor)
 }
 
 
-void AProjectile::FindEndLocation()
+void APlayerProjectile::FindEndLocation()
 {
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
 	//targetLocation = _dragonRef->GetProjectileTargetLocation();
@@ -256,7 +247,7 @@ void AProjectile::FindEndLocation()
 
 }
 
-void AProjectile::CheckDistance(FVector& _targetLocation)
+void APlayerProjectile::CheckDistance(FVector& _targetLocation)
 {
 	/*if (hasTarget) 
 	{*/
@@ -274,7 +265,7 @@ void AProjectile::CheckDistance(FVector& _targetLocation)
 
 
 
-void AProjectile::CallLineTraceDisplacement()
+void APlayerProjectile::CallLineTraceDisplacement()
 {	
 
 	//canActivateLineTraceEffect = true;
@@ -283,7 +274,7 @@ void AProjectile::CallLineTraceDisplacement()
 	//_dragonRef->StartLineTraceAction();
 }
 
-TArray<UStaticMeshComponent*> AProjectile::FindAllChildMeshes(UStaticMeshComponent*& _parentMesh)
+TArray<UStaticMeshComponent*> APlayerProjectile::FindAllChildMeshes(UStaticMeshComponent*& _parentMesh)
 {
 	TArray<USceneComponent*> _allSceneCompos;
 	_allSceneCompos = _parentMesh->GetAttachChildren();
@@ -297,7 +288,7 @@ TArray<UStaticMeshComponent*> AProjectile::FindAllChildMeshes(UStaticMeshCompone
 	return _allStaticMeshes;
 }
 
-TArray<UStaticMeshComponent*> AProjectile::FindAllChildMeshes(UStaticMeshComponent*& _parentMesh, UStaticMeshComponent*& _parentMesh2, UStaticMeshComponent*& _parentMesh3)
+TArray<UStaticMeshComponent*> APlayerProjectile::FindAllChildMeshes(UStaticMeshComponent*& _parentMesh, UStaticMeshComponent*& _parentMesh2, UStaticMeshComponent*& _parentMesh3)
 {
 	TArray<USceneComponent*> _allSceneCompos;
 	_allSceneCompos = _parentMesh->GetAttachChildren(),_parentMesh2->GetAttachChildren(),
@@ -312,7 +303,7 @@ TArray<UStaticMeshComponent*> AProjectile::FindAllChildMeshes(UStaticMeshCompone
 	return _allStaticMeshes;
 }
 
-void AProjectile::ApplyHitEffect(TArray<UStaticMeshComponent*> _allStaticMeshesToHit)
+void APlayerProjectile::ApplyHitEffect(TArray<UStaticMeshComponent*> _allStaticMeshesToHit)
 {
 	int _size = _allStaticMeshesToHit.Num();
 	for (int i = 0; i < _size; i++)
@@ -322,13 +313,13 @@ void AProjectile::ApplyHitEffect(TArray<UStaticMeshComponent*> _allStaticMeshesT
 	}
 }
 
-void AProjectile::ApplyHitEffect(UStaticMeshComponent* _staticMeshToAffect)
+void APlayerProjectile::ApplyHitEffect(UStaticMeshComponent* _staticMeshToAffect)
 {
 	_staticMeshToAffect->SetSimulatePhysics(true);
 	_staticMeshToAffect->SetMassOverrideInKg(NAME_None, 0.01f);
 }
 
-void AProjectile::UpdateOverlapPhysics(AActor*& _actorToActivatePhysicsOn)
+void APlayerProjectile::UpdateOverlapPhysics(AActor*& _actorToActivatePhysicsOn)
 {
 	meshCompo->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	//meshCompo->SetCollisionEnabled(initialCollisionSetting);

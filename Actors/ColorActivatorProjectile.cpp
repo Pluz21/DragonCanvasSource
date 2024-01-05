@@ -8,7 +8,7 @@
 #include "DragonCanvas/Components/RevealHiddenComponent.h"
 
 #include "DragonCanvas/Actors/HiddenActors.h" // can be deleted since we use compo
-#include "Projectile.h"
+#include "PlayerProjectile.h"
 
 // THIS CLASS IS THE ONE THAT ALLOWS ACTORS TO CHANGE TO THE COLOR OF THE PROJECTILE
 AColorActivatorProjectile::AColorActivatorProjectile()
@@ -59,7 +59,7 @@ void AColorActivatorProjectile::ManageOverlap(AActor* _overlapped, AActor* _over
 	//Super::ManageOverlap(_overlapped, _overlap);
 
 	if (!_overlap || !_overlapped) return;
-	if (!_overlap->IsA(AProjectile::StaticClass()))return;
+	if (!_overlap->IsA(APlayerProjectile::StaticClass()))return;
 	if (hasReceivedMaterial)return;
 	{
 		if(materialChecker->ActorMaterialCheck(_overlap))

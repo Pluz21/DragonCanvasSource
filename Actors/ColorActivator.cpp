@@ -11,7 +11,7 @@
 
 #include "DragonCanvas/Components/ProjectileTriggerComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Projectile.h"
+#include "PlayerProjectile.h"
 
 // THIS CLASS CHANGES THE MATERIAL OF THE PROJECTILE ON OVERLAP WITH A PICK-UP class
 
@@ -50,7 +50,8 @@ void AColorActivator::Init()
 	//Might need to call managers as in Dragon class 
 	InitGameMode();
 	ADragon* _dragonRef = Cast<ADragon>(UGameplayStatics::GetActorOfClass(GetWorld(), ADragon::StaticClass()));
-	TSubclassOf<AProjectile> _projectileRef = _dragonRef->GetProjectileToSpawn();
+	if (!_dragonRef || !_dragonRef->GetProjectileToSpawn())return;
+	TSubclassOf<APlayerProjectile> _projectileRef = _dragonRef->GetProjectileToSpawn();
 	dragonProjectileRef = _projectileRef;
 	if (!secondMesh || !baseMesh)return;
 	UMaterialInterface* _secondMeshMat = secondMesh->GetMaterial(0);
@@ -91,11 +92,13 @@ void AColorActivator::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 void AColorActivator::GiveColor() // Function to be re-used for the projectile selection
 {
 	if (!dragonProjectileRef)return;
-	AProjectile* _projectileRef = dragonProjectileRef.GetDefaultObject();
-	
+	APlayerProjectile* _projectileRef = dragonProjectileRef.GetDefaultObject();
+	if (!_projectileRef)return;
 	 UStaticMeshComponent* _projectileMesh = _projectileRef->
 					GetComponentByClass<UStaticMeshComponent>();
+	 if (!_projectileMesh)return;
 	 UMaterial* _projectileMaterial = _projectileMesh->GetMaterial(0)->GetMaterial();
+	 if (!_projectileMaterial)return;
 	 _projectileMesh->SetMaterial(0, matInterfaceToApply);
 	 //_projectileMesh->SetMaterial(0,matToApply); 
 	 

@@ -3,14 +3,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Projectile.generated.h"
+#include "BaseProjectile.h"
+#include "PlayerProjectile.generated.h"
 
 class AProjectileManager;
 class ACustomGameMode;
 class ADragon;
 class UMoveComponent;
 UCLASS()
-class DRAGONCANVAS_API AProjectile : public AActor
+class DRAGONCANVAS_API APlayerProjectile : public ABaseProjectile
 {
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTargetReached);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTargetAcquired);
@@ -39,14 +40,9 @@ class DRAGONCANVAS_API AProjectile : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	AProjectile();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UStaticMeshComponent> meshCompo;
+	APlayerProjectile();
+	
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<ACustomGameMode> gameMode;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<AProjectileManager> projectileManager;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveComponent> moveCompo;
@@ -59,8 +55,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	float deltaSeconds;
 	
-	UPROPERTY(EditAnywhere)
-	int damage = 1;
+
 	UPROPERTY(EditAnywhere)
 	float lifeSpan = 2;
 	UPROPERTY(EditAnywhere)
@@ -139,7 +134,6 @@ public:
 	void ManageEnemyHit(AActor* _actor);
 	void ManageDestroyTagHit(AActor* _actor);
 	void ManageCanMoveHit(AActor* _actor);
-	UFUNCTION() void SelfDestruct();
 
 	
 	//Events

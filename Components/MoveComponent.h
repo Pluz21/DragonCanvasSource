@@ -4,7 +4,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "MoveComponent.generated.h"
-class AProjectile;
+class APlayerProjectile;
 class ADragon;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DRAGONCANVAS_API UMoveComponent : public UActorComponent

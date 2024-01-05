@@ -4,7 +4,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProjectileManager.generated.h"
-class AProjectile;
+class ABaseProjectile;
 class ADragon;
 
 UCLASS()
@@ -20,7 +20,7 @@ class DRAGONCANVAS_API AProjectileManager : public AActor
 
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere)
-	TArray<AProjectile*> allProjectiles;
+	TArray<ABaseProjectile*> allProjectiles;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ADragon> playerRef;
 	
@@ -40,12 +40,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void Init();
-	void AddItem(TObjectPtr<AProjectile> _item);
-	void RemoveItem(TObjectPtr<AProjectile> _item);
-	bool Exists(TObjectPtr<AProjectile> _item);
+	void AddItem(TObjectPtr<ABaseProjectile> _item);
+	void RemoveItem(TObjectPtr<ABaseProjectile> _item);
+	bool Exists(TObjectPtr<ABaseProjectile> _item);
 	bool Exists(const int& _index);
-	TObjectPtr<AProjectile> GetItem(const int& _index); //we need the index. 
-	TArray<AProjectile*> GetAllProjectiles() { return allProjectiles; }
+	TObjectPtr<ABaseProjectile> GetItem(const int& _index); //we need the index. 
+	TArray<ABaseProjectile*> GetAllProjectiles() { return allProjectiles; }
 	int GetAllProjectilesSize() { return GetAllProjectiles().Num(); }
 
 	void AddMaterial(TObjectPtr<UMaterialInterface> _mat);

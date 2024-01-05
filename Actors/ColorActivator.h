@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "DragonCanvas/Components/ProjectileTriggerComponent.h"
 #include "ColorActivator.generated.h"
-class AProjectile;
+class APlayerProjectile;
 class ADragon;
 class APickUps;
 class AColorActivator;
@@ -26,7 +26,7 @@ public:
 	// Sets default values for this actor's properties
 	AColorActivator();
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AProjectile> dragonProjectileRef;
+	TSubclassOf<APlayerProjectile> dragonProjectileRef;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USceneComponent> root;

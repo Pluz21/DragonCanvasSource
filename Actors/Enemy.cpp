@@ -2,7 +2,7 @@
 
 #include "Enemy.h"
 #include "DragonCanvas/Actors/Dragon.h"
-#include "DragonCanvas/Actors/Projectile.h"
+#include "DragonCanvas/Actors/PlayerProjectile.h"
 
 #include "DragonCanvas/Components/MoveComponent.h"
 #include "DragonCanvas/Components/HealthComponent.h"

@@ -2,7 +2,7 @@
 
 #include "MoveComponent.h"
 #include "DragonCanvas/Actors/Dragon.h"
-#include "DragonCanvas/Actors/Projectile.h"
+#include "DragonCanvas/Actors/PlayerProjectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 

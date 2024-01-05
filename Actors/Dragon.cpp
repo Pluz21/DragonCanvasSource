@@ -7,7 +7,7 @@
 #include "ProjectileManager.h"
 #include "DragonCanvas/World/CustomGameMode.h"
 
-#include "Projectile.h"
+#include "PlayerProjectile.h"
 #include "Gun.h"
 
 #include "Camera/CameraComponent.h"
@@ -244,7 +244,7 @@ void ADragon::Jump()
 void ADragon::UpdateProjectileMaterial(int _allProjectileMatsIndexToUpdate)
 {
 	if (!projectileToSpawn)return;
-	AProjectile* _projectileRef = projectileToSpawn.GetDefaultObject();
+	APlayerProjectile* _projectileRef = projectileToSpawn.GetDefaultObject();
 	UStaticMeshComponent* _projectileMesh = _projectileRef->
 		GetComponentByClass<UStaticMeshComponent>();
 	UMaterialInterface* _newProjectileMat = _projectileMesh->GetMaterial(_allProjectileMatsIndexToUpdate);
@@ -299,8 +299,8 @@ void ADragon::FireBreath()
 	if (!attackCompo)return;
 	//spawnPointLocation = projectileSpawnPoint->GetComponentLocation();
 	FVector _spawnPointLocation = projectileSpawnPoint->GetComponentLocation();
-	//AProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,GetOwner());
-	AProjectile* _spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(projectileToSpawn, _spawnPointLocation, FRotator::ZeroRotator);
+	//APlayerProjectile* _spawnedProjectile = attackCompo->SpawnProjectile(spawnPointLocation,GetOwner());
+	APlayerProjectile* _spawnedProjectile = GetWorld()->SpawnActor<APlayerProjectile>(projectileToSpawn, _spawnPointLocation, FRotator::ZeroRotator);
 	if (!_spawnedProjectile)return;
 	manaCompo->RemoveMana(manaCompo->projectileManaCost);    
 	_spawnedProjectile->

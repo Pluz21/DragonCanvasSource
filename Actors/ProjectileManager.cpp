@@ -2,7 +2,7 @@
 
 #include "ProjectileManager.h"
 #include "DragonCanvas/Actors/Dragon.h"
-#include "Projectile.h"
+#include "PlayerProjectile.h"
 
 // Sets default values
 AProjectileManager::AProjectileManager()
@@ -35,19 +35,19 @@ void AProjectileManager::Init()
 
 // PROJECTILES
 
-void AProjectileManager::AddItem(TObjectPtr<AProjectile> _item)
+void AProjectileManager::AddItem(TObjectPtr<ABaseProjectile> _item)
 {
 	if (!_item || Exists(_item))return; // check if item is !valid and if he has already been added to array
 	allProjectiles.Add(_item);
 }
 
-void AProjectileManager::RemoveItem(TObjectPtr<AProjectile> _item)
+void AProjectileManager::RemoveItem(TObjectPtr<ABaseProjectile> _item)
 {
 	if (!Exists(_item))return; //check if item exists in array.
 	allProjectiles.Remove(_item);
 }
 
-TObjectPtr<AProjectile> AProjectileManager::GetItem(const int& _index)
+TObjectPtr<ABaseProjectile> AProjectileManager::GetItem(const int& _index)
 {
 	int _size = allProjectiles.Num();
 	//	if (_size < 1 && _index < 0 && _index >= _size)return nullptr; // check if array not empty, check if the index is not nul,then check if the index is inferior to array length.
@@ -57,12 +57,12 @@ TObjectPtr<AProjectile> AProjectileManager::GetItem(const int& _index)
 
 }
 
-bool AProjectileManager::Exists(TObjectPtr<AProjectile> _item)
+bool AProjectileManager::Exists(TObjectPtr<ABaseProjectile> _item)
 {
 	int _size = allProjectiles.Num();
 	for (int i = 0; i < _size; i++)
 	{
-		AProjectile* _projectile = allProjectiles[i];
+		ABaseProjectile* _projectile = allProjectiles[i];
 		if (!_projectile)continue;
 		if (_projectile == _item)
 			return true;
@@ -74,7 +74,7 @@ bool AProjectileManager::Exists(const int& _index)
 {
 	int _size = allProjectiles.Num();
 	if (_index < 0 || _index >= _size)return false; // check out of the bounds of array
-	AProjectile* _projectile = allProjectiles[_index];
+	ABaseProjectile* _projectile = allProjectiles[_index];
 	if (!_projectile)return false;
 	return true;
 }
