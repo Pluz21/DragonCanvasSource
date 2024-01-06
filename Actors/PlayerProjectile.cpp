@@ -113,8 +113,8 @@ void APlayerProjectile::SelfMove()
 
 	FVector _lookAtLocation = _spawnPointVector + (_cameraForwardVector * 10000);
 
-	DrawDebugSphere(GetWorld(), _spawnPointVector, 10, 12, FColor::Orange,true);
-	DrawDebugLine(GetWorld(), _spawnPointVector, _lookAtLocation, FColor::Red, true);
+	/*DrawDebugSphere(GetWorld(), _spawnPointVector, 10, 12, FColor::Orange,true);
+	DrawDebugLine(GetWorld(), _spawnPointVector, _lookAtLocation, FColor::Red, true);*/
 
 	FVector _projectileSpawnLocationFVector = _dragonRef->projectileSpawnPoint->GetForwardVector();
 	FVector _projectileDirection = (_lookAtLocation - _spawnPointVector).GetSafeNormal();

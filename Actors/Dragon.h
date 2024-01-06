@@ -173,7 +173,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AGun> baseGunToSpawn;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AGun> laserGunToSpawn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<AGun> baseGunRef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<AGun> laserGunRef;
 
 #pragma endregion Spawn
 
@@ -228,7 +232,7 @@ protected:
 	void InitManagers();
 	void InitInput();
 	void InitEvents();
-	void InitGun();
+	void InitGuns();
 	UFUNCTION()
 	void EmplaceMatInList(UMaterialInterface* _mat);
 	UFUNCTION()
@@ -260,6 +264,7 @@ protected:
 	void PlayProjectileSound();
 
 public:
+
 	UFUNCTION() void FireBreath();
 	UFUNCTION() void AdjustProjectileSpeed(UStaticMeshComponent* _projectileMeshToAdjust);
 	FVector  GetSpawnLocation() { return projectileSpawnPoint->GetComponentLocation(); }
@@ -300,5 +305,9 @@ public:
 
 	void SetStartAlphaCount();
 	float IncreaseTime(float _current, float _max);
-	FVector Lerperoo(const FVector& _start, const FVector& _end);
+
+	// Gun functions
+	void AttachGun(AGun* _gunToAttach, USceneComponent* _attachPoint);
+	
+
 };

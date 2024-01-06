@@ -83,7 +83,7 @@ void ADragon::Init()
 	InitManagers();
 	InitInput();
 	InitEvents();
-	InitGun();
+	InitGuns();
 	currentAmmo = maxAmmo;
 	UpdateMinDistanceToSelfDestruct();
 
@@ -123,13 +123,19 @@ void ADragon::InitEvents()
 	onProjectileShot.AddDynamic(this, &ADragon::PlayProjectileSound);
 }
 
-void ADragon::InitGun()
+void ADragon::InitGuns()
 {
 	if (!baseGunToSpawn)return;
 	AGun* _baseGun = GetWorld()->SpawnActor<AGun>(baseGunToSpawn);
 	if (!_baseGun)return;
 	baseGunRef = _baseGun;
-	baseGunRef->AttachToComponent(gunSpawnPoint, FAttachmentTransformRules::KeepRelativeTransform);
+
+	if (!laserGunToSpawn)return;
+	AGun* _laserGun = GetWorld()->SpawnActor<AGun>(laserGunToSpawn);
+	if (!_laserGun)return;
+	laserGunRef = _laserGun;
+
+	AttachGun(baseGunRef, gunSpawnPoint);
 
 }
 
@@ -429,6 +435,13 @@ void ADragon::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ADragon::UpdateMinDistanceToSelfDestruct()
 {
 	minDistanceToSelfDestruct = coneTraceRadius / 2;
+}
+
+
+void ADragon::AttachGun(AGun* _gunToAttach, USceneComponent* _attachPoint)
+{
+	_gunToAttach->AttachToComponent(_attachPoint, FAttachmentTransformRules::KeepRelativeTransform);
+
 }
 
 //Audio
